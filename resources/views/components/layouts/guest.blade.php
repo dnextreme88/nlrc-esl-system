@@ -16,13 +16,20 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
+        <script>
+            // Gets rid of white flashes on page load if the dark mode is on
+            if (JSON.parse(localStorage.getItem('nlrcEslProjectIsDarkMode'))) {
+                document.documentElement.classList.add('dark');
+            }
+        </script>
+
         @livewireStyles
         @vite('resources/css/app.css')
         @stack('styles')
         @stack('scripts')
     </head>
 
-    <body class="font-sans antialiased">
+    <body x-data="window.darkModeSwitcher()" x-init="init" x-bind:class="{ 'dark': switchOn }" class="font-sans antialiased">
         <div class="font-sans text-gray-900 dark:text-gray-100 antialiased">
             {{ $slot }}
         </div>
