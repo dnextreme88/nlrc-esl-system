@@ -22,6 +22,7 @@
             }
         },
         "concat_space": false,
+        "elseif": false,
         "no_useless_concat_operator": {
             "juggle_simple_strings": true
         },
