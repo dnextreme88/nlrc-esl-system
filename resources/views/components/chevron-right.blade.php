@@ -4,7 +4,7 @@
     'text_classes' => null,
 ])
 
-<span class="flex items-center gap-2 {{ $text ? 'justify-end' : '' }}">
+<span class="flex items-center gap-2 {{ $text ? 'justify-center md:justify-end' : '' }}">
     @if ($text)
         <span class="font-semibold px-3 {{ $text_classes }}">{{ $text }}</span>
     @endif
