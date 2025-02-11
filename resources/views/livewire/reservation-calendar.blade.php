@@ -17,19 +17,19 @@
 }"
     x-init="$wire.on('updated-reserved-slots', () => showLoading = false);"
 >
-    <div class="grid grid-cols-4">
+    <div class="grid grid-cols-1 md:grid-cols-4">
         <div class="ms-4 mb-6 col-span-4 [&>*]:py-4">
             <h2 class="text-4xl text-gray-800 dark:text-gray-200">Reservation Calendar</h2>
 
             <p class="text-gray-800 dark:text-gray-200">Opening and closing of reservation slots can be made within the next 28 days.</p>
         </div>
 
-        <button x-on:click="saveReservationSlots; showLoading = true" class="text-gray-800 dark:text-gray-200 hover:cursor-pointer px-4 py-2 bg-green-200 dark:bg-green-800 my-2 ml-4 transition duration-150 hover:bg-green-400 dark:hover:bg-green-600">
+        <button x-on:click="saveReservationSlots; showLoading = true" class="col-span-2 lg:col-span-1 text-gray-800 dark:text-gray-200 hover:cursor-pointer px-4 py-2 bg-green-200 dark:bg-green-800 my-2 mx-4 transition duration-150 hover:bg-green-400 dark:hover:bg-green-600">
             <span x-show="!showLoading">Reserve selected slots</span>
             <span x-show="showLoading">Reserving</span>
         </button>
 
-        <x-action-message class="col-span-3 mr-4 self-center justify-self-end" on="saving-reservation-slots">
+        <x-action-message class="col-span-2 lg:col-span-3 mr-4 self-center justify-self-end" on="saving-reservation-slots">
             <x-loading-indicator
                 :loader_color_bg="'fill-gray-800 dark:fill-gray-200'"
                 :loader_color_spin="'fill-gray-800 dark:fill-gray-200'"
@@ -39,21 +39,21 @@
         </x-action-message>
     </div>
 
-    <div class="grid grid-cols-3 space-x-3 [&>*]:px-4 [&>*]:py-3 mt-2 mb-6 border-2 border-gray-300 dark:border-gray-800">
+    <div class="grid grid-cols-1 sm:grid-cols-3 space-x-3 [&>*]:px-4 [&>*]:py-3 mt-2 mb-6 items-center border-2 border-gray-300 dark:border-gray-800">
         @if ($is_today)
             <div class="self-start">&nbsp;</div>
         @else
-            <div class="hover:cursor-pointer self-end text-gray-800 dark:text-gray-200" wire:click="render_prev_seven_days">
+            <div class="hover:cursor-pointer text-gray-800 dark:text-gray-200" wire:click="render_prev_seven_days">
                 <x-chevron-left :text="'Last 7 days'" :text_classes="'hover:text-gray-600 dark:hover:text-gray-400'" class="size-6" />
             </div>
         @endif
 
-        <div class="text-2xl flex justify-center text-gray-800 dark:text-gray-200">{{ $current_month_and_year }}</div>
+        <div class="text-xl md:text-2xl flex justify-center text-gray-800 dark:text-gray-200">{{ $current_month_and_year }}</div>
 
         @if ($is_max_date)
             <div class="self-end">&nbsp;</div>
         @else
-            <div class="hover:cursor-pointer self-end text-gray-800 dark:text-gray-200" wire:click="render_next_seven_days">
+            <div class="hover:cursor-pointer text-gray-800 dark:text-gray-200" wire:click="render_next_seven_days">
                 <x-chevron-right :text="'Next 7 days'" :text_classes="'hover:text-gray-600 dark:hover:text-gray-400'" class="size-6" />
             </div>
         @endif
