@@ -9,9 +9,21 @@
         </h2>
     </x-slot>
 
+    <div class="p-6 lg:p-8 bg-gradient-to-r from-green-300 to-gray-200 dark:bg-gray-800 dark:bg-gradient-to-bl dark:from-gray-600 dark:via-green-700 border-b border-gray-200 dark:border-gray-700">
+        <x-application-logo class="block h-12 w-auto" />
+
+        <h1 class="mt-8 text-2xl font-medium text-gray-800 dark:text-gray-200">
+            Welcome, {{ ucfirst(strtolower(Auth::user()->first_name)) }}!
+        </h1>
+    </div>
+
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
+        <div class="w-full mx-auto sm:px-6 lg:px-8">
+            <div class="bg-gray-100 dark:bg-gray-700 overflow-hidden shadow-xl sm:rounded-lg">
+                @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::TEACHER->value]))
+                    <livewire:reservation-calendar />
+                @endif
+
                 {{-- TODO: Separate these as individual components --}}
                 <x-welcome />
             </div>
