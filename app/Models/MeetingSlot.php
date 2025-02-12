@@ -15,6 +15,8 @@ class MeetingSlot extends Model
         'meeting_date',
         'start_time',
         'end_time',
+        'notes',
+        'status',
         'is_reserved',
     ];
 
