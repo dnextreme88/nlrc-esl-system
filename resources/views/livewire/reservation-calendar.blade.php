@@ -70,23 +70,22 @@
             />
         </span>
 
-        <div class="grid grid-cols-8" wire:loading.remove wire:target="render_prev_seven_days,render_next_seven_days">
-            <div class="grid grid-cols-1 gap-3">
-                <div class="text-center">
+        <div class="grid grid-cols-10" wire:loading.remove wire:target="render_prev_seven_days,render_next_seven_days">
+            <div class="grid grid-cols-1 col-span-3">
+                <div class="grid grid-cols-1 text-center">
                     <h2 class="text-4xl text-gray-800 dark:text-gray-200">Slots</h2>
                     <h3 class="mt-2 text-lg text-gray-800 dark:text-gray-200">&nbsp;</h3>
                 </div>
 
                 @foreach ($time_slots as $time)
-                    <div class="p-2 text-gray-800 dark:text-gray-200">
-                        <span>{{ $time['start_time'] }}</span> ~<br />
-                        <span>{{ $time['end_time'] }}</span>
+                    <div class="p-2 text-gray-800 dark:text-gray-200 break-words border-t border-r-2 border-t-green-800 dark:border-t-green-200 border-r-gray-600 dark:border-r-gray-200">
+                        <span>{{ $time['start_time'] }} ~ {{ $time['end_time'] }}</span>
                     </div>
                 @endforeach
             </div>
 
             @foreach ($dates as $day => $date)
-                <div class="grid grid-cols-1 gap-3">
+                <div class="grid grid-cols-1">
                     <div class="text-center">
                         <h2 class="text-4xl text-green-600 dark:text-green-400">{{ $day }}</h2>
                         <h3 class="mt-2 text-lg text-gray-600 dark:text-gray-400">{{ $date['date_shorthand'] }}</h3>
@@ -103,7 +102,7 @@
 
                         <div
                             x-data="{ toggleSlot: {{ $has_existing_slot && $has_existing_slot[0]['is_reserved'] == 1 ? 'true' : 'false' }} }"
-                            class="flex px-4 py-2"
+                            class="grid grid-cols-1 place-items-center py-2 border-t border-green-800 dark:border-green-200"
                         >
                             @if ($has_existing_slot && count($has_existing_slot[0]['meeting_slot_users']) == 0 || !$has_existing_slot)
                                 <input
@@ -153,18 +152,23 @@
                                     </span>
                                 </button>
                             @elseif ($has_existing_slot && !is_null($has_existing_slot[0]['meeting_slot_users']))
-                                <div class="flex gap-2">
-                                    @foreach ($has_existing_slot[0]['meeting_slot_users'] as $student)
+                                <div class="flex -space-x-2">
+                                    @foreach (array_slice($has_existing_slot[0]['meeting_slot_users'], 0, 2) as $student)
                                         <img
-                                            class="size-6 rounded-full object-cover"
+                                            class="size-6 rounded-full object-cover border-green-300 border-2"
                                             src="{{ $student['profile_photo_url'] }}"
                                             alt="{{ $student['last_name'] }}, {{ $student['first_name'] }}"
                                             title="{{ $student['last_name'] }}, {{ $student['first_name'] }} has booked this slot"
                                         />
                                     @endforeach
+
+                                    {{-- TODO: ADD A LINK THAT WHEN CLICKING THE PLUS BUTTON, IT SHOULD GO TO THE BOOKED CALENDAR WITH THE ASSOCIATED TIME --}}
+                                    @if (count($has_existing_slot[0]['meeting_slot_users']) > 2)
+                                        <div class="size-6 rounded-full object-cover border-gray-300 border-2 text-white px-1 w-full text-[9px] bg-gray-800 flex items-center">{{ count($has_existing_slot[0]['meeting_slot_users']) }}+</div>
+                                    @endif
                                 </div>
                             @endif
-                    </div>
+                        </div>
                     @endforeach
                 </div>
             @endforeach
