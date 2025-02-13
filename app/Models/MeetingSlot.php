@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class MeetingSlot extends Model
@@ -24,5 +25,10 @@ class MeetingSlot extends Model
     {
         return $this->belongsToMany(User::class, 'meeting_slot_users', 'meeting_slot_id', 'student_id')
             ->withTimestamps();
+    }
+
+    public function teacher(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

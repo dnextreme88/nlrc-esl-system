@@ -56,6 +56,12 @@
                             </x-slot>
 
                             <x-slot name="content">
+                                <x-dropdown-link wire:navigate href="{{ route('my-meetings') }}">
+                                    {{ __('My Meetings') }}
+                                </x-dropdown-link>
+
+                                <div class="border-t border-gray-200 dark:border-gray-600"></div>
+
                                 <!-- Account Management -->
                                 <div class="block px-4 py-2 text-xs text-gray-600 dark:text-gray-400">
                                     {{ __('Manage Account') }}
@@ -138,6 +144,10 @@
                             </svg>
                         </x-slot>
                     </x-dark-mode-toggle>
+
+                    <x-responsive-nav-link wire:navigate href="{{ route('my-meetings') }}">
+                        {{ __('My Meetings') }}
+                    </x-responsive-nav-link>
 
                     <!-- Account Management -->
                     <x-responsive-nav-link wire:navigate href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">
