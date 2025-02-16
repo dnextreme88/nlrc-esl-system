@@ -60,6 +60,12 @@
                                     {{ __('My Meetings') }}
                                 </x-dropdown-link>
 
+                                @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::TEACHER->value]))
+                                    <x-dropdown-link wire:navigate href="{{ route('reservation-calendar') }}">
+                                        {{ __('Reservation Calendar') }}
+                                    </x-dropdown-link>
+                                @endif
+
                                 <div class="border-t border-gray-200 dark:border-gray-600"></div>
 
                                 <!-- Account Management -->
@@ -148,6 +154,12 @@
                     <x-responsive-nav-link wire:navigate href="{{ route('my-meetings') }}">
                         {{ __('My Meetings') }}
                     </x-responsive-nav-link>
+
+                    @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::TEACHER->value]))
+                        <x-responsive-nav-link wire:navigate href="{{ route('reservation-calendar') }}">
+                            {{ __('Reservation Calendar') }}
+                        </x-responsive-nav-link>
+                    @endif
 
                     <!-- Account Management -->
                     <x-responsive-nav-link wire:navigate href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">

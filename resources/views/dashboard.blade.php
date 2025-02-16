@@ -20,8 +20,10 @@
     <div class="py-12">
         <div class="w-full mx-auto sm:px-6 lg:px-8">
             <div class="bg-gray-100 dark:bg-gray-700 overflow-hidden shadow-xl sm:rounded-lg">
-                @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::TEACHER->value]))
-                    <livewire:reservation-calendar />
+                @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::STUDENT->value, \App\Enums\Roles::TEACHER->value]))
+                    <div class="ms-4 mb-6 col-span-4 [&>*]:py-4">
+                        <livewire:upcoming-meetings />
+                    </div>
                 @endif
 
                 {{-- TODO: Separate these as individual components --}}
