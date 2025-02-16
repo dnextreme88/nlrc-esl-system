@@ -2,7 +2,7 @@
     <h3 class="text-3xl text-gray-600 dark:text-gray-400">Upcoming Meetings</h3>
 
     <div class="[&>*]:my-4">
-        @foreach ($meetings as $meeting)
+        @forelse ($meetings as $meeting)
             @php
                 $color_classes;
                 $is_teacher_role = in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::TEACHER->value]);
@@ -36,7 +36,9 @@
                     </div>
                 </div>
             </div>
-        @endforeach
+        @empty
+            <p class="text-gray-800 dark:text-gray-200 italic">You currently have no upcoming meetings.</p>
+        @endforelse
     </div>
 
     @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::STUDENT->value, \App\Enums\Roles::TEACHER->value]))
