@@ -26,6 +26,12 @@
                     </div>
                 @endif
 
+                @if (Auth::user()->role->name == \App\Enums\Roles::STUDENT->value)
+                    <div class="ms-4 mb-6 col-span-4 [&>*]:py-4">
+                        <livewire:select-meeting-slot />
+                    </div>
+                @endif
+
                 {{-- TODO: Separate these as individual components --}}
                 <x-welcome />
             </div>
