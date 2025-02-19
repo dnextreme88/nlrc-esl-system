@@ -10,14 +10,26 @@
                     </div>
 
                     <!-- Navigation Links -->
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <div class="hidden space-x-8 md:flex md:-my-px md:ms-10">
                         <x-nav-link wire:navigate href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                             {{ __('Dashboard') }}
                         </x-nav-link>
                     </div>
+
+                    <div class="hidden space-x-8 md:flex md:-my-px md:ms-10">
+                        <x-nav-link wire:navigate href="{{ route('my-meetings') }}" :active="request()->routeIs('my-meetings')">
+                            {{ __('My Meetings') }}
+                        </x-nav-link>
+                    </div>
+
+                    <div class="hidden space-x-8 md:flex md:-my-px md:ms-10">
+                        <x-nav-link wire:navigate href="{{ route('reservation-calendar') }}" :active="request()->routeIs('reservation-calendar')">
+                            {{ __('Reservation Calendar') }}
+                        </x-nav-link>
+                    </div>
                 </div>
 
-                <div class="hidden sm:flex sm:items-center sm:ms-6">
+                <div class="hidden md:flex md:items-center md:ms-6">
                     <x-dark-mode-toggle>
                         <x-slot name="left_side">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 fill-green-300 dark:fill-transparent dark:text-green-400" aria-label="Toggle light mode">
@@ -56,16 +68,6 @@
                             </x-slot>
 
                             <x-slot name="content">
-                                <x-dropdown-link wire:navigate href="{{ route('my-meetings') }}">
-                                    {{ __('My Meetings') }}
-                                </x-dropdown-link>
-
-                                @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::TEACHER->value]))
-                                    <x-dropdown-link wire:navigate href="{{ route('reservation-calendar') }}">
-                                        {{ __('Reservation Calendar') }}
-                                    </x-dropdown-link>
-                                @endif
-
                                 <div class="border-t border-gray-200 dark:border-gray-600"></div>
 
                                 <!-- Account Management -->
@@ -96,7 +98,7 @@
                 </div>
 
                 <!-- Hamburger -->
-                <div class="-me-2 flex items-center sm:hidden">
+                <div class="-me-2 flex items-center md:hidden">
                     <button
                         x-on:click="open = !open"
                         x-bind:class="{'focus:rotate-90': open}"
@@ -112,7 +114,7 @@
         </div>
 
         <!-- Responsive Navigation Menu -->
-        <div :class="{'block': open, 'hidden': !open}" class="hidden sm:hidden">
+        <div :class="{'block': open, 'hidden': !open}" class="hidden md:hidden">
             <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link wire:navigate href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                     {{ __('Dashboard') }}
@@ -150,16 +152,6 @@
                             </svg>
                         </x-slot>
                     </x-dark-mode-toggle>
-
-                    <x-responsive-nav-link wire:navigate href="{{ route('my-meetings') }}">
-                        {{ __('My Meetings') }}
-                    </x-responsive-nav-link>
-
-                    @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::TEACHER->value]))
-                        <x-responsive-nav-link wire:navigate href="{{ route('reservation-calendar') }}">
-                            {{ __('Reservation Calendar') }}
-                        </x-responsive-nav-link>
-                    @endif
 
                     <!-- Account Management -->
                     <x-responsive-nav-link wire:navigate href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">
