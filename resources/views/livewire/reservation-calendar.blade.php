@@ -39,8 +39,7 @@
                     </div>
 
                     <button x-on:click="saveReservationSlots; showLoading = true" class="col-span-2 lg:col-span-1 text-gray-800 dark:text-gray-200 hover:cursor-pointer px-4 py-2 bg-green-200 dark:bg-green-800 my-2 mx-4 transition duration-150 hover:bg-green-400 dark:hover:bg-green-600">
-                        <span x-show="!showLoading">Reserve selected slots</span>
-                        <span x-show="showLoading">Reserving</span>
+                        <span x-text="showLoading ? 'Reserving' : 'Reserve selected slots'">Reserve selected slots</span>
                     </button>
 
                     <x-action-message class="col-span-2 lg:col-span-3 mr-4 self-center justify-self-end" on="saving-reservation-slots">
