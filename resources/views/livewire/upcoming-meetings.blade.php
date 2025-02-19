@@ -1,6 +1,8 @@
 <div>
     <h3 class="text-3xl text-gray-600 dark:text-gray-400">Upcoming Meetings</h3>
 
+    <x-action-message class="bg-green-200 dark:bg-green-800 py-2 px-4 mr-4" on="reserved-slot">You have successfully booked your slot!</x-action-message>
+
     <div class="[&>*]:my-4">
         @forelse ($meetings as $meeting)
             @php

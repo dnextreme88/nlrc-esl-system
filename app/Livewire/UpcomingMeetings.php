@@ -24,6 +24,13 @@ class UpcomingMeetings extends Component
     public $reschedule_reason = '';
     public $start_times = [];
 
+    protected $listeners = ['reserved-slot' => 'dispatch_update_meetings'];
+
+    public function dispatch_update_meetings() // Dispatched from another component and to be shown on this component
+    {
+        $this->dispatch('reserved-slot');
+    }
+
     public function cancel_meeting_modal($meeting_slot_id)
     {
         $this->show_cancel_meeting_modal = true;
