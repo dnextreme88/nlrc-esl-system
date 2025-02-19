@@ -86,9 +86,10 @@
 
                     <div class="grid grid-cols-10" wire:loading.remove wire:target="render_prev_seven_days,render_next_seven_days">
                         <div class="grid grid-cols-1 col-span-3">
-                            <div class="grid grid-cols-1 text-center">
+                            <div class="grid grid-cols-1 text-center max-h-[105px]">
                                 <h2 class="text-4xl text-gray-800 dark:text-gray-200">Slots</h2>
                                 <h3 class="mt-2 text-lg text-gray-800 dark:text-gray-200">&nbsp;</h3>
+                                <h3 class="mt-2 text-sm text-gray-800 dark:text-gray-200">&nbsp;</h3>
                             </div>
 
                             @foreach ($time_slots as $time)
@@ -100,9 +101,19 @@
 
                         @foreach ($dates as $day => $date)
                             <div class="grid grid-cols-1">
+                                @php
+                                    $count_pending_reserved_slots = count(array_filter($meeting_slots, function ($val) use ($time, $date) {
+                                        return $val['meeting_date'] == $date['date'] &&
+                                            $val['status'] == \App\Enums\MeetingStatuses::PENDING->value &&
+                                            $val['is_reserved'] == 1 &&
+                                            $val['meeting_slot_users'] == null;
+                                    }));
+                                @endphp
+
                                 <div class="text-center">
                                     <h2 class="text-4xl text-green-600 dark:text-green-400">{{ $day }}</h2>
                                     <h3 class="mt-2 text-lg text-gray-600 dark:text-gray-400">{{ $date['date_shorthand'] }}</h3>
+                                    <h4 class="mt-2 text-sm text-gray-800 dark:text-gray-200">{{ $count_pending_reserved_slots }} / {{ count($time_slots) }}</h3>
                                 </div>
 
                                 @foreach ($time_slots as $key => $time)
