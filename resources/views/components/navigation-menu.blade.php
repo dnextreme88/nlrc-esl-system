@@ -122,6 +122,18 @@
                 </x-responsive-nav-link>
             </div>
 
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link wire:navigate href="{{ route('my-meetings') }}" :active="request()->routeIs('my-meetings')">
+                    {{ __('My Meetings') }}
+                </x-responsive-nav-link>
+            </div>
+
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link wire:navigate href="{{ route('reservation-calendar') }}" :active="request()->routeIs('reservation-calendar')">
+                    {{ __('Reservation Calendar') }}
+                </x-responsive-nav-link>
+            </div>
+
             <!-- Responsive Settings Options -->
             <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
                 <div class="flex items-center px-4">
