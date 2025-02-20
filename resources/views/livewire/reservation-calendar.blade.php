@@ -39,7 +39,7 @@
                     </div>
 
                     <button x-on:click="saveReservationSlots; showLoading = true" class="col-span-2 lg:col-span-1 text-gray-800 dark:text-gray-200 hover:cursor-pointer px-4 py-2 bg-green-200 dark:bg-green-800 my-2 mx-4 transition duration-150 hover:bg-green-400 dark:hover:bg-green-600">
-                        <span x-text="showLoading ? 'Reserving' : 'Reserve selected slots'">Reserve selected slots</span>
+                        <span x-text="showLoading ? 'Updating' : 'Update slots'">Update slots</span>
                     </button>
 
                     <x-action-message class="col-span-2 lg:col-span-3 mr-4 self-center justify-self-end" on="saving-reservation-slots">
@@ -56,7 +56,7 @@
                     @if ($is_today)
                         <div class="self-start">&nbsp;</div>
                     @else
-                        <div class="hover:cursor-pointer text-gray-800 dark:text-gray-200" wire:click="render_prev_seven_days">
+                        <div class="hover:cursor-pointer text-gray-800 dark:text-gray-200" wire:click="render_prev_seven_days" wire:loading.class="pointer-events-none">
                             <x-chevron-left :text="'Last 7 days'" :text_classes="'hover:text-gray-600 dark:hover:text-gray-400'" class="size-6" />
                         </div>
                     @endif
@@ -66,7 +66,7 @@
                     @if ($is_max_date)
                         <div class="self-end">&nbsp;</div>
                     @else
-                        <div class="hover:cursor-pointer text-gray-800 dark:text-gray-200" wire:click="render_next_seven_days">
+                        <div class="hover:cursor-pointer text-gray-800 dark:text-gray-200" wire:click="render_next_seven_days" wire:loading.class="pointer-events-none">
                             <x-chevron-right :text="'Next 7 days'" :text_classes="'hover:text-gray-600 dark:hover:text-gray-400'" class="size-6" />
                         </div>
                     @endif

@@ -1,5 +1,5 @@
 <div>
-    <h3 class="text-3xl text-gray-600 dark:text-gray-400">Upcoming Meetings</h3>
+    <h3 class="text-3xl text-gray-800 dark:text-gray-200">Upcoming Meetings</h3>
 
     <x-action-message class="bg-green-200 dark:bg-green-800 py-2 px-4 mr-4" on="reserved-slot">You have successfully booked your slot!</x-action-message>
 
@@ -25,7 +25,12 @@
                 <span class="inline-block md:hidden self-center text-center rounded-full ml-4 mb-1 px-4 py-2 text-xs font-medium ring-1 ring-inset {{ $color_classes }}">{{ $meeting->status }}</span>
 
                 <div class="grid grid-cols-1 px-4 items-center {{ $is_teacher_role ? 'md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 space-y-2 md:space-y-0 md:space-x-3' : 'md:grid-cols-2' }}">
-                    <span class="text-gray-800 dark:text-gray-200 {{ $is_teacher_role ? 'col-span-2 lg:col-span-3 xl:col-span-4' : '' }}">{{ \Carbon\Carbon::parse($meeting->meeting_date)->format('M j, Y') }} {{ $meeting->start_time }} ~ {{ $meeting->end_time }}</span>
+                    <div class="{{ $is_teacher_role ? 'col-span-2 lg:col-span-3 xl:col-span-4' : '' }}">
+                        {{-- TODO: We can probably add a user setting option to format dates like these --}}
+                        <h4 class="text-2xl font-semibold text-gray-800 dark:text-gray-200">{{ \Carbon\Carbon::parse($meeting->meeting_date)->format('M j, Y') }}</h4>
+
+                        <span class="text-sm text-gray-600 dark:text-gray-400">{{ $meeting->start_time }} ~ {{ $meeting->end_time }}</span>
+                    </div>
 
                     <div class="pb-4 border-b-2 border-gray-600 md:border-b-0 md:pb-0 grid grid-cols-1 {{ $is_teacher_role ? 'md:grid-cols-3 space-y-2 md:space-y-0 md:space-x-2 col-span-2' : 'justify-self-end' }}">
                         <span class="hidden md:inline-block self-center text-center rounded-full px-2 py-2 text-xs font-medium ring-1 ring-inset min-w-[100px] max-w-[100px] {{ $color_classes }}">{{ $meeting->status }}</span>
