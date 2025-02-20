@@ -168,7 +168,7 @@
 
                     <!-- Account Management -->
                     {{-- TODO: Remove the Laravel Fortify views related to it --}}
-                    <x-responsive-nav-link wire:navigate href="{{ route('settings.user') }}" :active="request()->routeIs('settings.user')">
+                    <x-responsive-nav-link wire:navigate href="{{ route('settings.user') }}" :active="request()->route()->getPrefix() == '/settings'">
                         {{ __('Settings') }}
                     </x-responsive-nav-link>
 
