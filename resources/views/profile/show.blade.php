@@ -1,3 +1,8 @@
+{{--
+TODO: These components are already placed on a separate route not using this Laravel Fortify view.
+Can be removed. Must also disable the static routes from Laravel Fortify
+https://www.youtube.com/watch?v=Z3O9Pflsl4g
+--}}
 <x-layouts.master>
     <x-slot name="nav_menu">
         <x-navigation-menu />

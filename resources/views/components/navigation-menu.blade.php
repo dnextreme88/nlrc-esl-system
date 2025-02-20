@@ -75,8 +75,9 @@
                                     {{ __('Manage Account') }}
                                 </div>
 
-                                <x-dropdown-link wire:navigate href="{{ route('profile.show') }}">
-                                    {{ __('Profile') }}
+                                {{-- TODO: Remove the Laravel Fortify views related to it --}}
+                                <x-dropdown-link wire:navigate href="{{ route('settings.user') }}">
+                                    {{ __('Settings') }}
                                 </x-dropdown-link>
 
                                 <div class="border-t border-gray-200 dark:border-gray-600"></div>
@@ -154,8 +155,9 @@
                     </x-dark-mode-toggle>
 
                     <!-- Account Management -->
-                    <x-responsive-nav-link wire:navigate href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">
-                        {{ __('Profile') }}
+                    {{-- TODO: Remove the Laravel Fortify views related to it --}}
+                    <x-responsive-nav-link wire:navigate href="{{ route('settings.user') }}" :active="request()->routeIs('settings.user')">
+                        {{ __('Settings') }}
                     </x-responsive-nav-link>
 
                     <!-- Authentication -->
