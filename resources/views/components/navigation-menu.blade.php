@@ -10,14 +10,26 @@
                     </div>
 
                     <!-- Navigation Links -->
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <div class="hidden space-x-8 md:flex md:-my-px md:ms-10">
                         <x-nav-link wire:navigate href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                             {{ __('Dashboard') }}
                         </x-nav-link>
                     </div>
+
+                    <div class="hidden space-x-8 md:flex md:-my-px md:ms-10">
+                        <x-nav-link wire:navigate href="{{ route('my-meetings') }}" :active="request()->routeIs('my-meetings')">
+                            {{ __('My Meetings') }}
+                        </x-nav-link>
+                    </div>
+
+                    <div class="hidden space-x-8 md:flex md:-my-px md:ms-10">
+                        <x-nav-link wire:navigate href="{{ route('reservation-calendar') }}" :active="request()->routeIs('reservation-calendar')">
+                            {{ __('Reservation Calendar') }}
+                        </x-nav-link>
+                    </div>
                 </div>
 
-                <div class="hidden sm:flex sm:items-center sm:ms-6">
+                <div class="hidden md:flex md:items-center md:ms-6">
                     <x-dark-mode-toggle>
                         <x-slot name="left_side">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 fill-green-300 dark:fill-transparent dark:text-green-400" aria-label="Toggle light mode">
@@ -56,13 +68,16 @@
                             </x-slot>
 
                             <x-slot name="content">
+                                <div class="border-t border-gray-200 dark:border-gray-600"></div>
+
                                 <!-- Account Management -->
                                 <div class="block px-4 py-2 text-xs text-gray-600 dark:text-gray-400">
                                     {{ __('Manage Account') }}
                                 </div>
 
-                                <x-dropdown-link wire:navigate href="{{ route('profile.show') }}">
-                                    {{ __('Profile') }}
+                                {{-- TODO: Remove the Laravel Fortify views related to it --}}
+                                <x-dropdown-link wire:navigate href="{{ route('settings.user') }}">
+                                    {{ __('Settings') }}
                                 </x-dropdown-link>
 
                                 <div class="border-t border-gray-200 dark:border-gray-600"></div>
@@ -84,7 +99,7 @@
                 </div>
 
                 <!-- Hamburger -->
-                <div class="-me-2 flex items-center sm:hidden">
+                <div class="-me-2 flex items-center md:hidden">
                     <button
                         x-on:click="open = !open"
                         x-bind:class="{'focus:rotate-90': open}"
@@ -100,10 +115,22 @@
         </div>
 
         <!-- Responsive Navigation Menu -->
-        <div :class="{'block': open, 'hidden': !open}" class="hidden sm:hidden">
+        <div :class="{'block': open, 'hidden': !open}" class="hidden md:hidden">
             <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link wire:navigate href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                     {{ __('Dashboard') }}
+                </x-responsive-nav-link>
+            </div>
+
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link wire:navigate href="{{ route('my-meetings') }}" :active="request()->routeIs('my-meetings')">
+                    {{ __('My Meetings') }}
+                </x-responsive-nav-link>
+            </div>
+
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link wire:navigate href="{{ route('reservation-calendar') }}" :active="request()->routeIs('reservation-calendar')">
+                    {{ __('Reservation Calendar') }}
                 </x-responsive-nav-link>
             </div>
 
@@ -125,7 +152,7 @@
                 <div class="mt-3 space-y-1">
                     <x-dark-mode-toggle>
                         <x-slot name="left_side">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 fill-blue-300 dark:fill-transparent dark:text-blue-400" aria-label="Toggle light mode">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 fill-green-300 dark:fill-transparent dark:text-green-400" aria-label="Toggle light mode">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189m-1.5.189a6.01 6.01 0 0 1-1.5-.189m3.75 7.478a12.06 12.06 0 0 1-4.5 0m3.75 2.383a14.406 14.406 0 0 1-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 1 0-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />
                                 <title>Toggle light mode</title>
                             </svg>
@@ -140,8 +167,9 @@
                     </x-dark-mode-toggle>
 
                     <!-- Account Management -->
-                    <x-responsive-nav-link wire:navigate href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">
-                        {{ __('Profile') }}
+                    {{-- TODO: Remove the Laravel Fortify views related to it --}}
+                    <x-responsive-nav-link wire:navigate href="{{ route('settings.user') }}" :active="request()->route()->getPrefix() == '/settings'">
+                        {{ __('Settings') }}
                     </x-responsive-nav-link>
 
                     <!-- Authentication -->

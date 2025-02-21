@@ -35,6 +35,7 @@
         </div>
 
         @livewireScripts
+        @livewireCalendarScripts
         @vite('resources/js/app.js')
         @stack('modals')
     </body>
