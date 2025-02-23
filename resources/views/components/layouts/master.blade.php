@@ -23,6 +23,7 @@
             }
         </script>
 
+        @filamentStyles
         @livewireStyles
         @vite('resources/css/app.css')
         @stack('styles')
@@ -58,6 +59,7 @@
             </main>
         </div>
 
+        @filamentScripts
         @livewireScripts
         @livewireCalendarScripts
         @vite('resources/js/app.js')
