@@ -56,7 +56,6 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->maxContentWidth(MaxWidth::Full)
-            ->topNavigation()
-            ->viteTheme('resources/css/filament-admin-theme.css');
+            ->topNavigation();
     }
 }
