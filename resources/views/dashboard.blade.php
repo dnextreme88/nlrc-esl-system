@@ -31,9 +31,6 @@
                         <livewire:select-meeting-slot />
                     </div>
                 @endif
-
-                {{-- TODO: Separate these as individual components --}}
-                <x-welcome />
             </div>
         </div>
     </div>

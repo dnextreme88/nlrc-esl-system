@@ -37,6 +37,12 @@
             </div>
 
             <div class="hidden md:flex md:items-center md:ms-6">
+                <x-custom.notification-bell
+                    :user_notifications="$user_notifications"
+                    :user_notifications_unread_count="$user_notifications_unread_count"
+                    :user_notifications_unread_count_is_overlap="$user_notifications_unread_count_is_overlap"
+                />
+
                 <x-dark-mode-toggle>
                     <x-slot name="left_side">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 fill-green-300 dark:fill-transparent dark:text-green-400" aria-label="Toggle light mode">
@@ -77,6 +83,10 @@
                         <x-slot name="content">
                             <div class="border-t border-gray-200 dark:border-gray-600"></div>
 
+                            <x-dropdown-link wire:navigate href="{{ route('announcements.index') }}">
+                                {{ __('Announcements') }}
+                            </x-dropdown-link>
+
                             <!-- Account Management -->
                             <div class="block px-4 py-2 text-xs text-gray-600 dark:text-gray-400">
                                 {{ __('Manage Account') }}
@@ -107,6 +117,12 @@
 
             <!-- Hamburger -->
             <div class="-me-2 flex items-center md:hidden">
+                <x-custom.notification-bell
+                    :user_notifications="$user_notifications"
+                    :user_notifications_unread_count="$user_notifications_unread_count"
+                    :user_notifications_unread_count_is_overlap="$user_notifications_unread_count_is_overlap"
+                />
+
                 <button
                     x-on:click="open = !open"
                     x-bind:class="{'focus:rotate-90': open}"
@@ -180,6 +196,10 @@
                         </svg>
                     </x-slot>
                 </x-dark-mode-toggle>
+
+                <x-responsive-nav-link wire:navigate href="{{ route('announcements.index') }}" :active="request()->routeIs('announcements.index')">
+                    {{ __('Announcements') }}
+                </x-responsive-nav-link>
 
                 <!-- Account Management -->
                 {{-- TODO: Remove the Laravel Fortify views related to it --}}

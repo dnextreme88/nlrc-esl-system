@@ -39,6 +39,7 @@ class User extends Authenticatable implements FilamentUser, HasName
         'date_of_birth',
         'is_active',
         'gender',
+        'notification_settings',
         'password',
         'profile_photo_path',
     ];
@@ -73,6 +74,7 @@ class User extends Authenticatable implements FilamentUser, HasName
     {
         return [
             'email_verified_at' => 'datetime',
+            'notification_settings' => 'array',
             'password' => 'hashed',
         ];
     }
