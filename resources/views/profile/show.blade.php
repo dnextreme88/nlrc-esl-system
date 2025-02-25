@@ -5,7 +5,7 @@ https://www.youtube.com/watch?v=Z3O9Pflsl4g
 --}}
 <x-layouts.master>
     <x-slot name="nav_menu">
-        <x-navigation-menu />
+        <livewire:NavMenu />
     </x-slot>
 
     <x-slot name="header">

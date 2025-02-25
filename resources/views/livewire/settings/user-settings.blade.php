@@ -1,6 +1,6 @@
 <div>
     <x-slot name="nav_menu">
-        <x-navigation-menu />
+        <livewire:NavMenu />
     </x-slot>
 
     <x-slot name="header">
