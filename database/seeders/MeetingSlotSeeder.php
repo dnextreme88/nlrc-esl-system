@@ -8,7 +8,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
-class MeetingSlotsSeeder extends Seeder
+class MeetingSlotSeeder extends Seeder
 {
     public function run(): void
     {
