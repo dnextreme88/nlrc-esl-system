@@ -8,6 +8,7 @@ use App\Livewire\NotificationList;
 use App\Livewire\ReservationCalendar;
 use App\Livewire\Settings\SecuritySettings;
 use App\Livewire\Settings\SettingsPage;
+use App\Livewire\Settings\TimeSettings;
 use App\Livewire\Settings\UserSettings;
 use Illuminate\Support\Facades\Route;
 
@@ -33,7 +34,8 @@ Route::middleware([
 
     Route::group(['prefix' => 'settings', 'as' => 'settings.'], function () {
         Route::get('/', SettingsPage::class)->name('index');
-        Route::get('/user', UserSettings::class)->name('user');
         Route::get('/security', SecuritySettings::class)->name('security');
+        Route::get('/time', TimeSettings::class)->name('time');
+        Route::get('/user', UserSettings::class)->name('user');
     });
 });
