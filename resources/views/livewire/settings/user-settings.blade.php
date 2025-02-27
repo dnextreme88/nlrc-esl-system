@@ -9,7 +9,15 @@
         </h2>
     </x-slot>
 
-    @if (Laravel\Fortify\Features::canUpdateProfileInformation())
-        @livewire('profile.update-profile-information-form')
-    @endif
+    <div class="py-12">
+        <div class="w-full mx-auto sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3">
+            <x-custom.settings-sidebar />
+
+            <div class="col-span-1 md:col-span-2 px-10 pt-20 pb-10 bg-gray-300/50 dark:bg-gray-600/50">
+                @if (Laravel\Fortify\Features::canUpdateProfileInformation())
+                    @livewire('profile.update-profile-information-form')
+                @endif
+            </div>
+        </div>
+    </div>
 </div>
