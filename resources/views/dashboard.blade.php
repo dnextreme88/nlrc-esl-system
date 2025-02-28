@@ -27,8 +27,12 @@
                 @endif
 
                 @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::STUDENT->value, \App\Enums\Roles::TEACHER->value]))
-                    <div class="bg-gray-200 dark:bg-gray-600 col-span-2">
+                    <div class="bg-gray-200 dark:bg-gray-600">
                         <livewire:upcoming-meetings />
+                    </div>
+
+                    <div class="bg-gray-200 dark:bg-gray-600">
+                        <livewire:recent-meetings />
                     </div>
                 @endif
             </div>
