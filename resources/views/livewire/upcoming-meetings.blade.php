@@ -3,7 +3,7 @@
 
     <x-action-message class="bg-green-200 dark:bg-green-800 py-2 px-4 mr-4" on="reserved-slot">You have successfully booked your slot!</x-action-message>
 
-    <div class="[&>*]:my-4">
+    <div class="grid grid-cols-1 gap-2 md:gap-4 [&>*]:mx-2 [&>*]:my-4">
         @forelse ($meetings as $meeting)
             @php
                 $color_classes;
@@ -21,26 +21,28 @@
                 }
             @endphp
 
-            <div>
-                <span class="inline-block md:hidden self-center text-center rounded-full ml-4 mb-1 px-4 py-2 text-xs font-medium ring-1 ring-inset {{ $color_classes }}">{{ $meeting->status }}</span>
+            <div class="grid grid-cols-1 md:grid-cols-2">
+                <div>
+                    @if ($is_teacher_role)
+                        <span class="block self-center text-center rounded-full px-4 py-2 text-xs my-2 font-medium ring-1 ring-inset min-w-[100px] max-w-[100px] {{ $color_classes }}">{{ $meeting->status }}</span>
+                    @endif
 
-                <div class="grid grid-cols-1 px-4 items-center {{ $is_teacher_role ? 'md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 space-y-2 md:space-y-0 md:space-x-3' : 'md:grid-cols-2' }}">
-                    <div class="{{ $is_teacher_role ? 'col-span-2 lg:col-span-3 xl:col-span-4' : '' }}">
-                        {{-- TODO: We can probably add a user setting option to format dates like these --}}
-                        <h4 class="text-2xl font-semibold text-gray-800 dark:text-gray-200">{{ \Carbon\Carbon::parse($meeting->meeting_date)->format('M j, Y') }}</h4>
+                    <x-meetings.date-with-time-section
+                        :classes_date="'text-2xl font-semibold'"
+                        :end_time="$meeting->end_time"
+                        :meeting_date="$meeting->meeting_date"
+                        :start_time="$meeting->start_time"
+                    />
+                </div>
 
-                        <span class="text-sm text-gray-600 dark:text-gray-400">{{ $meeting->start_time }} ~ {{ $meeting->end_time }}</span>
-                    </div>
+                <div class="grid grid-cols-1 gap-2 p-4 border-b-2 border-gray-600 items-center md:border-b-0 md:p-0 {{ $is_teacher_role ? 'md:gap-3 md:grid-cols-2' : 'place-self-end' }}">
+                    @if ($is_teacher_role)
+                        <button wire:click="cancel_meeting_modal({{ $meeting->id }})" class="transition duration-150 rounded-md py-2 px-4 text-gray-800 dark:text-gray-200 bg-red-300 dark:bg-red-600 hover:bg-red-400 dark:hover:bg-red-700 {{ $meeting->status == \App\Enums\MeetingStatuses::CANCELLED->value ? 'hidden md:block md:invisible' : '' }}">Cancel</button>
 
-                    <div class="pb-4 border-b-2 border-gray-600 md:border-b-0 md:pb-0 grid grid-cols-1 {{ $is_teacher_role ? 'md:grid-cols-3 space-y-2 md:space-y-0 md:space-x-2 col-span-2' : 'justify-self-end' }}">
-                        <span class="hidden md:inline-block self-center text-center rounded-full px-2 py-2 text-xs font-medium ring-1 ring-inset min-w-[100px] max-w-[100px] {{ $color_classes }}">{{ $meeting->status }}</span>
-
-                        @if ($is_teacher_role)
-                            <button wire:click="cancel_meeting_modal({{ $meeting->id }})" class="transition duration-150 rounded-md py-2 px-4 text-gray-800 dark:text-gray-200 bg-red-300 dark:bg-red-600 hover:bg-red-400 dark:hover:bg-red-700 {{ $meeting->status == \App\Enums\MeetingStatuses::CANCELLED->value ? 'hidden md:block md:invisible' : '' }}">Cancel</button>
-
-                            <button wire:click="reschedule_meeting_modal({{ $meeting->id }})" class="transition duration-150 rounded-md py-2 px-2 lg:px-4 text-gray-800 dark:text-gray-200 bg-blue-300 dark:bg-blue-600 hover:bg-blue-400 dark:hover:bg-blue-700">Reschedule</button>
-                        @endif
-                    </div>
+                        <button wire:click="reschedule_meeting_modal({{ $meeting->id }})" class="transition duration-150 rounded-md py-2 px-2 lg:px-4 text-gray-800 dark:text-gray-200 bg-blue-300 dark:bg-blue-600 hover:bg-blue-400 dark:hover:bg-blue-700">Reschedule</button>
+                    @else
+                        <span class="block self-center text-center rounded-full px-4 py-2 text-xs my-2 font-medium ring-1 ring-inset min-w-[100px] max-w-[100px] {{ $color_classes }}">{{ $meeting->status }}</span>
+                    @endif
                 </div>
             </div>
         @empty

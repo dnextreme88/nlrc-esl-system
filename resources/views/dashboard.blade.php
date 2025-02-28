@@ -19,16 +19,16 @@
 
     <div class="py-12">
         <div class="w-full mx-auto sm:px-6 lg:px-8">
-            <div class="bg-gray-100 dark:bg-gray-700 overflow-hidden shadow-xl sm:rounded-lg">
-                @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::STUDENT->value, \App\Enums\Roles::TEACHER->value]))
-                    <div class="ms-4 mb-6 col-span-4 [&>*]:py-4">
-                        <livewire:upcoming-meetings />
+            <div class="grid grid-cols-1 gap-2 overflow-hidden md:gap-4 lg:grid-cols-2 [&>*]:p-4 [&>*]:sm:rounded-lg">
+                @if (Auth::user()->role->name == \App\Enums\Roles::STUDENT->value)
+                    <div class="bg-gray-200 dark:bg-gray-600 col-span-2">
+                        <livewire:select-meeting-slot />
                     </div>
                 @endif
 
-                @if (Auth::user()->role->name == \App\Enums\Roles::STUDENT->value)
-                    <div class="ms-4 mb-6 col-span-4 [&>*]:py-4">
-                        <livewire:select-meeting-slot />
+                @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::STUDENT->value, \App\Enums\Roles::TEACHER->value]))
+                    <div class="bg-gray-200 dark:bg-gray-600 col-span-2">
+                        <livewire:upcoming-meetings />
                     </div>
                 @endif
             </div>

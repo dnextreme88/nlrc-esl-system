@@ -1,55 +1,62 @@
 <div>
-    <h3 class="text-3xl text-gray-600 dark:text-gray-400">Reserve your slot</h3>
+    <h3 class="text-3xl text-gray-800 dark:text-gray-200">Reserve your slot</h3>
 
-    <form wire:submit.prevent="show_available_times_for_selected_date" class="my-4 px-4">
-        <x-label is_required="true" value="{{ __('Meeting Date') }}" for="meeting_date" />
+    <div class="grid grid-cols-1 md:grid-cols-3 [&>*]:my-4 [&>*]:px-2">
+        <form wire:submit.prevent="show_available_times_for_selected_date">
+            <x-label is_required="true" value="{{ __('Meeting Date') }}" for="meeting_date" />
 
-        <x-select wire:model="meeting_date" name="meeting_date">
-            <option value="">Select a date</option>
-            @foreach ($possible_dates as $date)
-                <option value="{{ $date['db_format'] }}">{{ $date['view_format'] }}</option>
-            @endforeach
-        </x-select>
-
-        @error ('meeting_date')
-            <div class="text-red-500 text-sm mb-2">{{ $message }}</div>
-        @enderror
-
-        <div>
-            <x-button class="my-4 hover:cursor-pointer">
-                <span wire:loading.flex wire:target="show_available_times_for_selected_date" class="items-center">
-                    <x-loading-indicator
-                        :loader_color_bg="'fill-gray-200 dark:fill-gray-800'"
-                        :loader_color_spin="'fill-gray-200 dark:fill-gray-800'"
-                        :show_text="false"
-                        :size="4"
-                    />
-
-                    <span class="ml-2">Showing time slots</span>
-                </span>
-
-                <span wire:loading.remove wire:target="show_available_times_for_selected_date">Show time slots</span>
-            </x-button>
-        </div>
-    </form>
-
-    @if ($is_meeting_date_chosen)
-        @if (count($available_meeting_slots_time) > 0)
-            <h4 class="text-2xl text-gray-800 dark:text-gray-200">Available time slots for {{ \Carbon\Carbon::parse($meeting_date)->format('F j, Y') }}</h4>
-
-            <div class="[&>*]:py-4">
-                @foreach ($available_meeting_slots_time as $meeting_slot_time)
-                    <div class="flex items-center justify-between px-4">
-                        <p class="text-gray-800 dark:text-gray-200">Duration: {{ $meeting_slot_time['start_time'] }} ~ {{ $meeting_slot_time['end_time'] }}</p> 
-                        
-                        <x-secondary-button wire:click="reserve_slot_modal('{{ $meeting_slot_time['start_time'] }}', '{{ $meeting_slot_time['end_time'] }}')">Book this time</x-secondary-button>
-                    </div>
+            <x-select wire:model="meeting_date" name="meeting_date">
+                <option value="">Select a date</option>
+                @foreach ($possible_dates as $date)
+                    <option value="{{ $date['db_format'] }}">{{ $date['view_format'] }}</option>
                 @endforeach
+            </x-select>
+
+            @error ('meeting_date')
+                <div class="text-red-500 text-sm mb-2">{{ $message }}</div>
+            @enderror
+
+            <div>
+                <x-button class="my-4 hover:cursor-pointer">
+                    <span wire:loading.flex wire:target="show_available_times_for_selected_date" class="items-center">
+                        <x-loading-indicator
+                            :loader_color_bg="'fill-gray-200 dark:fill-gray-800'"
+                            :loader_color_spin="'fill-gray-200 dark:fill-gray-800'"
+                            :show_text="false"
+                            :size="4"
+                        />
+
+                        <span class="ml-2">Showing time slots</span>
+                    </span>
+
+                    <span wire:loading.remove wire:target="show_available_times_for_selected_date">Show time slots</span>
+                </x-button>
             </div>
-        @else
-            <p class="my-4 px-4 text-red-800 dark:text-red-200">This date has no available meeting slots</p>
-        @endif
-    @endif
+        </form>
+
+        <div class="md:col-span-2">
+            @if ($is_meeting_date_chosen)
+                @if (count($available_meeting_slots_time) > 0)
+                    <h4 class="text-lg text-gray-800 dark:text-gray-200">Available time slots for {{ \Carbon\Carbon::parse($meeting_date)->format('F j, Y') }}</h4>
+
+                    <ul class="[&>*]:py-4">
+                        @foreach ($available_meeting_slots_time as $meeting_slot_time)
+                            <li class="px-4 items-center grid grid-cols-1 gap-3 sm:grid-cols-2 lg:px-2">
+                                <p>
+                                    <span class="text-xl text-green-600 dark:text-green-300">&rarr;</span>
+                                    <span class="text-gray-800 dark:text-gray-200">{{ $meeting_slot_time['start_time'] }} ~ {{ $meeting_slot_time['end_time'] }}</span>
+                                </p> 
+                                
+                                <x-secondary-button wire:click="reserve_slot_modal('{{ $meeting_slot_time['start_time'] }}', '{{ $meeting_slot_time['end_time'] }}')" class="justify-self-start sm:justify-self-end">Book this time</x-secondary-button>
+                            </li>
+                        @endforeach
+                    </ul>
+                @else
+                    <p class="my-4 px-4 text-red-800 dark:text-red-200">This date has no available meeting slots</p>
+                @endif
+            @endif
+        </div>
+    </div>
 
     <x-confirmation-modal wire:model="show_reserve_slot_confirmation_modal" :maxWidth="'xl'">
         <x-slot name="title">
