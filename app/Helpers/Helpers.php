@@ -6,7 +6,7 @@ use Carbon\Carbon;
 
 class Helpers
 {
-    public static function populate_time_slots(): array
+    public static function populate_time_slots($format = 'H:i'): array
     {
         $time_slots = [];
 
@@ -17,8 +17,8 @@ class Helpers
         while ($twelve_o_clock_am->lte($eleven_thirty_pm)) {
             $next_time = $twelve_o_clock_am->copy()->addMinutes(30);
             $time_slots[] = [
-                'start_time' => $twelve_o_clock_am->format('g:i A'),
-                'end_time' => $next_time->format('g:i A')
+                'start_time' => $twelve_o_clock_am->format($format),
+                'end_time' => $next_time->format($format)
             ];
             $twelve_o_clock_am->addMinutes(30);
         }

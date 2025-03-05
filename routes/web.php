@@ -3,9 +3,9 @@
 use App\Livewire\Announcements\AnnouncementDetail;
 use App\Livewire\Announcements\AnnouncementList;
 use App\Livewire\Homepage;
+use App\Livewire\Meetings\TeacherAvailabilitySlots;
 use App\Livewire\MyMeetings;
 use App\Livewire\NotificationList;
-use App\Livewire\ReservationCalendar;
 use App\Livewire\Settings\SecuritySettings;
 use App\Livewire\Settings\SettingsPage;
 use App\Livewire\Settings\TimeSettings;
@@ -25,7 +25,10 @@ Route::middleware([
 
     Route::get('/my-meetings', MyMeetings::class)->name('my-meetings');
     Route::get('/notifications', NotificationList::class)->name('notifications');
-    Route::get('/reservation-calendar', ReservationCalendar::class)->name('reservation-calendar');
+
+    Route::group(['prefix' => 'meetings', 'as' => 'meetings.'], function () {
+        Route::get('/availability', TeacherAvailabilitySlots::class)->name('availability');
+    });
 
     Route::group(['prefix' => 'announcements', 'as' => 'announcements.'], function () {
         Route::get('/', AnnouncementList::class)->name('index');

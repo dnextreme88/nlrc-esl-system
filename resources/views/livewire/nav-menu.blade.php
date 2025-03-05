@@ -25,8 +25,8 @@
 
                 @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::TEACHER->value]))
                     <div class="hidden space-x-8 md:flex md:-my-px md:ms-10">
-                        <x-nav-link wire:navigate href="{{ route('reservation-calendar') }}" :active="request()->routeIs('reservation-calendar')">
-                            {{ __('Reservation Calendar') }}
+                        <x-nav-link wire:navigate href="{{ route('meetings.availability') }}" :active="request()->routeIs('meetings.availability')">
+                            {{ __('Meeting Availability') }}
                         </x-nav-link>
                     </div>
                 @endif
@@ -159,8 +159,8 @@
 
         @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::TEACHER->value]))
             <div class="pt-2 pb-3 space-y-1">
-                <x-responsive-nav-link wire:navigate href="{{ route('reservation-calendar') }}" :active="request()->routeIs('reservation-calendar')">
-                    {{ __('Reservation Calendar') }}
+                <x-responsive-nav-link wire:navigate href="{{ route('meetings.availability') }}" :active="request()->routeIs('meetings.availability')">
+                    {{ __('Meeting Availability') }}
                 </x-responsive-nav-link>
             </div>
         @endif
