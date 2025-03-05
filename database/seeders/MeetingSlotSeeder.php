@@ -40,6 +40,9 @@ class MeetingSlotSeeder extends Seeder
                             'updated_at' => Carbon::now(),
                         ]);
                     }
+
+                    $meeting_slot->is_opened = 1;
+                    $meeting_slot->save();
                 }
             });
     }

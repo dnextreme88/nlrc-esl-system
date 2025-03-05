@@ -18,7 +18,7 @@ class MeetingSlot extends Model
         'end_time',
         'notes',
         'status',
-        'is_reserved',
+        'is_opened',
     ];
 
     public function meeting_slot_users(): BelongsToMany
