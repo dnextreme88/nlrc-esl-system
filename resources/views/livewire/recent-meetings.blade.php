@@ -28,7 +28,6 @@
                     :classes_container="'opacity-50 dark:opacity-25'"
                     :classes_date="'text-base'"
                     :end_time="$meeting->end_time"
-                    :meeting_date="$meeting->meeting_date"
                     :start_time="$meeting->start_time"
                 />
 

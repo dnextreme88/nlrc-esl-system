@@ -30,7 +30,6 @@
                     <x-meetings.date-with-time-section
                         :classes_date="'text-2xl font-semibold'"
                         :end_time="$meeting->end_time"
-                        :meeting_date="$meeting->meeting_date"
                         :start_time="$meeting->start_time"
                     />
                 </div>

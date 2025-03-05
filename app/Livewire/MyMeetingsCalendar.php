@@ -33,9 +33,9 @@ class MyMeetingsCalendar extends LivewireCalendar
 
                 $meetings[] = [
                     'id' => $slot->id,
-                    'title' => $slot->start_time. ' ~ ' .$slot->end_time,
+                    'title' => Carbon::parse($slot->start_time)->toUserTimezone()->format('H:i A'). ' ~ ' .Carbon::parse($slot->end_time)->toUserTimezone()->format('H:i A'),
                     'description' => count($students) > 0 ? $students : 'N/A',
-                    'date' => Carbon::parse($slot->meeting_date),
+                    'date' => Carbon::parse($slot->start_time)->toUserTimezone(),
                 ];
             }
         } else if ($user->role->name == Roles::STUDENT->value) {
@@ -46,9 +46,9 @@ class MyMeetingsCalendar extends LivewireCalendar
             foreach ($meetings_for_student as $slot) {
                 $meetings[] = [
                     'id' => $slot->meeting_slot->id,
-                    'title' => $slot->meeting_slot->start_time. ' ~ ' .$slot->meeting_slot->end_time,
+                    'title' => Carbon::parse($slot->meeting_slot->start_time)->toUserTimezone()->format('H:i A'). ' ~ ' .Carbon::parse($slot->meeting_slot->end_time)->toUserTimezone()->format('H:i A'),
                     'description' => $slot->meeting_slot->teacher->profile_photo_url,
-                    'date' => Carbon::parse($slot->meeting_slot->meeting_date),
+                    'date' => Carbon::parse($slot->meeting_slot->start_time)->toUserTimezone(),
                 ];
             }
         }
