@@ -10,16 +10,16 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "filament/filament": "^3.2",
-        "laravel/framework": "^11.31",
+        "filament/filament": "^3.3.3",
+        "laravel/framework": "^12.0.2",
         "laravel/jetstream": "^5.3.4",
         "laravel/reverb": "^1.0",
         "laravel/sanctum": "^4.0.8",
         "laravel/tinker": "^2.10.1",
-        "livewire/livewire": "^3.5.19",
+        "livewire/livewire": "^3.6.1",
         "masmerise/livewire-toaster": "^2.7",
         "njxqlus/filament-progressbar": "^1.1",
-        "omnia-digital/livewire-calendar": "^3.1",
+        "omnia-digital/livewire-calendar": "^3.2",
         "pusher/pusher-php-server": "^7.2"
     },
     "require-dev": {
