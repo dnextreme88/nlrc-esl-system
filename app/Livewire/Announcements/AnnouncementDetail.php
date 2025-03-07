@@ -3,6 +3,8 @@
 namespace App\Livewire\Announcements;
 
 use App\Models\Announcement;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class AnnouncementDetail extends Component
@@ -17,10 +19,14 @@ class AnnouncementDetail extends Component
 
     public function render()
     {
-        // TODO: TO ADD MODEL POLICIES SO THAT USERS WHO ARE SUPPOSED TO RECEIVE SPECIFIC ANNOUNCEMENTS
-        // CAN RECEIVE THEM INSTEAD OF LETTING THEM VIEW ALL ANNOUNCEMENTS
+        $user = User::findOrFail(Auth::user()->id);
+
         if ($this->current_announcement) {
-            return view('livewire.announcements.announcement-detail');
+            if ($user->cannot('view', $this->current_announcement)) {
+                abort(403);
+            } else {
+                return view('livewire.announcements.announcement-detail');
+            }
         } else {
             abort(404);
         }
