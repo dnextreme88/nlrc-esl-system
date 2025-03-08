@@ -19,7 +19,7 @@ class AnnouncementFactory extends Factory
 
         return [
             'user_id' => $random_admin->id,
-            'title' => $random_title,
+            'title' => ucfirst($random_title),
             'slug' => Str::slug($random_title, '-'),
             'description' => fake()->sentence(fake()->randomDigitNotNull()),
             'tags' => implode(',', fake()->words(3)),
