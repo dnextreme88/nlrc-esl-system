@@ -21,6 +21,11 @@ class MeetingSlot extends Model
         'is_opened',
     ];
 
+    public function getStudentsCountAttribute()
+    {
+        return $this->meeting_slot_users()->count();
+    }
+
     public function meeting_slot_users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'meeting_slot_users', 'meeting_slot_id', 'student_id')

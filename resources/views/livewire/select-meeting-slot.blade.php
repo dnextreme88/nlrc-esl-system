@@ -62,17 +62,11 @@
                                             <span class="text-xl text-green-600 dark:text-green-300">&rarr;</span>
                                             <span class="text-gray-800 dark:text-gray-200 {{ $student_already_reserved_in_slot ? 'line-through decoration-2 decoration-green-600 dark:decoration-green-300' : '' }}">{{ \Carbon\Carbon::parse($meeting_slot_time['start_time'])->toUserTimezone()->format('h:i A') }} ~ {{ \Carbon\Carbon::parse($meeting_slot_time['end_time'])->toUserTimezone()->format('h:i A') }}</span>
                                         </p>
-
-                                        @if (!$student_already_reserved_in_slot)
-                                            <p class="text-sm text-gray-600 dark:text-gray-300"># of students: {{ $meeting_slot_time->meeting_slot_users->count() }} / {{ $max_students_per_slot }}</p>
-                                        @endif
                                     </div>
 
                                     @if ($student_already_reserved_in_slot)
                                         <p class="text-base text-start text-gray-600 dark:text-gray-300 sm:text-sm sm:text-end">You already reserved this slot</p>
-                                    @elseif ($meeting_slot_time->meeting_slot_users->count() == $max_students_per_slot)
-                                        <p class="text-base text-start text-red-600 dark:text-red-300 sm:text-sm sm:text-end">This slot is full</p>
-                                    @elseif (!$student_already_reserved_in_slot)
+                                    @else
                                         <x-secondary-button
                                             wire:click="reserve_slot_modal('{{ $meeting_slot_time['start_time'] }}', '{{ $meeting_slot_time['end_time'] }}')"
                                             class="justify-self-start sm:justify-self-end"
