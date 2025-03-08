@@ -1,7 +1,7 @@
 <div>
     <h3 class="text-3xl text-gray-800 dark:text-gray-200">Recent Meetings</h3>
 
-    <div class="grid grid-cols-1 gap-2 md:gap-4 [&>*]:mx-2 [&>*]:my-4">
+    <div class="grid grid-cols-1 gap-2 md:gap-4 [&>*]:my-4">
         @forelse ($meetings as $meeting)
             @php
                 $color_classes;
@@ -23,7 +23,7 @@
                 }
             @endphp
 
-            <div class="grid grid-cols-1 md:grid-cols-2">
+            <div class="mx-2 grid grid-cols-[1fr_180px]">
                 <x-meetings.date-with-time-section
                     :classes_container="'opacity-50 dark:opacity-25'"
                     :classes_date="'text-base'"
@@ -36,7 +36,7 @@
                 </div>
             </div>
         @empty
-            <p class="text-gray-800 dark:text-gray-200 italic">You currently have no recent meetings.</p>
+            <p class="p-2 text-gray-800 dark:text-gray-200">You currently have no recent meetings.</p>
         @endforelse
     </div>
 </div>

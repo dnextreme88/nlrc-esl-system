@@ -109,7 +109,7 @@
                 "
                 class="bg-gray-200 dark:bg-gray-600 p-6"
             >
-                <p class="text-gray-800 dark:text-gray-200">You may toggle your availability starting the next day until the next 28 days based on your timezone. Times are saved in UTC but will be rendered in your respective timezone. Your current timezone is <strong>{{ Auth::user()->timezone }}</strong>. If this is not correct, please go to your <a class="text-green-600 dark:text-green-300 hover:underline" href="{{ route('settings.time') }}">settings and change it there</a>.</p>
+                <p class="text-gray-800 dark:text-gray-200">You may toggle your availability starting the next day until the next 28 days based on your timezone. Times are saved in UTC but will be rendered in your respective timezone. Your current timezone is <strong>{{ Auth::user()->timezone }}</strong>. If this is not correct, please go to your <a wire:navigate class="text-green-600 dark:text-green-300 hover:underline" href="{{ route('settings.time') }}">settings and change it there</a>.</p>
 
                 <div class="[&>*]:my-4 [&>*]:px-2 {{ $is_meeting_date_chosen ? 'border-b-2 border-gray-700' : '' }}">
                     <form wire:submit.prevent="show_available_times_for_selected_date">

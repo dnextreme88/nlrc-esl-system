@@ -1,7 +1,7 @@
 {{-- wire:ignore prevents refreshing this component so the active classes are not lost --}}
-<div class="px-10 py-20" wire:ignore>
+<div class="py-2 mx-4 sm:mx-0 mb-4 border-2 border-gray-300 dark:border-gray-600 md:mb-0 md:px-10 md:py-20 md:border-0" wire:ignore>
     <nav>
-        <ul class="space-y-4 [&>*]:flex [&>*]:items-center [&>*]:gap-4">
+        <ul class="flex space-x-4 px-3 md:px-0 md:space-y-6 md:flex-col md:space-x-0 [&>*]:flex [&>*]:items-center [&>*]:gap-4">
             <li>
                 <svg class="size-5 text-gray-800 dark:text-gray-200 {{ Request::routeIs('settings.user') ? 'fill-green-400 dark:fill-green-600' : '' }}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />

@@ -1,24 +1,26 @@
 <div>
     <h3 class="text-3xl text-gray-800 dark:text-gray-200">Reserve your slot</h3>
 
-    <p class="mx-2 my-4 text-gray-800 dark:text-gray-200">Pick a date and a time below to schedule a meeting with a teacher. Your current timezone is <strong>{{ Auth::user()->timezone }}</strong>. If this is not correct, please go to your <a class="text-green-600 dark:text-green-300 hover:underline" href="{{ route('settings.time') }}">settings and change it there</a>.</p>
+    <p class="mx-2 my-4 text-gray-800 dark:text-gray-200">Pick a date and a time below to schedule a meeting with a teacher. Your current timezone is <strong>{{ Auth::user()->timezone }}</strong>. If this is not correct, please go to your <a wire:navigate class="text-green-600 dark:text-green-300 hover:underline" href="{{ route('settings.time') }}">settings and change it there</a>.</p>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 [&>*]:my-4 [&>*]:px-2">
-        <form wire:submit.prevent="show_available_times_for_selected_date">
+        <form wire:submit.prevent="show_available_times_for_selected_date" class="grid grid-cols-1 md:grid-cols-[180px_1fr] items-center">
             <x-label is_required="true" value="{{ __('Meeting Date') }}" for="meeting_date" />
 
-            <x-select wire:model="meeting_date" name="meeting_date">
-                <option value="">Select a date</option>
-                @foreach ($possible_dates as $date)
-                    <option value="{{ \Carbon\Carbon::parse($date)->format('Y-m-d') }}">{{ \Carbon\Carbon::parse($date)->format('F d, Y') }}</option>
-                @endforeach
-            </x-select>
-
-            @error ('meeting_date')
-                <div class="text-red-500 text-sm mb-2">{{ $message }}</div>
-            @enderror
-
             <div>
+                <x-select wire:model="meeting_date" name="meeting_date">
+                    <option value="">Select a date</option>
+                    @foreach ($possible_dates as $date)
+                        <option value="{{ \Carbon\Carbon::parse($date)->format('Y-m-d') }}">{{ \Carbon\Carbon::parse($date)->format('F d, Y') }}</option>
+                    @endforeach
+                </x-select>
+
+                @error ('meeting_date')
+                    <div class="text-red-500 text-sm mb-2 hidden md:block">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="items-center col-span-1 md:col-span-2">
                 <x-button class="my-4 hover:cursor-pointer">
                     <span wire:loading.flex wire:target="show_available_times_for_selected_date" class="items-center">
                         <x-loading-indicator

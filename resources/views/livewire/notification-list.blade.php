@@ -72,7 +72,7 @@
                     --}}
                     @endif
                 @empty
-                    <p class="px-2 dark:text-gray-200">You have no notifications.</p>
+                    <p class="p-2 text-gray-800 dark:text-gray-200">You have no notifications.</p>
                 @endforelse
             </div>
         </div>

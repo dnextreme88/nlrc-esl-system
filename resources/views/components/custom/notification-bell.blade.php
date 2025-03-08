@@ -67,7 +67,7 @@
             --}}
             @endif
         @empty
-            <p class="p-2 text-sm dark:text-white">You have no notifications.</p>
+            <p class="p-2 text-sm text-gray-800 dark:text-gray-200">You have no notifications.</p>
         @endforelse
 
         @if (count($user_notifications) > 0)
