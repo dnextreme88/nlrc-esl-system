@@ -1,7 +1,7 @@
 <div>
     <h3 class="text-3xl text-gray-800 dark:text-gray-200">Recent Meetings</h3>
 
-    <div class="grid grid-cols-1 gap-2 md:gap-4 [&>*]:my-4">
+    <div class="grid grid-cols-1 gap-2 md:gap-4 *:my-4">
         @forelse ($meetings as $meeting)
             @php
                 $color_classes;

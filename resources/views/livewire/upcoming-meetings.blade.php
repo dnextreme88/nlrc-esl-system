@@ -3,7 +3,7 @@
 
     <x-action-message class="bg-green-200 dark:bg-green-800 py-2 px-4 mr-4" on="reserved-slot">You have successfully booked your slot!</x-action-message>
 
-    <div class="grid grid-cols-1 gap-2 md:gap-4 [&>*]:mx-2 [&>*]:my-4">
+    <div class="grid grid-cols-1 gap-2 md:gap-4 *:mx-2 *:my-4">
         @forelse ($meetings as $meeting)
             @php
                 $color_classes;

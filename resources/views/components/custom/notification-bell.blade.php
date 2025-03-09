@@ -6,7 +6,7 @@
 
 <x-dropdown align="right" width="64">
     <x-slot name="trigger">
-        <button class="flex items-center pt-0.5">
+        <button class="flex items-center pt-0.5 cursor-pointer">
             <x-heroicon-o-bell class="h-6 w-auto text-gray-900 hover:fill-gray-300 dark:text-gray-300 dark:hover:fill-gray-600" />
 
             <sup>

@@ -1,7 +1,7 @@
 <div>
     <h3 class="text-3xl text-gray-800 dark:text-gray-200">Announcements</h3>
 
-    <div class="[&>*]:my-4">
+    <div class="*:my-4">
         @if ($latest_announcement)
             <div class="my-2 indent-2">
                 <a
@@ -23,7 +23,7 @@
             <div class="my-4">
                 <h4 class="text-xl text-gray-800 dark:text-gray-200">Recent</h4>
 
-                <ul class="flex gap-2 flex-col mt-2 [&>*]:indent-2">
+                <ul class="flex gap-2 flex-col mt-2 *:indent-2">
                     @foreach ($recent_announcements as $recent_announcement)
                         <li>
                             <a

@@ -38,7 +38,7 @@
                 @if (Request::routeIs('home'))
                     <div class="h-8 bg-gray-100 dark:bg-gray-800">&nbsp;</div>
 
-                    <nav class="bg-gray-100 dark:bg-gray-800 top-0 sticky z-[1]">{{ $nav_menu }}</nav>
+                    <nav class="bg-gray-100 dark:bg-gray-800 top-0 sticky z-1">{{ $nav_menu }}</nav>
                 @else
                     <nav class="bg-gray-100 dark:bg-gray-800">{{ $nav_menu }}</nav>
                 @endif
@@ -46,7 +46,7 @@
 
             <!-- Page Heading -->
             @if (isset($header))
-                <header class="bg-white dark:bg-gray-800 shadow">
+                <header class="bg-white dark:bg-gray-800 shadow-sm">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>

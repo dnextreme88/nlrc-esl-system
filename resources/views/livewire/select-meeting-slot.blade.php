@@ -3,7 +3,7 @@
 
     <p class="mx-2 my-4 text-gray-800 dark:text-gray-200">Pick a date and a time below to schedule a meeting with a teacher. Your current timezone is <strong>{{ Auth::user()->timezone }}</strong>. If this is not correct, please go to your <a wire:navigate class="text-green-600 dark:text-green-300 hover:underline" href="{{ route('settings.time') }}">settings and change it there</a>.</p>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 [&>*]:my-4 [&>*]:px-2">
+    <div class="grid grid-cols-1 lg:grid-cols-2 *:my-4 *:px-2">
         <form wire:submit.prevent="show_available_times_for_selected_date" class="grid grid-cols-1 md:grid-cols-[180px_1fr] items-center">
             <x-label is_required="true" value="{{ __('Meeting Date') }}" for="meeting_date" />
 
@@ -51,7 +51,7 @@
                     @if ($available_meeting_slots_time->isNotEmpty())
                         <h4 class="text-lg text-gray-800 dark:text-gray-200">Available time slots for {{ \Carbon\Carbon::parse($meeting_date)->format('F j, Y') }}</h4>
 
-                        <ul class="[&>*]:py-4">
+                        <ul class="*:py-4">
                             @foreach ($available_meeting_slots_time as $meeting_slot_time)
                                 @php
                                     $student_already_reserved_in_slot = $meeting_slot_time->meeting_slot_users->pluck('id')
