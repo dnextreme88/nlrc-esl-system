@@ -64,5 +64,7 @@
         @livewireCalendarScripts
         @vite('resources/js/app.js')
         @stack('modals')
+
+        <x-toaster-hub />
     </body>
 </html>
