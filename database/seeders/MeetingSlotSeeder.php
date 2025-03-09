@@ -8,7 +8,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
-class MeetingSlotsSeeder extends Seeder
+class MeetingSlotSeeder extends Seeder
 {
     public function run(): void
     {
@@ -40,6 +40,9 @@ class MeetingSlotsSeeder extends Seeder
                             'updated_at' => Carbon::now(),
                         ]);
                     }
+
+                    $meeting_slot->is_opened = 1;
+                    $meeting_slot->save();
                 }
             });
     }

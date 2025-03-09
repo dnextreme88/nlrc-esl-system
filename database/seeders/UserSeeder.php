@@ -15,6 +15,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $genders = array_column(Genders::cases(), 'value');
+        $sample_timezones = ['Asia/Colombo', 'Asia/Manila', 'UTC'];
         $default_pass = Hash::make('password');
 
         User::insert([
@@ -25,6 +26,7 @@ class UserSeeder extends Seeder
                 'email' => 'admin@test.com',
                 'date_of_birth' => Carbon::today()->subYears(rand(18, 35))->subMonths(rand(0, 12))->subDays(rand(1, 28)),
                 'gender' => $genders[array_rand($genders)],
+                'timezone' => fake()->randomElement($sample_timezones),
                 'password' => $default_pass,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -36,39 +38,7 @@ class UserSeeder extends Seeder
                 'email' => 'head@test.com',
                 'date_of_birth' => Carbon::today()->subYears(rand(18, 35))->subMonths(rand(0, 12))->subDays(rand(1, 28)),
                 'gender' => $genders[array_rand($genders)],
-                'password' => $default_pass,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-            [
-                'role_id' => Role::where('name', Roles::STUDENT->value)->first()->id,
-                'first_name' => Roles::STUDENT->value. ' 1',
-                'last_name' => 'User',
-                'email' => 'student@test.com',
-                'date_of_birth' => Carbon::today()->subYears(rand(18, 35))->subMonths(rand(0, 12))->subDays(rand(1, 28)),
-                'gender' => $genders[array_rand($genders)],
-                'password' => $default_pass,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-            [
-                'role_id' => Role::where('name', Roles::STUDENT->value)->first()->id,
-                'first_name' => Roles::STUDENT->value. ' 2',
-                'last_name' => 'User',
-                'email' => 'student2@test.com',
-                'date_of_birth' => Carbon::today()->subYears(rand(18, 35))->subMonths(rand(0, 12))->subDays(rand(1, 28)),
-                'gender' => $genders[array_rand($genders)],
-                'password' => $default_pass,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-            [
-                'role_id' => Role::where('name', Roles::STUDENT->value)->first()->id,
-                'first_name' => Roles::STUDENT->value. ' 3',
-                'last_name' => 'User',
-                'email' => 'student3@test.com',
-                'date_of_birth' => Carbon::today()->subYears(rand(18, 35))->subMonths(rand(0, 12))->subDays(rand(1, 28)),
-                'gender' => $genders[array_rand($genders)],
+                'timezone' => fake()->randomElement($sample_timezones),
                 'password' => $default_pass,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -80,10 +50,15 @@ class UserSeeder extends Seeder
                 'email' => 'teacher@test.com',
                 'date_of_birth' => Carbon::today()->subYears(rand(18, 35))->subMonths(rand(0, 12))->subDays(rand(1, 28)),
                 'gender' => $genders[array_rand($genders)],
+                'timezone' => fake()->randomElement($sample_timezones),
                 'password' => $default_pass,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
         ]);
+
+        User::factory()->count(3)
+            ->students()
+            ->create();
     }
 }

@@ -2,6 +2,22 @@
 
 An English as a Second Language (ESL) system built for Zeldan Nordic Languages Review Center using the TALL stack (Tailwind, Alpine, Laravel, and Livewire).
 
+## Useful commands
+1. Run server
+``php artisan serve``
+
+2. Run Vite
+``npm run dev``
+
+3. Listen to Laravel events
+``php artisan queue:listen``
+
+4. Start Laravel Reverb WebSocket server
+``php artisan reverb:start``
+
+5. Clear cache and optimize files
+``php artisan optimize:clear``
+
 ## TODOS NOTES (draft)
 - According to Ms. Jan Claire, textbooks / courses -> has lessons. this one is important and probably a must have in the system
 - Certifications are issued to students who completed the ESL course. Certificate printing with PDF (may have to use Kendo UI package?)

@@ -8,6 +8,6 @@ class UserSettings extends Component
 {
     public function render()
     {
-        return view('livewire.settings.user-settings')->layout('components.layouts.settings');
+        return view('livewire.settings.user-settings');
     }
 }

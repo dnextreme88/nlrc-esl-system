@@ -1,55 +1,91 @@
 <div>
-    <h3 class="text-3xl text-gray-600 dark:text-gray-400">Reserve your slot</h3>
+    <h3 class="text-3xl text-gray-800 dark:text-gray-200">Reserve your slot</h3>
 
-    <form wire:submit.prevent="show_available_times_for_selected_date" class="my-4 px-4">
-        <x-label is_required="true" value="{{ __('Meeting Date') }}" for="meeting_date" />
+    <p class="mx-2 my-4 text-gray-800 dark:text-gray-200">Pick a date and a time below to schedule a meeting with a teacher. Your current timezone is <strong>{{ Auth::user()->timezone }}</strong>. If this is not correct, please go to your <a wire:navigate class="text-green-600 dark:text-green-300 hover:underline" href="{{ route('settings.time') }}">settings and change it there</a>.</p>
 
-        <x-select wire:model="meeting_date" name="meeting_date">
-            <option value="">Select a date</option>
-            @foreach ($possible_dates as $date)
-                <option value="{{ $date['db_format'] }}">{{ $date['view_format'] }}</option>
-            @endforeach
-        </x-select>
+    <div class="grid grid-cols-1 lg:grid-cols-2 [&>*]:my-4 [&>*]:px-2">
+        <form wire:submit.prevent="show_available_times_for_selected_date" class="grid grid-cols-1 md:grid-cols-[180px_1fr] items-center">
+            <x-label is_required="true" value="{{ __('Meeting Date') }}" for="meeting_date" />
 
-        @error ('meeting_date')
-            <div class="text-red-500 text-sm mb-2">{{ $message }}</div>
-        @enderror
+            <div>
+                <x-select wire:model="meeting_date" name="meeting_date">
+                    <option value="">Select a date</option>
+                    @foreach ($possible_dates as $date)
+                        <option value="{{ \Carbon\Carbon::parse($date)->format('Y-m-d') }}">{{ \Carbon\Carbon::parse($date)->format('F d, Y') }}</option>
+                    @endforeach
+                </x-select>
+
+                @error ('meeting_date')
+                    <div class="text-red-500 text-sm mb-2 hidden md:block">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="items-center col-span-1 md:col-span-2">
+                <x-button class="my-4 hover:cursor-pointer">
+                    <span wire:loading.flex wire:target="show_available_times_for_selected_date" class="items-center">
+                        <x-loading-indicator
+                            :loader_color_bg="'fill-gray-200 dark:fill-gray-800'"
+                            :loader_color_spin="'fill-gray-200 dark:fill-gray-800'"
+                            :show_text="false"
+                            :size="4"
+                        />
+                    </span>
+
+                    <span class="ml-2">Show time slots</span>
+                </x-button>
+            </div>
+        </form>
 
         <div>
-            <x-button class="my-4 hover:cursor-pointer">
-                <span wire:loading.flex wire:target="show_available_times_for_selected_date" class="items-center">
-                    <x-loading-indicator
-                        :loader_color_bg="'fill-gray-200 dark:fill-gray-800'"
-                        :loader_color_spin="'fill-gray-200 dark:fill-gray-800'"
-                        :show_text="false"
-                        :size="4"
-                    />
+            <span wire:loading.flex wire:target="show_available_times_for_selected_date" class="items-center">
+                <x-loading-indicator
+                    :loader_color_bg="'fill-gray-800 dark:fill-gray-200'"
+                    :loader_color_spin="'fill-gray-800 dark:fill-gray-200'"
+                    :text="'Showing time slots'"
+                    :size="4"
+                />
+            </span>
 
-                    <span class="ml-2">Showing time slots</span>
-                </span>
+            <div wire:loading.remove wire:target="show_available_times_for_selected_date">
+                @if ($is_meeting_date_chosen)
+                    @if ($available_meeting_slots_time->isNotEmpty())
+                        <h4 class="text-lg text-gray-800 dark:text-gray-200">Available time slots for {{ \Carbon\Carbon::parse($meeting_date)->format('F j, Y') }}</h4>
 
-                <span wire:loading.remove wire:target="show_available_times_for_selected_date">Show time slots</span>
-            </x-button>
-        </div>
-    </form>
+                        <ul class="[&>*]:py-4">
+                            @foreach ($available_meeting_slots_time as $meeting_slot_time)
+                                @php
+                                    $student_already_reserved_in_slot = $meeting_slot_time->meeting_slot_users->pluck('id')
+                                        ->first(fn ($user_id) => $user_id == Auth::user()->id);
+                                @endphp
 
-    @if ($is_meeting_date_chosen)
-        @if (count($available_meeting_slots_time) > 0)
-            <h4 class="text-2xl text-gray-800 dark:text-gray-200">Available time slots for {{ \Carbon\Carbon::parse($meeting_date)->format('F j, Y') }}</h4>
+                                <li class="px-4 items-center grid grid-cols-1 gap-3 sm:grid-cols-2 lg:px-2">
+                                    <div>
+                                        <p>
+                                            <span class="text-xl text-green-600 dark:text-green-300">&rarr;</span>
+                                            <span class="text-gray-800 dark:text-gray-200 {{ $student_already_reserved_in_slot ? 'line-through decoration-2 decoration-green-600 dark:decoration-green-300' : '' }}">{{ \Carbon\Carbon::parse($meeting_slot_time['start_time'])->toUserTimezone()->format('h:i A') }} ~ {{ \Carbon\Carbon::parse($meeting_slot_time['end_time'])->toUserTimezone()->format('h:i A') }}</span>
+                                        </p>
+                                    </div>
 
-            <div class="[&>*]:py-4">
-                @foreach ($available_meeting_slots_time as $meeting_slot_time)
-                    <div class="flex items-center justify-between px-4">
-                        <p class="text-gray-800 dark:text-gray-200">Duration: {{ $meeting_slot_time['start_time'] }} ~ {{ $meeting_slot_time['end_time'] }}</p> 
-                        
-                        <x-secondary-button wire:click="reserve_slot_modal('{{ $meeting_slot_time['start_time'] }}', '{{ $meeting_slot_time['end_time'] }}')">Book this time</x-secondary-button>
-                    </div>
-                @endforeach
+                                    @if ($student_already_reserved_in_slot)
+                                        <p class="text-base text-start text-gray-600 dark:text-gray-300 sm:text-sm sm:text-end">You already reserved this slot</p>
+                                    @else
+                                        <x-secondary-button
+                                            wire:click="reserve_slot_modal('{{ $meeting_slot_time['start_time'] }}', '{{ $meeting_slot_time['end_time'] }}')"
+                                            class="justify-self-start sm:justify-self-end"
+                                        >
+                                            Book this time
+                                        </x-secondary-button>
+                                    @endif
+                                </li>
+                            @endforeach
+                        </ul>
+                    @else
+                        <p class="px-4 text-red-800 dark:text-red-200">This date has no available meeting slots.</p>
+                    @endif
+                @endif
             </div>
-        @else
-            <p class="my-4 px-4 text-red-800 dark:text-red-200">This date has no available meeting slots</p>
-        @endif
-    @endif
+        </div>
+    </div>
 
     <x-confirmation-modal wire:model="show_reserve_slot_confirmation_modal" :maxWidth="'xl'">
         <x-slot name="title">
@@ -63,7 +99,10 @@
         <x-slot name="content">
             <p>Are you sure you want to book this time? Please confirm your meeting details below:</p>
 
-            <p class="font-semibold mt-2">{{ \Carbon\Carbon::parse($meeting_date)->format('l, F, j Y') }} at {{ $start_time }} ~ {{ $end_time }}</p>
+            <p class="mt-2">
+                <span class="text-xl text-green-600 dark:text-green-300">&rarr;</span>
+                <span class="font-semibold text-gray-600 dark:text-gray-300">{{ \Carbon\Carbon::parse($start_time)->toUserTimezone()->format('l, F, j Y') }}: {{ \Carbon\Carbon::parse($start_time)->toUserTimezone()->format('h:i A') }} ~ {{ \Carbon\Carbon::parse($end_time)->toUserTimezone()->format('h:i A') }}</span>
+            </p>
         </x-slot>
 
         <x-slot name="footer">

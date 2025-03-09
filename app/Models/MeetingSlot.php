@@ -18,8 +18,13 @@ class MeetingSlot extends Model
         'end_time',
         'notes',
         'status',
-        'is_reserved',
+        'is_opened',
     ];
+
+    public function getStudentsCountAttribute()
+    {
+        return $this->meeting_slot_users()->count();
+    }
 
     public function meeting_slot_users(): BelongsToMany
     {

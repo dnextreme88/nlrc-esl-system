@@ -2,6 +2,10 @@
 
 namespace App\Models;
 
+use App\Enums\Roles;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasName;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,7 +18,7 @@ use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser, HasName
 {
     use HasFactory;
     use HasProfilePhoto;
@@ -33,7 +37,10 @@ class User extends Authenticatable
         'last_name',
         'email',
         'date_of_birth',
+        'is_active',
         'gender',
+        'timezone',
+        'notification_settings',
         'password',
         'profile_photo_path',
     ];
@@ -68,6 +75,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'notification_settings' => 'array',
             'password' => 'hashed',
         ];
     }
@@ -80,6 +88,16 @@ class User extends Authenticatable
     public function meeting_slots(): HasMany
     {
         return $this->hasMany(MeetingSlotUser::class);
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->role->name == Roles::ADMIN->value;
+    }
+
+    public function getFilamentName(): string
+    {
+        return $this->last_name. ', ' .$this->first_name. ' ' .$this->middle_name;
     }
 
     public function profilePhotoUrl(): Attribute

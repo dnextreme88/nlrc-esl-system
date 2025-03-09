@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('end_time', 64);
             $table->string('notes', 255)->nullable();
             $table->string('status')->default(MeetingStatuses::PENDING->value);
-            $table->boolean('is_reserved')->default(1);
+            $table->boolean('is_opened')->default(1);
             $table->timestamps();
         });
     }

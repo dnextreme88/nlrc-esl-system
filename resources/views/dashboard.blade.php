@@ -1,6 +1,6 @@
 <x-layouts.master>
     <x-slot name="nav_menu">
-        <x-navigation-menu />
+        <livewire:NavMenu />
     </x-slot>
 
     <x-slot name="header">
@@ -19,21 +19,26 @@
 
     <div class="py-12">
         <div class="w-full mx-auto sm:px-6 lg:px-8">
-            <div class="bg-gray-100 dark:bg-gray-700 overflow-hidden shadow-xl sm:rounded-lg">
-                @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::STUDENT->value, \App\Enums\Roles::TEACHER->value]))
-                    <div class="ms-4 mb-6 col-span-4 [&>*]:py-4">
-                        <livewire:upcoming-meetings />
-                    </div>
-                @endif
-
+            <div class="grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-2 [&>*]:p-4 [&>*]:sm:rounded-lg">
                 @if (Auth::user()->role->name == \App\Enums\Roles::STUDENT->value)
-                    <div class="ms-4 mb-6 col-span-4 [&>*]:py-4">
+                    <div class="bg-gray-200 dark:bg-gray-600 shadow-md shadow-gray-500 col-span-2">
                         <livewire:select-meeting-slot />
                     </div>
                 @endif
 
-                {{-- TODO: Separate these as individual components --}}
-                <x-welcome />
+                @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::STUDENT->value, \App\Enums\Roles::TEACHER->value]))
+                    <div class="bg-gray-200 dark:bg-gray-600 shadow-md shadow-gray-500 {{ Auth::user()->role->name == \App\Enums\Roles::STUDENT->value ? 'col-span-2 lg:col-span-1' : '' }}">
+                        <livewire:upcoming-meetings />
+                    </div>
+
+                    <div class="bg-gray-200 dark:bg-gray-600 shadow-md shadow-gray-500 {{ Auth::user()->role->name == \App\Enums\Roles::STUDENT->value ? 'col-span-2 lg:col-span-1' : '' }}">
+                        <livewire:recent-meetings />
+                    </div>
+                @endif
+
+                <div class="bg-gray-200 dark:bg-gray-600 shadow-md shadow-gray-500 {{ Auth::user()->role->name == \App\Enums\Roles::STUDENT->value ? 'col-span-2 lg:col-span-1' : '' }}">
+                    <livewire:announcements.mini-announcements />
+                </div>
             </div>
         </div>
     </div>

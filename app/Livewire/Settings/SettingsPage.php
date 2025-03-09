@@ -8,6 +8,6 @@ class SettingsPage extends Component
 {
     public function render()
     {
-        return view('livewire.settings.settings-page')->layout('components.layouts.settings');
+        return view('livewire.settings.settings-page');
     }
 }

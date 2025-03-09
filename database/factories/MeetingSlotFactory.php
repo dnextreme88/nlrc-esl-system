@@ -11,7 +11,7 @@ class MeetingSlotFactory extends Factory
 {
     public function definition(): array
     {
-        $time_slots = Helpers::populate_time_slots();
+        $time_slots = Helpers::populate_time_slots('H:i:s');
 
         $random_teacher = User::whereHas('role', fn ($query) => $query->where('name', Roles::HEAD_TEACHER->value)
             ->orWhere('name', Roles::TEACHER->value)
@@ -19,13 +19,13 @@ class MeetingSlotFactory extends Factory
             ->inRandomOrder()
             ->first();
         $random_time = fake()->randomElement($time_slots);
+        $random_date = fake()->dateTimeBetween('now', '+7 days')->format('Y-m-d');
 
         return [
             'teacher_id' => $random_teacher->id,
-            'meeting_date' => fake()->dateTimeBetween('now', '+7 days')->format('Y-m-d'),
-            'start_time' => $random_time['start_time'],
-            'end_time' => $random_time['end_time'],
-            'is_reserved' => fake()->boolean(100),
+            'meeting_date' => $random_date,
+            'start_time' => $random_date. ' ' .$random_time['start_time'],
+            'end_time' => $random_date. ' ' .$random_time['end_time'],
         ];
     }
 }

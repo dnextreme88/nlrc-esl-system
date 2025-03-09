@@ -12,7 +12,8 @@ class DatabaseSeeder extends Seeder
             ProgressionLevelSeeder::class,
             RoleSeeder::class,
             UserSeeder::class,
-            MeetingSlotsSeeder::class,
+            MeetingSlotSeeder::class,
+            AnnouncementSeeder::class,
         ]);
     }
 }

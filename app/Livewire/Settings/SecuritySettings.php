@@ -8,6 +8,6 @@ class SecuritySettings extends Component
 {
     public function render()
     {
-        return view('livewire.settings.security-settings')->layout('components.layouts.settings');
+        return view('livewire.settings.security-settings');
     }
 }

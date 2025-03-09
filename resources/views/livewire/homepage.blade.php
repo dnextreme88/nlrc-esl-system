@@ -1,7 +1,7 @@
 <div>
     <x-slot name="nav_menu">
         @auth
-            <x-navigation-menu />
+            <livewire:NavMenu />
         @else
             <nav class="flex justify-between items-center gap-3 p-4">
                 <div>
