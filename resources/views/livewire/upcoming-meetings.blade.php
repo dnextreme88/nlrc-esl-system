@@ -1,8 +1,6 @@
 <div>
     <h3 class="text-3xl text-gray-800 dark:text-gray-200">Upcoming Meetings</h3>
 
-    <x-action-message class="bg-green-200 dark:bg-green-800 py-2 px-4 mr-4" on="reserved-slot">You have successfully booked your slot!</x-action-message>
-
     <div class="grid grid-cols-1 gap-2 md:gap-4 *:mx-2 *:my-4">
         @forelse ($meetings as $meeting)
             @php
@@ -55,7 +53,7 @@
                 <div class="flex justify-between items-center border-b-2 border-b-gray-200">
                     <h3 class="text-2xl text-gray-800 dark:text-gray-200">Cancel Meeting Form</h3>
 
-                    <button wire:click="$toggle('show_cancel_meeting_modal')" class="text-xl p-4 text-gray-800 dark:text-gray-200">&times;</button>
+                    <button wire:click="$toggle('show_cancel_meeting_modal')" class="text-xl p-4 text-gray-800 dark:text-gray-200 hover:cursor-pointer">&times;</button>
                 </div>
 
                 <p class="my-6 text-gray-700 dark:text-gray-400"><strong>Note:</strong> Cancelling a meeting will incur a penalty.</p>
@@ -96,7 +94,7 @@
                 <div class="flex justify-between items-center border-b-2 border-b-gray-200">
                     <h3 class="text-2xl text-gray-800 dark:text-gray-200">Reschedule Meeting Form</h3>
 
-                    <button wire:click="$toggle('show_reschedule_meeting_modal')" class="text-xl p-4 text-gray-800 dark:text-gray-200">&times;</button>
+                    <button wire:click="$toggle('show_reschedule_meeting_modal')" class="text-xl p-4 text-gray-800 dark:text-gray-200 hover:cursor-pointer">&times;</button>
                 </div>
 
                 <p class="my-6 text-gray-700 dark:text-gray-400"><strong>Note:</strong> Reschedule this meeting at a later date. Every meeting lasts for 30 minutes.</p>

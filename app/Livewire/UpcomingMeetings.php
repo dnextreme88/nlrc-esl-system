@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Masmerise\Toaster\Toaster;
 
 class UpcomingMeetings extends Component
 {
@@ -23,13 +24,6 @@ class UpcomingMeetings extends Component
     public $reschedule_new_start_time;
     public $reschedule_reason = '';
     public $start_times = [];
-
-    protected $listeners = ['reserved-slot' => 'dispatch_update_meetings'];
-
-    public function dispatch_update_meetings() // Dispatched from another component and to be shown on this component
-    {
-        $this->dispatch('reserved-slot');
-    }
 
     public function cancel_meeting_modal($meeting_slot_id)
     {
@@ -53,6 +47,7 @@ class UpcomingMeetings extends Component
         $this->reset();
         $this->show_cancel_meeting_modal = false;
 
+        Toaster::success('You have successfully cancelled your meeting!');
         $this->dispatch('cancelled-meeting');
     }
 
@@ -83,6 +78,7 @@ class UpcomingMeetings extends Component
         $this->reset();
         $this->show_reschedule_meeting_modal = false;
 
+        Toaster::success('You have successfully rescheduled your meeting!');
         $this->dispatch('rescheduled-meeting');
     }
 
