@@ -1,15 +1,15 @@
 @props(['id', 'maxWidth'])
 
 @php
-$id = $id ?? md5($attributes->wire('model'));
+    $id = $id ?? md5($attributes->wire('model'));
 
-$maxWidth = [
-    'sm' => 'sm:max-w-sm',
-    'md' => 'sm:max-w-md',
-    'lg' => 'sm:max-w-lg',
-    'xl' => 'sm:max-w-xl',
-    '2xl' => 'sm:max-w-2xl',
-][$maxWidth ?? '2xl'];
+    $maxWidth = [
+        'sm' => 'sm:max-w-sm',
+        'md' => 'sm:max-w-md',
+        'lg' => 'sm:max-w-lg',
+        'xl' => 'sm:max-w-xl',
+        '2xl' => 'sm:max-w-2xl',
+    ][$maxWidth ?? '2xl'];
 @endphp
 
 <div
@@ -18,7 +18,7 @@ $maxWidth = [
     x-on:keydown.escape.window="show = false"
     x-show="show"
     id="{{ $id }}"
-    class="jetstream-modal fixed inset-0 -overflow-y-auto px-4 py-6 z-50 bg-black bg-opacity-25 dark:bg-opacity-50 sm:px-0"
+    class="jetstream-modal fixed inset-0 -overflow-y-auto px-4 py-6 z-50 bg-gray-200/50 dark:bg-gray-800/50 sm:px-0"
     style="display: none;"
 >
     <div x-show="show" x-on:click="show = false" class="inset-0 transform transition-all"
