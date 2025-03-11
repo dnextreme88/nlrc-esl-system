@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('progression_levels', function (Blueprint $table) {
+        Schema::create('proficiencies', function (Blueprint $table) {
             $table->id();
-            $table->tinyInteger('level');
+            $table->string('level_code', 16);
             $table->string('name', 64);
             $table->string('description', 128);
             $table->timestamps();
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('progression_levels');
+        Schema::dropIfExists('proficiencies');
     }
 };
