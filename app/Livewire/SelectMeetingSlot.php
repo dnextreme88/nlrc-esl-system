@@ -5,13 +5,12 @@ namespace App\Livewire;
 use App\Enums\MeetingStatuses;
 use App\Models\MeetingSlot;
 use App\Models\MeetingSlotUser;
-use App\Models\User;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Masmerise\Toaster\Toaster;
 
 class SelectMeetingSlot extends Component
 {
@@ -54,6 +53,7 @@ class SelectMeetingSlot extends Component
             $this->meeting_date = null;
             $this->is_meeting_date_chosen = false;
 
+            Toaster::success('You have successfully booked your slot!');
             $this->dispatch('reserved-slot');
         }
     }

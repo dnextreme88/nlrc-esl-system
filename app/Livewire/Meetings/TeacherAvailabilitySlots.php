@@ -10,6 +10,7 @@ use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Masmerise\Toaster\Toaster;
 
 class TeacherAvailabilitySlots extends Component
 {
@@ -40,9 +41,10 @@ class TeacherAvailabilitySlots extends Component
         }
 
         // Reset
-        $this->meeting_date = '';
+        $this->meeting_date = null;
         $this->is_meeting_date_chosen = false;
 
+        Toaster::success('You have successfully updated your availabilities!');
         $this->dispatch('updated-reserved-slots');
     }
 

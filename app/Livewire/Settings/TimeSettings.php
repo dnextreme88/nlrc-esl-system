@@ -7,6 +7,7 @@ use DateTimeZone;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Masmerise\Toaster\Toaster;
 
 class TimeSettings extends Component
 {
@@ -30,6 +31,7 @@ class TimeSettings extends Component
     {
         $this->user->update(['timezone' => $this->timezone]);
 
+        Toaster::success('Your timezone is now updated!');
         $this->dispatch('timezone-settings-updated');
     }
 

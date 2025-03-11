@@ -38,10 +38,6 @@
 
                             <x-input-error class="mt-2" for="timezone" />
                         </div>
-
-                        <x-action-message class="block me-3" on="timezone-settings-updated">
-                            {{ __('Timezone settings updated.') }}
-                        </x-action-message>
                     </x-slot>
 
                     <x-slot name="actions">

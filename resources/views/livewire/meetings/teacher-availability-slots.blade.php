@@ -53,7 +53,7 @@
 
                         // Fill days from previous month
                         for (let i = firstDay - 1; i >= 0; i--) {
-                            calendarDays.push(`<div class='text-gray-400 p-2 text-center border rounded'>${prevMonthDays - i}</div>`);
+                            calendarDays.push(`<div class='text-gray-400 p-2 text-center border rounded-sm'>${prevMonthDays - i}</div>`);
                         }
 
                         // Fill days from current month
@@ -64,9 +64,9 @@
                                 (isCurrentMonth && this.dateTomorrow.getDate() < day) ||
                                 (!isCurrentMonth && endHighlight.getDate() > day)
                             ) {
-                                markup = `<div class='p-2 text-center border rounded cursor-pointer hover:bg-blue-200'>${day}</div>`;
+                                markup = `<div class='p-2 text-center border rounded-sm cursor-pointer hover:bg-blue-200'>${day}</div>`;
                             } else {
-                                markup = `<div class='text-gray-400 p-2 text-center border rounded'>${day}</div>`
+                                markup = `<div class='text-gray-400 p-2 text-center border rounded-sm'>${day}</div>`
                             }
 
                             calendarDays.push(markup);
@@ -77,7 +77,7 @@
                         let nextMonthSelectable = new Date(year, month + 1, 1) <= endHighlight;
 
                         for (let i = 1; i <= remainingCells; i++) {
-                            calendarDays.push(`<div class='text-gray-400 p-2 text-center border rounded'>${i}</div>`);
+                            calendarDays.push(`<div class='text-gray-400 p-2 text-center border rounded-sm'>${i}</div>`);
                         }
 
                         calendar.innerHTML = calendarDays.join('');
@@ -111,7 +111,7 @@
             >
                 <p class="text-gray-800 dark:text-gray-200">You may toggle your availability starting the next day until the next 28 days based on your timezone. Times are saved in UTC but will be rendered in your respective timezone. Your current timezone is <strong>{{ Auth::user()->timezone }}</strong>. If this is not correct, please go to your <a wire:navigate class="text-green-600 dark:text-green-300 hover:underline" href="{{ route('settings.time') }}">settings and change it there</a>.</p>
 
-                <div class="[&>*]:my-4 [&>*]:px-2 {{ $is_meeting_date_chosen ? 'border-b-2 border-gray-700' : '' }}">
+                <div class="*:my-4 *:px-2 {{ $is_meeting_date_chosen ? 'border-b-2 border-gray-700' : '' }}">
                     <form wire:submit.prevent="show_available_times_for_selected_date">
                         <div>
                             <x-label is_required="true" value="{{ __('Meeting Date') }}" for="meeting_date" />
@@ -156,7 +156,7 @@
                             <button
                                 x-ref="prevButton"
                                 x-on:click="prevMonth"
-                                class="hidden p-2 bg-gray-300 rounded hover:bg-gray-400"
+                                class="hidden p-2 bg-gray-300 rounded-sm hover:bg-gray-400"
                                 id="prev"
                             >&larr;</button>
 
@@ -170,7 +170,7 @@
                             <button
                                 x-ref="nextButton"
                                 x-on:click="nextMonth"
-                                class="p-2 bg-gray-300 rounded hover:bg-gray-400"
+                                class="p-2 bg-gray-300 rounded-sm hover:bg-gray-400"
                                 id="next"
                             >&rarr;</button>
                         </div>
@@ -264,7 +264,7 @@
 
                                                         <span
                                                             x-bind:class="{'translate-x-5': toggleSlot, 'translate-x-0': !toggleSlot}"
-                                                            class="pointer-events-none relative inline-block size-5 translate-x-0 transform rounded-full bg-white ring-0 shadow-sm transition duration-200 ease-in-out"
+                                                            class="pointer-events-none relative inline-block size-5 translate-x-0 transform rounded-full bg-white ring-0 shadow-xs transition duration-200 ease-in-out"
                                                         >
                                                             <span
                                                                 x-bind:class="{'opacity-0 duration-100 ease-out': toggleSlot, 'opacity-100 duration-200 ease-in': !toggleSlot}"
@@ -351,7 +351,7 @@
 
                                                         <span
                                                             x-bind:class="{'translate-x-5': toggleSlot, 'translate-x-0': !toggleSlot}"
-                                                            class="pointer-events-none relative inline-block size-5 translate-x-0 transform rounded-full bg-white ring-0 shadow-sm transition duration-200 ease-in-out"
+                                                            class="pointer-events-none relative inline-block size-5 translate-x-0 transform rounded-full bg-white ring-0 shadow-xs transition duration-200 ease-in-out"
                                                         >
                                                             <span
                                                                 x-bind:class="{'opacity-0 duration-100 ease-out': toggleSlot, 'opacity-100 duration-200 ease-in': !toggleSlot}"
@@ -392,7 +392,7 @@
                                 @if (count($available_meeting_slots_time) > 0)
                                     <h4 class="text-lg text-gray-800 dark:text-gray-200">Available time slots for {{ \Carbon\Carbon::parse($meeting_date)->format('F j, Y') }}</h4>
 
-                                    <ul class="[&>*]:py-4">
+                                    <ul class="*:py-4">
                                         @foreach ($available_meeting_slots_time as $meeting_slot_time)
                                             <li class="px-4 items-center grid grid-cols-1 gap-3 sm:grid-cols-2 lg:px-2">
                                                 <p>
