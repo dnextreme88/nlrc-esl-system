@@ -221,9 +221,9 @@
                                                 x-data="{ toggleSlot: {{ $has_existing_slot && $has_existing_slot['is_opened'] == 1 ? 'true' : 'false' }} }"
                                                 class="grid grid-cols-1 place-items-center py-2"
                                             >
-                                                @if ($has_existing_slot && $has_existing_slot['meeting_slot_users']->isNotEmpty())
+                                                @if ($has_existing_slot && $has_existing_slot['meeting_slots_users']->isNotEmpty())
                                                     @php
-                                                        $as_array = $has_existing_slot['meeting_slot_users']->toArray();
+                                                        $as_array = $has_existing_slot['meeting_slots_users']->toArray();
                                                     @endphp
 
                                                     <div class="flex -space-x-2">
@@ -308,9 +308,9 @@
                                                 x-data="{ toggleSlot: {{ $has_existing_slot && $has_existing_slot['is_opened'] == 1 ? 'true' : 'false' }} }"
                                                 class="grid grid-cols-1 place-items-center py-2"
                                             >
-                                                @if ($has_existing_slot && $has_existing_slot['meeting_slot_users']->isNotEmpty())
+                                                @if ($has_existing_slot && $has_existing_slot['meeting_slots_users']->isNotEmpty())
                                                     @php
-                                                        $as_array = $has_existing_slot['meeting_slot_users']->toArray();
+                                                        $as_array = $has_existing_slot['meeting_slots_users']->toArray();
                                                     @endphp
 
                                                     <div class="flex -space-x-2">

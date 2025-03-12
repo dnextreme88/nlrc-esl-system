@@ -4,7 +4,7 @@ namespace App\Livewire;
 
 use App\Enums\Roles;
 use App\Models\MeetingSlot;
-use App\Models\MeetingSlotUser;
+use App\Models\MeetingSlotsUser;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -19,14 +19,14 @@ class MyMeetingsCalendar extends LivewireCalendar
 
         if (in_array($user->role->name, [Roles::HEAD_TEACHER->value, Roles::TEACHER->value])) {
             $meetings_for_teacher = MeetingSlot::where('teacher_id', $user->id)
-                ->whereHas('meeting_slot_users')
+                ->whereHas('meeting_slots_users')
                 ->get();
 
             foreach ($meetings_for_teacher as $slot) {
                 $students = [];
 
-                if (count($slot['meeting_slot_users']) > 0) {
-                    foreach ($slot['meeting_slot_users'] as $student) {
+                if (count($slot['meeting_slots_users']) > 0) {
+                    foreach ($slot['meeting_slots_users'] as $student) {
                         $students[] = $student->profile_photo_url;
                     }
                 }
@@ -39,7 +39,7 @@ class MyMeetingsCalendar extends LivewireCalendar
                 ];
             }
         } else if ($user->role->name == Roles::STUDENT->value) {
-            $meetings_for_student = MeetingSlotUser::where('student_id', $user->id)
+            $meetings_for_student = MeetingSlotsUser::where('student_id', $user->id)
                 ->whereHas('meeting_slot')
                 ->get();
 

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class MeetingSlotUser extends Model
+class MeetingSlotsUser extends Model
 {
     protected $fillable = [
         'meeting_slot_id',

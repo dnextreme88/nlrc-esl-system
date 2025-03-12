@@ -4,7 +4,7 @@ namespace App\Livewire;
 
 use App\Enums\MeetingStatuses;
 use App\Models\MeetingSlot;
-use App\Models\MeetingSlotUser;
+use App\Models\MeetingSlotsUser;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Auth;
@@ -43,7 +43,7 @@ class SelectMeetingSlot extends Component
         if ($random_meeting_slot->isNotEmpty()) {
             $random_meeting_slot = $random_meeting_slot->random();
 
-            $random_meeting_slot->meeting_slot_users()->attach($random_meeting_slot->id, [
+            $random_meeting_slot->meeting_slots_users()->attach($random_meeting_slot->id, [
                 'student_id' => Auth::user()->id,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -75,8 +75,8 @@ class SelectMeetingSlot extends Component
 
         $meeting_slot_ids = $available_meeting_slots_time->pluck('id');
 
-        $booked_meeting_slots = MeetingSlotUser::select(['meeting_slot_users.meeting_slot_id AS id', 'meeting_slots.start_time'])->whereIn('meeting_slot_id', $meeting_slot_ids)->where('student_id', Auth::user()->id)
-            ->join('meeting_slots', 'meeting_slot_users.meeting_slot_id', 'meeting_slots.id')
+        $booked_meeting_slots = MeetingSlotsUser::select(['meeting_slots_users.meeting_slot_id AS id', 'meeting_slots.start_time'])->whereIn('meeting_slot_id', $meeting_slot_ids)->where('student_id', Auth::user()->id)
+            ->join('meeting_slots', 'meeting_slots_users.meeting_slot_id', 'meeting_slots.id')
             ->get();
 
         $modified_available_meeting_slots_time = $available_meeting_slots_time;

@@ -56,14 +56,14 @@ class TeacherAvailabilitySlots extends Component
 
         $this->meeting_slots = MeetingSlot::where('teacher_id', Auth::user()->id)
             ->where('status', MeetingStatuses::PENDING->value)
-            ->with('meeting_slot_users')
+            ->with('meeting_slots_users')
             ->get()
             ->filter(function ($val) use ($meeting_date) {
                 return Carbon::parse($val['start_time'])->toUserTimezone()->format('Y-m-d') == $meeting_date;
             });
 
         $this->count_pending_reserved_slots = count($this->meeting_slots->filter(fn ($val) =>
-            $val['is_opened'] == 1 && $val['meeting_slot_users']->isEmpty()
+            $val['is_opened'] == 1 && $val['meeting_slots_users']->isEmpty()
         ));
 
         $this->is_meeting_date_chosen = true;

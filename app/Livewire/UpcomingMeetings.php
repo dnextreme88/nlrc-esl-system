@@ -6,7 +6,7 @@ use App\Enums\MeetingStatuses;
 use App\Enums\Roles;
 use App\Helpers\Helpers;
 use App\Models\MeetingSlot;
-use App\Models\MeetingSlotUser;
+use App\Models\MeetingSlotsUser;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
@@ -94,12 +94,12 @@ class UpcomingMeetings extends Component
             $this->meetings = MeetingSlot::select(['id', 'meeting_date', 'start_time', 'end_time', 'status'])->where('teacher_id', $user->id)
                 ->where('meeting_date', '>', Carbon::today()->format('Y-m-d'))
                 ->whereIn('status', [MeetingStatuses::CANCELLED->value, MeetingStatuses::PENDING->value])
-                ->whereHas('meeting_slot_users')
+                ->whereHas('meeting_slots_users')
                 ->orderBy('meeting_date', 'ASC')
                 ->orderBy('start_time', 'ASC')
                 ->get();
         } else if ($user->role->name == Roles::STUDENT->value) {
-            $this->meetings = MeetingSlotUser::select(['ms.id', 'ms.meeting_date', 'ms.start_time', 'ms.end_time', 'ms.status'])->join('meeting_slots AS ms', 'meeting_slot_users.meeting_slot_id', 'ms.id')
+            $this->meetings = MeetingSlotsUser::select(['ms.id', 'ms.meeting_date', 'ms.start_time', 'ms.end_time', 'ms.status'])->join('meeting_slots AS ms', 'meeting_slots_users.meeting_slot_id', 'ms.id')
                 ->where('student_id', $user->id)
                 ->where('ms.meeting_date', '>', Carbon::today()->format('Y-m-d'))
                 ->whereIn('status', [MeetingStatuses::CANCELLED->value, MeetingStatuses::PENDING->value])

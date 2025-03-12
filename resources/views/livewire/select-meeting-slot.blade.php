@@ -54,7 +54,7 @@
                         <ul class="*:py-4">
                             @foreach ($available_meeting_slots_time as $meeting_slot_time)
                                 @php
-                                    $student_already_reserved_in_slot = $meeting_slot_time->meeting_slot_users->pluck('id')
+                                    $student_already_reserved_in_slot = $meeting_slot_time->meeting_slots_users->pluck('id')
                                         ->first(fn ($user_id) => $user_id == Auth::user()->id);
                                 @endphp
 

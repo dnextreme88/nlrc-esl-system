@@ -23,12 +23,12 @@ class MeetingSlot extends Model
 
     public function getStudentsCountAttribute()
     {
-        return $this->meeting_slot_users()->count();
+        return $this->meeting_slots_users()->count();
     }
 
-    public function meeting_slot_users(): BelongsToMany
+    public function meeting_slots_users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'meeting_slot_users', 'meeting_slot_id', 'student_id')
+        return $this->belongsToMany(User::class, 'meeting_slots_users', 'meeting_slot_id', 'student_id')
             ->withTimestamps();
     }
 

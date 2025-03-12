@@ -22,7 +22,7 @@ class MeetingSlotSeeder extends Seeder
                         ->inRandomOrder()
                         ->first();
 
-                    $meeting_slot->meeting_slot_users()->attach($meeting_slot->id, [
+                    $meeting_slot->meeting_slots_users()->attach($meeting_slot->id, [
                         'student_id' => $random_student->id,
                         'created_at' => Carbon::now(),
                         'updated_at' => Carbon::now(),
@@ -34,7 +34,7 @@ class MeetingSlotSeeder extends Seeder
                             ->inRandomOrder()
                             ->first();
 
-                        $meeting_slot->meeting_slot_users()->attach($meeting_slot->id, [
+                        $meeting_slot->meeting_slots_users()->attach($meeting_slot->id, [
                             'student_id' => $another_random_student->id,
                             'created_at' => Carbon::now(),
                             'updated_at' => Carbon::now(),
