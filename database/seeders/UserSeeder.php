@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Enums\Genders;
 use App\Enums\Roles;
+use App\Models\Proficiency;
 use App\Models\Role;
 use App\Models\User;
 use Carbon\Carbon;
@@ -57,8 +58,34 @@ class UserSeeder extends Seeder
             ],
         ]);
 
-        User::factory()->count(3)
-            ->students()
-            ->create();
+        User::factory(3)->students()
+            ->create()
+            ->each(function ($user, $index) {
+                // Logic to populate proficiencies of students
+                $first_proficiency_id = Proficiency::select(['id'])->first()
+                    ->id;
+                $last_proficiency_id = Proficiency::select(['id'])->latest()
+                    ->first()
+                    ->id;
+
+                $random_number = rand($first_proficiency_id, $last_proficiency_id);
+
+                $user->proficiencies_users()->attach($user->id, [
+                    'proficiency_id' => $random_number,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ]);
+
+                if ($random_number < 5) { // Add another proficiency if the first one isn't a C1/C2 mastery yet
+                    $another_random_proficiency = Proficiency::where('id', '>', $random_number)->inRandomOrder()
+                        ->first();
+
+                    $user->proficiencies_users()->attach($user->id, [
+                        'proficiency_id' => $another_random_proficiency->id,
+                        'created_at' => Carbon::now()->addDays(28),
+                        'updated_at' => Carbon::now()->addDays(28),
+                    ]);
+                }
+            });
     }
 }
