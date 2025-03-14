@@ -22,8 +22,8 @@ return new class extends Migration
             $table->date('date_of_birth');
             $table->boolean('is_active')->default(1);
             $table->string('gender', 16);
-            $table->string('password');
             $table->string('profile_photo_path', 2048)->nullable();
+            $table->string('password');
             $table->rememberToken();
             $table->timestamps();
         });
