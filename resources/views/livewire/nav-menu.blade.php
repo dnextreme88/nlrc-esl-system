@@ -21,6 +21,12 @@
                             {{ __('My Meetings') }}
                         </x-nav-link>
                     </div>
+
+                    <div class="hidden space-x-8 md:flex md:-my-px md:ms-10">
+                        <x-nav-link wire:navigate href="{{ route('modules.index') }}" :active="request()->routeIs('modules.index')">
+                            {{ __('My Modules') }}
+                        </x-nav-link>
+                    </div>
                 @endif
 
                 @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::TEACHER->value]))
@@ -153,6 +159,12 @@
             <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link wire:navigate href="{{ route('my-meetings') }}" :active="request()->routeIs('my-meetings')">
                     {{ __('My Meetings') }}
+                </x-responsive-nav-link>
+            </div>
+
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link wire:navigate href="{{ route('modules.index') }}" :active="request()->routeIs('modules.index')">
+                    {{ __('My Modules') }}
                 </x-responsive-nav-link>
             </div>
         @endif

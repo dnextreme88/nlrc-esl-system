@@ -5,6 +5,8 @@ use App\Livewire\Announcements\AnnouncementList;
 use App\Livewire\Homepage;
 use App\Livewire\Meetings\TeacherAvailabilitySlots;
 use App\Livewire\MyMeetings;
+use App\Livewire\Modules\ModuleDetail;
+use App\Livewire\Modules\ModuleList;
 use App\Livewire\NotificationList;
 use App\Livewire\Settings\SecuritySettings;
 use App\Livewire\Settings\SettingsPage;
@@ -28,6 +30,11 @@ Route::middleware([
 
     Route::group(['prefix' => 'meetings', 'as' => 'meetings.'], function () {
         Route::get('/availability', TeacherAvailabilitySlots::class)->name('availability');
+    });
+
+    Route::group(['prefix' => 'modules', 'as' => 'modules.'], function () {
+        Route::get('/', ModuleList::class)->name('index');
+        Route::get('/{id}-{slug}', ModuleDetail::class)->name('detail');
     });
 
     Route::group(['prefix' => 'announcements', 'as' => 'announcements.'], function () {
