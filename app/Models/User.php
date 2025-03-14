@@ -81,6 +81,11 @@ class User extends Authenticatable implements FilamentUser, HasName
         ];
     }
 
+    public function modules(): HasMany
+    {
+        return $this->hasMany(ModulesStudent::class);
+    }
+
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
