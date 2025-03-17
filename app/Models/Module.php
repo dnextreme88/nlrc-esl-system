@@ -18,7 +18,7 @@ class Module extends Model
         'description',
     ];
 
-    public function module(): BelongsTo
+    public function proficiency(): BelongsTo
     {
         return $this->belongsTo(Proficiency::class);
     }
