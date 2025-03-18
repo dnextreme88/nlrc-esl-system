@@ -3,6 +3,9 @@
 An English as a Second Language (ESL) system built for Zeldan Nordic Languages Review Center using the TALL stack (Tailwind, Alpine, Laravel, and Livewire).
 
 ## Useful commands
+
+With the release of Laravel 12, item #s 1 - 3 are now run with a single command `composer run dev` by default.
+
 1. Run server
 ``php artisan serve``
 
@@ -18,8 +21,14 @@ An English as a Second Language (ESL) system built for Zeldan Nordic Languages R
 5. Clear cache and optimize files
 ``php artisan optimize:clear``
 
+### Some personal suggestions / personal todos not covered in other sections
+- [ ] Add notification event to notify teachers that their `meeting_slot` was selected and booked by a student. Also, add a way for the teachers to set a meeting_link (GMeet, Zoom etc.). We can also send an email to the teacher's email to notify them about this.
+- [ ] Comments system on a unit detail page? Students may be able to ask for help and teachers may respond etc.
+- [ ] Ratings system on a unit detail page? Just to make the app a little more reactive and lively. We could also show these to the user dashboard whatever units the student has already rated etc.
+
 ## TODOS NOTES (draft)
 - [ ] According to Ms. Jan Claire, textbooks / courses -> has lessons. this one is important and probably a must have in the system
+- [ ] Add ability to "register" teacher accounts in Admin Panel
 - [ ] Certifications are issued to students who completed the ESL course. Certificate printing with PDF (may have to use Kendo UI package?)
 - [x] Duration of booking of schedules: 30 minutes (25 minutes can be strategized by the teacher)
 - [ ] Feedback/Meeting remarks (new table?) - a system that lets teachers make comments to the student after a meeting has been conducted (more like a survey that gives them feedback)
@@ -28,9 +37,7 @@ An English as a Second Language (ESL) system built for Zeldan Nordic Languages R
 - [ ] May implement trial classes (not affordable?)
 - [ ] Project name to be decided
 - [ ] Purpose of stand-by teachers, if the student doesn't adhere to their "desired" schedule, they can join a meeting with a random teacher whose available at that time.
-- [ ] ~~Registrations are for student accounts~~ while instructor accounts are created in admin panel (use Filament package)
 - [x] Schedule between teacher and student
-- [ ] Students can pick a slot from available teachers but based on whose teachers can teach a specific level of progression (eg. if a student passes up to Intermediate level, the list of teachers that should show up will be teachers who can teach up to Advanced level)
 - [ ] Students have to pay before using the app (might use Laravel Spark / Laravel Cashier?). Payment can be made for: 1 month. If student has no money, they cannot book a schedule.
 - [ ] Hierarchy of modules (unsure):
   * modules
