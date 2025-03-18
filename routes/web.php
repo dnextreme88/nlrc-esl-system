@@ -12,6 +12,7 @@ use App\Livewire\Settings\SecuritySettings;
 use App\Livewire\Settings\SettingsPage;
 use App\Livewire\Settings\TimeSettings;
 use App\Livewire\Settings\UserSettings;
+use App\Livewire\Modules\Units\UnitDetail;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', Homepage::class)->name('home');
@@ -35,6 +36,7 @@ Route::middleware([
     Route::group(['prefix' => 'modules', 'as' => 'modules.'], function () {
         Route::get('/', ModuleList::class)->name('index');
         Route::get('/{id}-{slug}', ModuleDetail::class)->name('detail');
+        Route::get('/{id}-{slug}/units/{unit_id}-{unit_slug}', UnitDetail::class)->name('unit_detail');
     });
 
     Route::group(['prefix' => 'announcements', 'as' => 'announcements.'], function () {
