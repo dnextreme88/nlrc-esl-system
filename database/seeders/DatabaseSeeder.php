@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
             ProficiencySeeder::class,
             RoleSeeder::class,
             ModuleSeeder::class,
+            UnitSeeder::class,
             UserSeeder::class,
             MeetingSlotSeeder::class,
             AnnouncementSeeder::class,
