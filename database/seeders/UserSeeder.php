@@ -40,11 +40,13 @@ class UserSeeder extends Seeder
         User::factory(2)->teachers()
             ->state(new Sequence(
                 [
+                    'role_id' => 2,
                     'first_name' => Roles::HEAD_TEACHER->value,
                     'last_name' => 'User',
                     'email' => 'head@test.com',
                 ],
                 [
+                    'role_id' => 4,
                     'first_name' => Roles::TEACHER->value,
                     'last_name' => 'User',
                     'email' => 'teacher@test.com',
