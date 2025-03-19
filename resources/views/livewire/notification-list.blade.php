@@ -35,9 +35,8 @@
                                         {{ strip_tags(\Illuminate\Support\Str::limit($notification['description'], '128', ' (...)')) }}
                                     </p>
 
-                                    {{-- TODO: To parse based on user's timezone --}}
                                     <small class="mt-3 dark:text-gray-400">
-                                        {{ \Carbon\Carbon::parse($notification['created_at'])->diffForHumans(\Carbon\Carbon::now(), [
+                                        {{ \Carbon\Carbon::parse($notification['created_at'])->toUserTimezone()->diffForHumans(\Carbon\Carbon::now()->toUserTimezone(), [
                                             'syntax' => \Carbon\CarbonInterface::DIFF_RELATIVE_TO_NOW,
                                             'options' => \Carbon\Carbon::JUST_NOW | \Carbon\Carbon::NO_ZERO_DIFF | \Carbon\Carbon::ONE_DAY_WORDS
                                         ]) }}
@@ -62,7 +61,7 @@
                                 </div>
 
                                 <small class="block mt-2 dark:text-slate-400">
-                                    {{ \Carbon\Carbon::parse($notification->created_at)->diffForHumans(\Carbon\Carbon::now(), [
+                                    {{ \Carbon\Carbon::parse($notification->created_at)->toUserTimezone()->diffForHumans(\Carbon\Carbon::now()->toUserTimezone(), [
                                         'syntax' => \Carbon\CarbonInterface::DIFF_RELATIVE_TO_NOW,
                                         'options' => \Carbon\Carbon::JUST_NOW | \Carbon\Carbon::NO_ZERO_DIFF | \Carbon\Carbon::ONE_DAY_WORDS
                                     ]) }}
