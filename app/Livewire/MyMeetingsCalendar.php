@@ -3,9 +3,9 @@
 namespace App\Livewire;
 
 use App\Enums\Roles;
+use App\Helpers\Helpers;
 use App\Models\MeetingSlot;
 use App\Models\MeetingSlotsUser;
-use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Omnia\LivewireCalendar\LivewireCalendar;
@@ -33,9 +33,9 @@ class MyMeetingsCalendar extends LivewireCalendar
 
                 $meetings[] = [
                     'id' => $slot->id,
-                    'title' => Carbon::parse($slot->start_time)->toUserTimezone()->format('H:i A'). ' ~ ' .Carbon::parse($slot->end_time)->toUserTimezone()->format('H:i A'),
+                    'title' => Helpers::parse_time_to_user_timezone($slot->start_time)->format('H:i A'). ' ~ ' .Helpers::parse_time_to_user_timezone($slot->end_time)->format('H:i A'),
                     'description' => count($students) > 0 ? $students : 'N/A',
-                    'date' => Carbon::parse($slot->start_time)->toUserTimezone(),
+                    'date' => Helpers::parse_time_to_user_timezone($slot->start_time),
                 ];
             }
         } else if ($user->role->name == Roles::STUDENT->value) {
@@ -46,9 +46,9 @@ class MyMeetingsCalendar extends LivewireCalendar
             foreach ($meetings_for_student as $slot) {
                 $meetings[] = [
                     'id' => $slot->meeting_slot->id,
-                    'title' => Carbon::parse($slot->meeting_slot->start_time)->toUserTimezone()->format('H:i A'). ' ~ ' .Carbon::parse($slot->meeting_slot->end_time)->toUserTimezone()->format('H:i A'),
+                    'title' => Helpers::parse_time_to_user_timezone($slot->meeting_slot->start_time)->format('H:i A'). ' ~ ' .Helpers::parse_time_to_user_timezone($slot->meeting_slot->end_time)->format('H:i A'),
                     'description' => $slot->meeting_slot->teacher->profile_photo_url,
-                    'date' => Carbon::parse($slot->meeting_slot->start_time)->toUserTimezone(),
+                    'date' => Helpers::parse_time_to_user_timezone($slot->meeting_slot->start_time),
                 ];
             }
         }

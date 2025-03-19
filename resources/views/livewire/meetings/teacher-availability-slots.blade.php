@@ -210,7 +210,7 @@
                                     @foreach (array_slice($time_slots, 0, 24) as $time_slot_left_side)
                                         @php
                                             $has_existing_slot = $meeting_slots->first(function ($val) use ($time_slot_left_side) {
-                                                return \Carbon\Carbon::parse($val['start_time'])->toUserTimezone()->format('H:i:s') == $time_slot_left_side['start_time'];
+                                                return Helpers::parse_time_to_user_timezone($val['start_time'])->format('H:i:s') == $time_slot_left_side['start_time'];
                                             });
                                         @endphp
 
@@ -297,7 +297,7 @@
                                     @foreach (array_slice($time_slots, 24) as $time_slot_right_side)
                                         @php
                                             $has_existing_slot = $meeting_slots->first(function ($val) use ($time_slot_right_side) {
-                                                return \Carbon\Carbon::parse($val['start_time'])->toUserTimezone()->format('H:i:s') == $time_slot_right_side['start_time'];
+                                                return Helpers::parse_time_to_user_timezone($val['start_time'])->format('H:i:s') == $time_slot_right_side['start_time'];
                                             });
                                         @endphp
 

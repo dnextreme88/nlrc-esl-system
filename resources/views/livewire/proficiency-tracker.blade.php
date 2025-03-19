@@ -21,7 +21,7 @@
                 <div class="grid grid-cols-1 items-center md:grid-cols-[minmax(10%,_21%)_1fr] md:col-span-2 lg:col-span-1 lg:block lg:items-start">
                     <h3 class="text-gray-800 dark:text-gray-200 text-2xl font-semibold">Achieved on</h4>
 
-                    <span class="text-sm text-gray-600 dark:text-gray-400 md:text-xl lg:text-sm">{{ \Carbon\Carbon::parse($student_proficiency->created_at)->toUserTimezone()->format('M d, Y g:i A') }}</span>
+                    <span class="text-sm text-gray-600 dark:text-gray-400 md:text-xl lg:text-sm">{{ Helpers::parse_time_to_user_timezone($student_proficiency->created_at)->format('M d, Y g:i A') }}</span>
                 </div>
             </div>
         @endforeach

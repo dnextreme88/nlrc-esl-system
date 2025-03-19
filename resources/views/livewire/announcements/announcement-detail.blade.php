@@ -21,10 +21,10 @@
                 </ul>
             @endif
 
-            <p class="mt-4 text-gray-600 dark:text-gray-400 text-xs sm:text-sm">Posted by {{ $current_announcement->user->first_name }} {{ $current_announcement->user->last_name }} on <span class="font-bold">{{ \Carbon\Carbon::parse($current_announcement['created_at'])->toUserTimezone()->format('D, M j, Y \a\t g:i A') }}</span></p>
+            <p class="mt-4 text-gray-600 dark:text-gray-400 text-xs sm:text-sm">Posted by {{ $current_announcement->user->first_name }} {{ $current_announcement->user->last_name }} on <span class="font-bold">{{ Helpers::parse_time_to_user_timezone($current_announcement['created_at'])->format('D, M j, Y \a\t g:i A') }}</span></p>
 
             @if ($current_announcement['created_at'] != $current_announcement['updated_at'])
-                <p class="text-gray-600 dark:text-gray-400 text-xs sm:text-sm">Updated on <span class="font-bold">{{ \Carbon\Carbon::parse($current_announcement['updated_at'])->toUserTimezone()->format('D, M j, Y \a\t g:i A') }}</span></p>
+                <p class="text-gray-600 dark:text-gray-400 text-xs sm:text-sm">Updated on <span class="font-bold">{{ Helpers::parse_time_to_user_timezone($current_announcement['updated_at'])->format('D, M j, Y \a\t g:i A') }}</span></p>
             @endif
 
             <div class="mt-4 dark:text-gray-400">{!! Markdown::parse($current_announcement['description']) !!}</div>

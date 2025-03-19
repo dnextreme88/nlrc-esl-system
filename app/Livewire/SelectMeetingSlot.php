@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Enums\MeetingStatuses;
+use App\Helpers\Helpers;
 use App\Models\MeetingSlot;
 use App\Models\MeetingSlotsUser;
 use Carbon\Carbon;
@@ -70,7 +71,7 @@ class SelectMeetingSlot extends Component
             ->orderBy('start_time', 'ASC')
             ->get()
             ->filter(function ($meeting_slot) use ($meeting_date) {
-                return Carbon::parse($meeting_slot['start_time'])->toUserTimezone()->format('Y-m-d') == $meeting_date;
+                return Helpers::parse_time_to_user_timezone($meeting_slot['start_time'])->format('Y-m-d') == $meeting_date;
             });
 
         $meeting_slot_ids = $available_meeting_slots_time->pluck('id');

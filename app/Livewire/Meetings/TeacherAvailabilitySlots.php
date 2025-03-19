@@ -59,7 +59,7 @@ class TeacherAvailabilitySlots extends Component
             ->with('meeting_slots_users')
             ->get()
             ->filter(function ($val) use ($meeting_date) {
-                return Carbon::parse($val['start_time'])->toUserTimezone()->format('Y-m-d') == $meeting_date;
+                return Helpers::parse_time_to_user_timezone($val['start_time'])->format('Y-m-d') == $meeting_date;
             });
 
         $this->count_pending_reserved_slots = count($this->meeting_slots->filter(fn ($val) =>
