@@ -25,7 +25,7 @@ class AnnouncementPolicy
             ->where('data->announcement_id', $announcement->id)
             ->first();
 
-        return $user_has_announcement ? true : false;
+        return $user_has_announcement || $user->role->name == Roles::ADMIN->value ? true : false;
     }
 
     public function create(User $user): bool

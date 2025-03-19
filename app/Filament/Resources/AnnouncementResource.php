@@ -325,10 +325,8 @@ class AnnouncementResource extends Resource
                             ->label('Email'),
                         TextEntry::make('user.role.name')
                             ->label('Role'),
-                        /* TODO: TIMEZONE FIELD TO BE IMPLEMENTED
                         TextEntry::make('user.timezone')
                             ->label('Timezone')
-                        */
                     ])
                     ->columns(2)
             ]);
