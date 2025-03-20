@@ -30,6 +30,8 @@ class TimeSettings extends Component
 
     public function update_timezone_settings()
     {
+        $this->validate(['timezone' => ['required']]);
+
         $this->user->update(['timezone' => $this->timezone]);
 
         Toaster::success('Your timezone is now updated!');
