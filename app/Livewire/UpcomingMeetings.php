@@ -92,19 +92,19 @@ class UpcomingMeetings extends Component
 
         if (in_array($user->role->name, [Roles::HEAD_TEACHER->value, Roles::TEACHER->value])) {
             $this->meetings = MeetingSlot::select(['id', 'meeting_date', 'start_time', 'end_time', 'status'])->where('teacher_id', $user->id)
-                ->where('meeting_date', '>', Carbon::today()->format('Y-m-d'))
                 ->whereIn('status', [MeetingStatuses::CANCELLED->value, MeetingStatuses::PENDING->value])
                 ->whereHas('meeting_slots_users')
-                ->orderBy('meeting_date', 'ASC')
-                ->orderBy('start_time', 'ASC')
+                ->getMeetingDates('future')
+                ->orderMeetings('ASC')
+                ->limit(5)
                 ->get();
         } else if ($user->role->name == Roles::STUDENT->value) {
             $this->meetings = MeetingSlotsUser::select(['ms.id', 'ms.meeting_date', 'ms.start_time', 'ms.end_time', 'ms.status'])->join('meeting_slots AS ms', 'meeting_slots_users.meeting_slot_id', 'ms.id')
                 ->where('student_id', $user->id)
-                ->where('ms.meeting_date', '>', Carbon::today()->format('Y-m-d'))
                 ->whereIn('status', [MeetingStatuses::CANCELLED->value, MeetingStatuses::PENDING->value])
-                ->orderBy('ms.meeting_date', 'ASC')
-                ->orderBy('start_time', 'ASC')
+                ->getMeetingDates('future')
+                ->orderMeetings('ASC')
+                ->limit(5)
                 ->get();
         }
 
