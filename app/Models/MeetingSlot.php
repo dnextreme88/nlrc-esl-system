@@ -15,6 +15,7 @@ class MeetingSlot extends Model
 
     protected $fillable = [
         'teacher_id',
+        'meeting_uuid',
         'meeting_date',
         'start_time',
         'end_time',

@@ -8,6 +8,7 @@ use App\Helpers\Helpers;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Ramsey\Uuid\Uuid;
 
 class MeetingSlotFactory extends Factory
 {
@@ -33,6 +34,7 @@ class MeetingSlotFactory extends Factory
 
         return [
             'teacher_id' => $random_teacher->id,
+            'meeting_uuid' => Uuid::uuid4()->toString(),
             'meeting_date' => $random_date,
             'start_time' => $random_date. ' ' .$random_time['start_time'],
             'end_time' => $random_date. ' ' .$random_time['end_time'],

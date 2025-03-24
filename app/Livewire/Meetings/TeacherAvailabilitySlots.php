@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Masmerise\Toaster\Toaster;
+use Ramsey\Uuid\Uuid;
 
 class TeacherAvailabilitySlots extends Component
 {
@@ -32,6 +33,7 @@ class TeacherAvailabilitySlots extends Component
             MeetingSlot::updateOrCreate(
                 [
                     'teacher_id' => Auth::user()->id,
+                    'meeting_uuid' => Uuid::uuid4()->toString(),
                     'meeting_date' => Carbon::parse($start_times[$index], Auth::user()->timezone)->setTimezone('UTC')->format('Y-m-d'),
                     'start_time' => Carbon::parse($start_times[$index], Auth::user()->timezone)->setTimezone('UTC')->format('Y-m-d H:i:s'),
                     'end_time' => Carbon::parse($end_times[$index], Auth::user()->timezone)->setTimezone('UTC')->format('Y-m-d H:i:s'),
