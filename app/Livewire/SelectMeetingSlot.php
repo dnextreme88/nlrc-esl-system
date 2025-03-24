@@ -34,6 +34,9 @@ class SelectMeetingSlot extends Component
 
     public function reserve_slot()
     {
+        dump($this->meeting_date);
+        dump($this->start_time);
+        dump($this->end_time);
         // Assign to a random meeting slot if there are multiple teachers who has the same meeting date and times
         $random_meeting_slot = MeetingSlot::select(['id', 'start_time', 'end_time'])->where('meeting_date', $this->meeting_date)
             ->where('start_time', $this->start_time)

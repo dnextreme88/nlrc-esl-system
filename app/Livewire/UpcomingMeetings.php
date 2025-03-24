@@ -91,7 +91,7 @@ class UpcomingMeetings extends Component
         $user = Auth::user();
 
         if (in_array($user->role->name, [Roles::HEAD_TEACHER->value, Roles::TEACHER->value])) {
-            $this->meetings = MeetingSlot::select(['id', 'meeting_date', 'start_time', 'end_time', 'status'])->where('teacher_id', $user->id)
+            $this->meetings = MeetingSlot::select(['id', 'meeting_uuid', 'meeting_date', 'start_time', 'end_time', 'status'])->where('teacher_id', $user->id)
                 ->whereIn('status', [MeetingStatuses::CANCELLED->value, MeetingStatuses::PENDING->value])
                 ->whereHas('meeting_slots_users')
                 ->getMeetingDates('future')
@@ -99,7 +99,7 @@ class UpcomingMeetings extends Component
                 ->limit(5)
                 ->get();
         } else if ($user->role->name == Roles::STUDENT->value) {
-            $this->meetings = MeetingSlotsUser::select(['ms.id', 'ms.meeting_date', 'ms.start_time', 'ms.end_time', 'ms.status'])->join('meeting_slots AS ms', 'meeting_slots_users.meeting_slot_id', 'ms.id')
+            $this->meetings = MeetingSlotsUser::select(['ms.id', 'ms.meeting_uuid', 'ms.meeting_date', 'ms.start_time', 'ms.end_time', 'ms.status'])->join('meeting_slots AS ms', 'meeting_slots_users.meeting_slot_id', 'ms.id')
                 ->where('student_id', $user->id)
                 ->whereIn('status', [MeetingStatuses::CANCELLED->value, MeetingStatuses::PENDING->value])
                 ->getMeetingDates('future')

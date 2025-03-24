@@ -3,6 +3,7 @@
 use App\Livewire\Announcements\AnnouncementDetail;
 use App\Livewire\Announcements\AnnouncementList;
 use App\Livewire\Homepage;
+use App\Livewire\Meetings\MeetingDetail;
 use App\Livewire\Meetings\TeacherAvailabilitySlots;
 use App\Livewire\MyMeetings;
 use App\Livewire\Modules\ModuleDetail;
@@ -30,6 +31,7 @@ Route::middleware([
     Route::get('/notifications', NotificationList::class)->name('notifications');
 
     Route::group(['prefix' => 'meetings', 'as' => 'meetings.'], function () {
+        Route::get('/details/{meeting_uuid}', MeetingDetail::class)->name('detail');
         Route::get('/availability', TeacherAvailabilitySlots::class)->name('availability');
     });
 
