@@ -2,9 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Enums\MeetingStatuses;
 use App\Enums\Roles;
 use App\Helpers\Helpers;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class MeetingSlotFactory extends Factory
@@ -19,13 +21,22 @@ class MeetingSlotFactory extends Factory
             ->inRandomOrder()
             ->first();
         $random_time = fake()->randomElement($time_slots);
-        $random_date = fake()->dateTimeBetween('now', '+7 days')->format('Y-m-d');
+        $random_date = fake()->dateTimeBetween('-1 week', '+7 days')->format('Y-m-d');
+
+        if ($random_date < Carbon::today()->format('Y-m-d')) {
+            $random_status = fake()->randomElement(array_column(
+                array_filter(MeetingStatuses::cases(), fn ($case) => $case !== MeetingStatuses::PENDING), 'value')
+            );
+        } else {
+            $random_status = MeetingStatuses::PENDING->value;
+        }
 
         return [
             'teacher_id' => $random_teacher->id,
             'meeting_date' => $random_date,
             'start_time' => $random_date. ' ' .$random_time['start_time'],
             'end_time' => $random_date. ' ' .$random_time['end_time'],
+            'status' => $random_status,
         ];
     }
 }
