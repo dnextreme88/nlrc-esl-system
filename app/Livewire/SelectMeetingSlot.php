@@ -34,10 +34,8 @@ class SelectMeetingSlot extends Component
 
     public function reserve_slot()
     {
-        $parsed_meeting_date = Carbon::parse($this->start_time, Auth::user()->timezone)->setTimezone('UTC')->format('Y-m-d');
-
         // Assign to a random meeting slot if there are multiple teachers who has the same meeting date and times
-        $random_meeting_slot = MeetingSlot::select(['id', 'start_time', 'end_time'])->where('meeting_date', $parsed_meeting_date)
+        $random_meeting_slot = MeetingSlot::select(['id', 'start_time', 'end_time'])->where('meeting_date', Carbon::parse($this->start_time)->format('Y-m-d'))
             ->where('start_time', $this->start_time)
             ->where('end_time', $this->end_time)
             ->get()
