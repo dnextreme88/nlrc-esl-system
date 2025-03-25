@@ -30,11 +30,15 @@ class MyMeetingsCalendar extends LivewireCalendar
                     }
                 }
 
+                $meeting_start_time = Helpers::parse_time_to_user_timezone($slot->start_time);
+                $meeting_end_time = Helpers::parse_time_to_user_timezone($slot->end_time);
+
                 $meetings[] = [
                     'id' => $slot->id,
-                    'title' => Helpers::parse_time_to_user_timezone($slot->start_time)->format('H:i A'). ' ~ ' .Helpers::parse_time_to_user_timezone($slot->end_time)->format('H:i A'),
+                    'title' => $meeting_start_time->format('h:i A'). ' ~ ' .$meeting_end_time->format('h:i A'),
                     'description' => count($students) > 0 ? $students : 'N/A',
-                    'date' => Helpers::parse_time_to_user_timezone($slot->start_time),
+                    'date' => $meeting_start_time,
+                    'meeting_slot' => $slot,
                 ];
             }
         } else if ($user->role->name == Roles::STUDENT->value) {
@@ -42,11 +46,15 @@ class MyMeetingsCalendar extends LivewireCalendar
                 ->get();
 
             foreach ($meetings_for_student as $slot) {
+                $meeting_start_time = Helpers::parse_time_to_user_timezone($slot->meeting_slot->start_time);
+                $meeting_end_time = Helpers::parse_time_to_user_timezone($slot->meeting_slot->end_time);
+
                 $meetings[] = [
                     'id' => $slot->meeting_slot->id,
-                    'title' => Helpers::parse_time_to_user_timezone($slot->meeting_slot->start_time)->format('H:i A'). ' ~ ' .Helpers::parse_time_to_user_timezone($slot->meeting_slot->end_time)->format('H:i A'),
+                    'title' => $meeting_start_time->format('h:i A'). ' ~ ' .$meeting_end_time->format('h:i A'),
                     'description' => $slot->meeting_slot->teacher->profile_photo_url,
-                    'date' => Helpers::parse_time_to_user_timezone($slot->meeting_slot->start_time),
+                    'date' => $meeting_start_time,
+                    'meeting_slot' => $slot->meeting_slot,
                 ];
             }
         }

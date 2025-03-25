@@ -226,7 +226,11 @@
                                                         $as_array = $has_existing_slot['meeting_slots_users']->toArray();
                                                     @endphp
 
-                                                    <div class="flex -space-x-2">
+                                                    <a
+                                                        wire:navigate
+                                                        class="flex -space-x-2"
+                                                        href="{{ route('meetings.detail', ['meeting_uuid' => $has_existing_slot['meeting_uuid']]) }}"
+                                                    >
                                                         @foreach (array_slice($as_array, 0, 2) as $student)
                                                             <img
                                                                 class="size-6 rounded-full object-cover border-green-300 border-2"
@@ -236,11 +240,10 @@
                                                             />
                                                         @endforeach
 
-                                                        {{-- TODO: ADD A LINK THAT WHEN CLICKING THE PLUS BUTTON, IT SHOULD GO TO THE BOOKED CALENDAR WITH THE ASSOCIATED TIME --}}
                                                         @if (count($as_array) > 2)
                                                             <div class="size-6 rounded-full object-cover border-gray-300 border-2 text-white px-1 w-full text-[9px] bg-gray-800 flex items-center">{{ count($as_array) - 2 }}+</div>
                                                         @endif
-                                                    </div>
+                                                    </a>
                                                 @else
                                                     <input
                                                         x-bind:checked="toggleSlot"
@@ -313,7 +316,11 @@
                                                         $as_array = $has_existing_slot['meeting_slots_users']->toArray();
                                                     @endphp
 
-                                                    <div class="flex -space-x-2">
+                                                    <a
+                                                        wire:navigate
+                                                        class="flex -space-x-2"
+                                                        href="{{ route('meetings.detail', ['meeting_uuid' => $has_existing_slot['meeting_uuid']]) }}"
+                                                    >
                                                         @foreach (array_slice($as_array, 0, 2) as $student)
                                                             <img
                                                                 class="size-6 rounded-full object-cover border-green-300 border-2"
@@ -323,11 +330,10 @@
                                                             />
                                                         @endforeach
 
-                                                        {{-- TODO: ADD A LINK THAT WHEN CLICKING THE PLUS BUTTON, IT SHOULD GO TO THE BOOKED CALENDAR WITH THE ASSOCIATED TIME --}}
                                                         @if (count($as_array) > 2)
                                                             <div class="size-6 rounded-full object-cover border-gray-300 border-2 text-white px-1 w-full text-[9px] bg-gray-800 flex items-center">{{ count($as_array) - 2 }}+</div>
                                                         @endif
-                                                    </div>
+                                                    </a>
                                                 @else
                                                     <input
                                                         x-bind:checked="toggleSlot"
