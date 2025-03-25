@@ -25,10 +25,10 @@ class UnitPolicy
     {
         // Basing it from the modules table since units are dependent on modules anyway
         if (in_array($user->role->name, [Roles::HEAD_TEACHER->value, Roles::TEACHER->value])) {
-            $user_has_access_to_unit = ModulesTeacher::where('module_id', $module->id)->isTeacherId($user->id)
+            $user_has_access_to_unit = ModulesTeacher::isModuleId($module->id)->isTeacherId($user->id)
                 ->first();
         } else if ($user->role->name == Roles::STUDENT->value) {
-            $user_has_access_to_unit = ModulesStudent::where('module_id', $module->id)->isStudentId($user->id)
+            $user_has_access_to_unit = ModulesStudent::isModuleId($module->id)->isStudentId($user->id)
                 ->first();
         }
 
