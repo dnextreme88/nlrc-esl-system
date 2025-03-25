@@ -232,11 +232,10 @@
                                                         href="{{ route('meetings.detail', ['meeting_uuid' => $has_existing_slot['meeting_uuid']]) }}"
                                                     >
                                                         @foreach (array_slice($as_array, 0, 2) as $student)
-                                                            <img
-                                                                class="size-6 rounded-full object-cover border-green-300 border-2"
-                                                                src="{{ $student['profile_photo_url'] }}"
-                                                                alt="{{ $student['last_name'] }}, {{ $student['first_name'] }}"
-                                                                title="{{ $student['last_name'] }}, {{ $student['first_name'] }} has booked this slot"
+                                                            <x-round-image
+                                                                :alt_text="$student['last_name']. ', ' .$student['first_name']"
+                                                                :title_text="$student['last_name']. ', ' .$student['first_name']. ' has booked this slot'"
+                                                                :src="$student['profile_photo_url']"
                                                             />
                                                         @endforeach
 
@@ -322,11 +321,10 @@
                                                         href="{{ route('meetings.detail', ['meeting_uuid' => $has_existing_slot['meeting_uuid']]) }}"
                                                     >
                                                         @foreach (array_slice($as_array, 0, 2) as $student)
-                                                            <img
-                                                                class="size-6 rounded-full object-cover border-green-300 border-2"
-                                                                src="{{ $student['profile_photo_url'] }}"
-                                                                alt="{{ $student['last_name'] }}, {{ $student['first_name'] }}"
-                                                                title="{{ $student['last_name'] }}, {{ $student['first_name'] }} has booked this slot"
+                                                            <x-round-image
+                                                                :alt_text="$student['last_name']. ', ' .$student['first_name']"
+                                                                :title_text="$student['last_name']. ', ' .$student['first_name']. ' has booked this slot'"
+                                                                :src="$student['profile_photo_url']"
                                                             />
                                                         @endforeach
 

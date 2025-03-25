@@ -48,12 +48,10 @@
                                     @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::TEACHER->value]))
                                         @foreach ($meeting_update['sub_text'] as $student)
                                             <div class="flex space-y-2 gap-3">
-                                                <img
-                                                    class="size-6 rounded-full object-cover border-green-300 border-2"
-                                                    src="{{ $student['student']['profile_photo_url'] }}"
-                                                    alt="{{ $student['student']['last_name'] }}, {{ $student['student']['first_name'] }}"
-                                                    title="{{ $student['student']['last_name'] }}, {{ $student['student']['last_name']. ' ' .$student['student']['first_name'] }} has booked this slot"
-                                                    loading="lazy"
+                                                <x-round-image
+                                                    :alt_text="$student['student']['last_name']. ', ' .$student['student']['first_name']"
+                                                    :title_text="$student['student']['last_name']. ', ' .$student['student']['first_name']. ' has booked this slot'"
+                                                    :src="$student['student']['profile_photo_url']"
                                                 />
 
                                                 <span class="text-gray-800 dark:text-gray-200">booked on {{ Helpers::parse_time_to_user_timezone($student['created_at'])->format('F j, Y g:i A') }}</span>
