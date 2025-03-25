@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Ramsey\Uuid\Uuid;
 
 class MeetingSlot extends Model
 {
@@ -38,5 +39,12 @@ class MeetingSlot extends Model
     public function teacher(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public static function booted(): void
+    {
+        static::creating(function (self $meeting_slot) {
+            $meeting_slot->meeting_uuid = Uuid::uuid4()->toString();
+        });
     }
 }
