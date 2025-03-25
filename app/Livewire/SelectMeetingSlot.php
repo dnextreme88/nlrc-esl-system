@@ -78,7 +78,7 @@ class SelectMeetingSlot extends Component
 
         $meeting_slot_ids = $available_meeting_slots_time->pluck('id');
 
-        $booked_meeting_slots = MeetingSlotsUser::select(['meeting_slots_users.meeting_slot_id AS id', 'meeting_slots.start_time'])->whereIn('meeting_slot_id', $meeting_slot_ids)->where('student_id', Auth::user()->id)
+        $booked_meeting_slots = MeetingSlotsUser::select(['meeting_slots_users.meeting_slot_id AS id', 'meeting_slots.start_time'])->whereIn('meeting_slot_id', $meeting_slot_ids)->isStudentId(Auth::user()->id)
             ->join('meeting_slots', 'meeting_slots_users.meeting_slot_id', 'meeting_slots.id')
             ->get();
 

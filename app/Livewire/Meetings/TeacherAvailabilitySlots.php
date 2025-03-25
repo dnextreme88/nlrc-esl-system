@@ -54,7 +54,7 @@ class TeacherAvailabilitySlots extends Component
 
         $meeting_date = $this->meeting_date;
 
-        $this->meeting_slots = MeetingSlot::where('teacher_id', Auth::user()->id)
+        $this->meeting_slots = MeetingSlot::isTeacherId(Auth::user()->id)
             ->where('status', MeetingStatuses::PENDING->value)
             ->with('meeting_slots_users')
             ->get()

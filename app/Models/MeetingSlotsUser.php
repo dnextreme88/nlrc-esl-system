@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Traits\DateTrait;
+use App\Traits\IdTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MeetingSlotsUser extends Model
 {
     use DateTrait;
+    use IdTrait;
 
     protected $fillable = [
         'meeting_slot_id',

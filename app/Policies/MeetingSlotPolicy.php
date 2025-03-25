@@ -22,10 +22,10 @@ class MeetingSlotPolicy
     public function view(?User $user, MeetingSlot $meeting_slot): bool
     {
         if (in_array($user->role->name, [Roles::HEAD_TEACHER->value, Roles::TEACHER->value])) {
-            $user_has_meeting = MeetingSlot::where('id', $meeting_slot->id)->where('teacher_id', $user->id)
+            $user_has_meeting = MeetingSlot::where('id', $meeting_slot->id)->isTeacherId($user->id)
                 ->first();
         } else if ($user->role->name == Roles::STUDENT->value) {
-            $user_has_meeting = MeetingSlotsUser::where('meeting_slot_id', $meeting_slot->id)->where('student_id', $user->id)
+            $user_has_meeting = MeetingSlotsUser::where('meeting_slot_id', $meeting_slot->id)->isStudentId($user->id)
                 ->first();
         }
 

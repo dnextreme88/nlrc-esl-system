@@ -18,8 +18,7 @@ class MyMeetingsCalendar extends LivewireCalendar
         $user = Auth::user();
 
         if (in_array($user->role->name, [Roles::HEAD_TEACHER->value, Roles::TEACHER->value])) {
-            $meetings_for_teacher = MeetingSlot::where('teacher_id', $user->id)
-                ->whereHas('meeting_slots_users')
+            $meetings_for_teacher = MeetingSlot::isTeacherId($user->id)->whereHas('meeting_slots_users')
                 ->get();
 
             foreach ($meetings_for_teacher as $slot) {
@@ -39,8 +38,7 @@ class MyMeetingsCalendar extends LivewireCalendar
                 ];
             }
         } else if ($user->role->name == Roles::STUDENT->value) {
-            $meetings_for_student = MeetingSlotsUser::where('student_id', $user->id)
-                ->whereHas('meeting_slot')
+            $meetings_for_student = MeetingSlotsUser::isStudentId($user->id)->whereHas('meeting_slot')
                 ->get();
 
             foreach ($meetings_for_student as $slot) {

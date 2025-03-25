@@ -105,7 +105,7 @@ class UserSeeder extends Seeder
                     ]);
                 }
 
-                $student_proficiency_ids = ProficienciesUser::select(['proficiency_id'])->where('student_id', $user->id)
+                $student_proficiency_ids = ProficienciesUser::select(['proficiency_id'])->isStudentId($user->id)
                     ->get()
                     ->pluck('proficiency_id');
 

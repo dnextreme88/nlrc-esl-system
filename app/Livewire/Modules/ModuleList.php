@@ -20,10 +20,10 @@ class ModuleList extends Component
         $modules_with_user_access = '';
 
         if (in_array($user->role->name, [Roles::HEAD_TEACHER->value, Roles::TEACHER->value])) {
-            $modules_with_user_access = ModulesTeacher::where('teacher_id', Auth::user()->id)
+            $modules_with_user_access = ModulesTeacher::isTeacherId(Auth::user()->id)
                 ->pluck('module_id');
         } else if ($user->role->name == Roles::STUDENT->value) {
-            $modules_with_user_access = ModulesStudent::where('student_id', Auth::user()->id)
+            $modules_with_user_access = ModulesStudent::isStudentId(Auth::user()->id)
                 ->pluck('module_id');
         }
 

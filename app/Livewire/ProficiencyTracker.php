@@ -12,7 +12,7 @@ class ProficiencyTracker extends Component
 
     public function render()
     {
-        $this->student_proficiencies = ProficienciesUser::where('student_id', Auth::user()->id)
+        $this->student_proficiencies = ProficienciesUser::isStudentId(Auth::user()->id)
             ->get();
 
         return view('livewire.proficiency-tracker');

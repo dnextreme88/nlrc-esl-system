@@ -37,7 +37,7 @@ class MeetingDetail extends Component
         if ($this->current_meeting_slot->meeting_slots_users) {
             $students_in_meeting = $this->current_meeting_slot->meeting_slots_users
                 ->map(fn ($student) =>
-                    MeetingSlotsUser::where('meeting_slot_id', $this->current_meeting_slot->id)->where('student_id', $student->id)
+                    MeetingSlotsUser::where('meeting_slot_id', $this->current_meeting_slot->id)->isStudentId($student->id)
                         ->first()
                 )->all();
 

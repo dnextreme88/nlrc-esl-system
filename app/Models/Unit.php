@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\IdTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Unit extends Model
 {
     use HasFactory;
+    use IdTrait;
 
     protected $fillable = [
         'module_id',

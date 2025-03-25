@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
+use App\Traits\IdTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ProficienciesUser extends Model
 {
+    use IdTrait;
+
     protected $fillable = [
         'proficiency_id',
-        'user_id',
+        'student_id',
     ];
 
     protected $table = 'proficiencies_users';

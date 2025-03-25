@@ -23,10 +23,10 @@ class ModulePolicy
     public function view(?User $user, Module $module): bool
     {
         if (in_array($user->role->name, [Roles::HEAD_TEACHER->value, Roles::TEACHER->value])) {
-            $user_has_access_to_module = ModulesTeacher::where('module_id', $module->id)->where('teacher_id', $user->id)
+            $user_has_access_to_module = ModulesTeacher::where('module_id', $module->id)->isTeacherId($user->id)
                 ->first();
         } else if ($user->role->name == Roles::STUDENT->value) {
-            $user_has_access_to_module = ModulesStudent::where('module_id', $module->id)->where('student_id', $user->id)
+            $user_has_access_to_module = ModulesStudent::where('module_id', $module->id)->isStudentId($user->id)
                 ->first();
         }
 
