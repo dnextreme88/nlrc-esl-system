@@ -4,9 +4,9 @@ namespace App\Traits;
 
 trait IdTrait
 {
-    protected function scopeIsModuleId($query, int $user_id)
+    protected function scopeIsModuleId($query, int $module_id)
     {
-        return $query->where('module_id', $user_id);
+        return $query->where('module_id', $module_id);
     }
 
     protected function scopeIsStudentId($query, int $user_id)
