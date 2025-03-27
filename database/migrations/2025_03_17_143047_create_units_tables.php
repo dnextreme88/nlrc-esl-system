@@ -32,7 +32,8 @@ return new class extends Migration
             $table->string('file_name', 128);
             $table->string('file_type', 32);
             $table->text('file_path');
-            $table->text('description');
+            $table->string('description', 128)
+                ->nullable();
             $table->timestamps();
         });
     }
