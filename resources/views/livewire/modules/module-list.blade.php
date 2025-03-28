@@ -23,7 +23,7 @@
                 >
                     <div class="transition duration-[500ms] text-center translate-y-full opacity-0 group-hover:opacity-100 group-hover:translate-y-0">
                         @if ($module->has_access)
-                            <span class="text-sm text-gray-800 dark:text-gray-200">{{ $module->description }}</span>
+                            <span class="text-sm text-gray-800 dark:text-gray-200">{{ Str::limit($module->description, 100, preserveWords: true) }}</span>
                         @else
                             <span class="text-sm text-red-900 dark:text-red-300">You don't have access to this module yet!</span>
                         @endif
