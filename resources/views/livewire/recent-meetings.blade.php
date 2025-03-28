@@ -24,12 +24,14 @@
             @endphp
 
             <div class="mx-2 grid grid-cols-[1fr_180px]">
-                <x-meetings.date-with-time-section
-                    :classes_container="'opacity-50 dark:opacity-25'"
-                    :classes_date="'text-base'"
-                    :end_time="$meeting->end_time"
-                    :start_time="$meeting->start_time"
-                />
+                <a wire:navigate href="{{ route('meetings.detail', ['meeting_uuid' => $meeting['meeting_uuid']]) }}">
+                    <x-meetings.date-with-time-section
+                        :classes_container="'opacity-50 dark:opacity-25'"
+                        :classes_date="'text-base'"
+                        :end_time="$meeting->end_time"
+                        :start_time="$meeting->start_time"
+                    />
+                </a>
 
                 <div class="opacity-50 dark:opacity-25 place-self-end">
                     <span class="block self-center text-center rounded-full px-4 py-2 text-xs my-2 font-medium ring-1 ring-inset min-w-[100px] max-w-[100px] {{ $color_classes }}">{{ $meeting->status }}</span>

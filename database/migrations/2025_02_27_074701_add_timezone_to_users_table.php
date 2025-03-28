@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('timezone', 128)->nullable()
-                ->default('UTC')
+                ->default('Asia/Manila')
                 ->after('gender');
         });
     }

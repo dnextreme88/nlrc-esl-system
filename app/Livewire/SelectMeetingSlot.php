@@ -3,8 +3,9 @@
 namespace App\Livewire;
 
 use App\Enums\MeetingStatuses;
+use App\Helpers\Helpers;
 use App\Models\MeetingSlot;
-use App\Models\MeetingSlotUser;
+use App\Models\MeetingSlotsUser;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Auth;
@@ -34,7 +35,7 @@ class SelectMeetingSlot extends Component
     public function reserve_slot()
     {
         // Assign to a random meeting slot if there are multiple teachers who has the same meeting date and times
-        $random_meeting_slot = MeetingSlot::select(['id', 'start_time', 'end_time'])->where('meeting_date', $this->meeting_date)
+        $random_meeting_slot = MeetingSlot::select(['id', 'start_time', 'end_time'])->where('meeting_date', Carbon::parse($this->start_time)->format('Y-m-d'))
             ->where('start_time', $this->start_time)
             ->where('end_time', $this->end_time)
             ->get()
@@ -43,7 +44,7 @@ class SelectMeetingSlot extends Component
         if ($random_meeting_slot->isNotEmpty()) {
             $random_meeting_slot = $random_meeting_slot->random();
 
-            $random_meeting_slot->meeting_slot_users()->attach($random_meeting_slot->id, [
+            $random_meeting_slot->meeting_slots_users()->attach($random_meeting_slot->id, [
                 'student_id' => Auth::user()->id,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -70,13 +71,13 @@ class SelectMeetingSlot extends Component
             ->orderBy('start_time', 'ASC')
             ->get()
             ->filter(function ($meeting_slot) use ($meeting_date) {
-                return Carbon::parse($meeting_slot['start_time'])->toUserTimezone()->format('Y-m-d') == $meeting_date;
+                return Helpers::parse_time_to_user_timezone($meeting_slot['start_time'])->format('Y-m-d') == $meeting_date;
             });
 
         $meeting_slot_ids = $available_meeting_slots_time->pluck('id');
 
-        $booked_meeting_slots = MeetingSlotUser::select(['meeting_slot_users.meeting_slot_id AS id', 'meeting_slots.start_time'])->whereIn('meeting_slot_id', $meeting_slot_ids)->where('student_id', Auth::user()->id)
-            ->join('meeting_slots', 'meeting_slot_users.meeting_slot_id', 'meeting_slots.id')
+        $booked_meeting_slots = MeetingSlotsUser::select(['meeting_slots_users.meeting_slot_id AS id', 'meeting_slots.start_time'])->whereIn('meeting_slot_id', $meeting_slot_ids)->isStudentId(Auth::user()->id)
+            ->join('meeting_slots', 'meeting_slots_users.meeting_slot_id', 'meeting_slots.id')
             ->get();
 
         $modified_available_meeting_slots_time = $available_meeting_slots_time;

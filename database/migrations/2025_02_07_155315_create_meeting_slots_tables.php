@@ -26,6 +26,16 @@ return new class extends Migration
             $table->boolean('is_opened')->default(1);
             $table->timestamps();
         });
+
+        Schema::create('meeting_slots_users', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('meeting_slot_id');
+            $table->foreign('meeting_slot_id')
+                ->references('id')
+                ->on('meeting_slots');
+            $table->unsignedBigInteger('student_id')->nullable();
+            $table->timestamps();
+        });
     }
 
     /**
@@ -33,6 +43,8 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('meeting_slots_users');
+
         Schema::dropIfExists('meeting_slots');
     }
 };

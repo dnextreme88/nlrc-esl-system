@@ -210,7 +210,7 @@
                                     @foreach (array_slice($time_slots, 0, 24) as $time_slot_left_side)
                                         @php
                                             $has_existing_slot = $meeting_slots->first(function ($val) use ($time_slot_left_side) {
-                                                return \Carbon\Carbon::parse($val['start_time'])->toUserTimezone()->format('H:i:s') == $time_slot_left_side['start_time'];
+                                                return Helpers::parse_time_to_user_timezone($val['start_time'])->format('H:i:s') == $time_slot_left_side['start_time'];
                                             });
                                         @endphp
 
@@ -221,26 +221,28 @@
                                                 x-data="{ toggleSlot: {{ $has_existing_slot && $has_existing_slot['is_opened'] == 1 ? 'true' : 'false' }} }"
                                                 class="grid grid-cols-1 place-items-center py-2"
                                             >
-                                                @if ($has_existing_slot && $has_existing_slot['meeting_slot_users']->isNotEmpty())
+                                                @if ($has_existing_slot && $has_existing_slot['meeting_slots_users']->isNotEmpty())
                                                     @php
-                                                        $as_array = $has_existing_slot['meeting_slot_users']->toArray();
+                                                        $as_array = $has_existing_slot['meeting_slots_users']->toArray();
                                                     @endphp
 
-                                                    <div class="flex -space-x-2">
+                                                    <a
+                                                        wire:navigate
+                                                        class="flex -space-x-2"
+                                                        href="{{ route('meetings.detail', ['meeting_uuid' => $has_existing_slot['meeting_uuid']]) }}"
+                                                    >
                                                         @foreach (array_slice($as_array, 0, 2) as $student)
-                                                            <img
-                                                                class="size-6 rounded-full object-cover border-green-300 border-2"
-                                                                src="{{ $student['profile_photo_url'] }}"
-                                                                alt="{{ $student['last_name'] }}, {{ $student['first_name'] }}"
-                                                                title="{{ $student['last_name'] }}, {{ $student['first_name'] }} has booked this slot"
+                                                            <x-round-image
+                                                                :alt_text="$student['last_name']. ', ' .$student['first_name']"
+                                                                :title_text="$student['last_name']. ', ' .$student['first_name']. ' has booked this slot'"
+                                                                :src="$student['profile_photo_url']"
                                                             />
                                                         @endforeach
 
-                                                        {{-- TODO: ADD A LINK THAT WHEN CLICKING THE PLUS BUTTON, IT SHOULD GO TO THE BOOKED CALENDAR WITH THE ASSOCIATED TIME --}}
                                                         @if (count($as_array) > 2)
                                                             <div class="size-6 rounded-full object-cover border-gray-300 border-2 text-white px-1 w-full text-[9px] bg-gray-800 flex items-center">{{ count($as_array) - 2 }}+</div>
                                                         @endif
-                                                    </div>
+                                                    </a>
                                                 @else
                                                     <input
                                                         x-bind:checked="toggleSlot"
@@ -297,7 +299,7 @@
                                     @foreach (array_slice($time_slots, 24) as $time_slot_right_side)
                                         @php
                                             $has_existing_slot = $meeting_slots->first(function ($val) use ($time_slot_right_side) {
-                                                return \Carbon\Carbon::parse($val['start_time'])->toUserTimezone()->format('H:i:s') == $time_slot_right_side['start_time'];
+                                                return Helpers::parse_time_to_user_timezone($val['start_time'])->format('H:i:s') == $time_slot_right_side['start_time'];
                                             });
                                         @endphp
 
@@ -308,26 +310,28 @@
                                                 x-data="{ toggleSlot: {{ $has_existing_slot && $has_existing_slot['is_opened'] == 1 ? 'true' : 'false' }} }"
                                                 class="grid grid-cols-1 place-items-center py-2"
                                             >
-                                                @if ($has_existing_slot && $has_existing_slot['meeting_slot_users']->isNotEmpty())
+                                                @if ($has_existing_slot && $has_existing_slot['meeting_slots_users']->isNotEmpty())
                                                     @php
-                                                        $as_array = $has_existing_slot['meeting_slot_users']->toArray();
+                                                        $as_array = $has_existing_slot['meeting_slots_users']->toArray();
                                                     @endphp
 
-                                                    <div class="flex -space-x-2">
+                                                    <a
+                                                        wire:navigate
+                                                        class="flex -space-x-2"
+                                                        href="{{ route('meetings.detail', ['meeting_uuid' => $has_existing_slot['meeting_uuid']]) }}"
+                                                    >
                                                         @foreach (array_slice($as_array, 0, 2) as $student)
-                                                            <img
-                                                                class="size-6 rounded-full object-cover border-green-300 border-2"
-                                                                src="{{ $student['profile_photo_url'] }}"
-                                                                alt="{{ $student['last_name'] }}, {{ $student['first_name'] }}"
-                                                                title="{{ $student['last_name'] }}, {{ $student['first_name'] }} has booked this slot"
+                                                            <x-round-image
+                                                                :alt_text="$student['last_name']. ', ' .$student['first_name']"
+                                                                :title_text="$student['last_name']. ', ' .$student['first_name']. ' has booked this slot'"
+                                                                :src="$student['profile_photo_url']"
                                                             />
                                                         @endforeach
 
-                                                        {{-- TODO: ADD A LINK THAT WHEN CLICKING THE PLUS BUTTON, IT SHOULD GO TO THE BOOKED CALENDAR WITH THE ASSOCIATED TIME --}}
                                                         @if (count($as_array) > 2)
                                                             <div class="size-6 rounded-full object-cover border-gray-300 border-2 text-white px-1 w-full text-[9px] bg-gray-800 flex items-center">{{ count($as_array) - 2 }}+</div>
                                                         @endif
-                                                    </div>
+                                                    </a>
                                                 @else
                                                     <input
                                                         x-bind:checked="toggleSlot"

@@ -9,6 +9,7 @@ use Filament\Panel;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\UploadedFile;
@@ -80,14 +81,25 @@ class User extends Authenticatable implements FilamentUser, HasName
         ];
     }
 
+    public function modules(): HasMany
+    {
+        return $this->hasMany(ModulesStudent::class);
+    }
+
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
     }
 
+    public function proficiencies_users(): BelongsToMany
+    {
+        return $this->belongsToMany(Proficiency::class, 'proficiencies_users', 'proficiency_id', 'student_id')
+            ->withTimestamps();
+    }
+
     public function meeting_slots(): HasMany
     {
-        return $this->hasMany(MeetingSlotUser::class);
+        return $this->hasMany(MeetingSlotsUser::class);
     }
 
     public function canAccessPanel(Panel $panel): bool

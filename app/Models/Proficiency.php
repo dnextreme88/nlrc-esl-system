@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ProgressionLevel extends Model
+class Proficiency extends Model
 {
     protected $fillable = [
-        'level',
+        'level_code',
         'name',
         'description',
     ];

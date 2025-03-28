@@ -2,19 +2,22 @@
 
 namespace App\Models;
 
+use App\Traits\IdTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class MeetingSlotUser extends Model
+class ModulesStudent extends Model
 {
+    use IdTrait;
+
     protected $fillable = [
-        'meeting_slot_id',
+        'module_id',
         'student_id',
     ];
 
-    public function meeting_slot(): BelongsTo
+    public function module(): BelongsTo
     {
-        return $this->belongsTo(MeetingSlot::class);
+        return $this->belongsTo(Module::class);
     }
 
     public function student(): BelongsTo

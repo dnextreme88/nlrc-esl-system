@@ -3,6 +3,7 @@
 namespace App\Livewire\Settings;
 
 use Carbon\Carbon;
+use Carbon\CarbonTimeZone;
 use DateTimeZone;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
@@ -29,6 +30,8 @@ class TimeSettings extends Component
 
     public function update_timezone_settings()
     {
+        $this->validate(['timezone' => ['required']]);
+
         $this->user->update(['timezone' => $this->timezone]);
 
         Toaster::success('Your timezone is now updated!');
@@ -38,8 +41,13 @@ class TimeSettings extends Component
     public function mount()
     {
         $this->user = Auth::user();
-        $this->timezones_list = DateTimeZone::listIdentifiers(timezoneGroup: DateTimeZone::ALL);
-        $this->timezone = Auth::user()->timezone;
+        $this->timezone = $this->user->timezone;
+
+        $timezone_names = DateTimeZone::listIdentifiers(timezoneGroup: DateTimeZone::ALL);
+        $this->timezones_list = array_combine(
+            $timezone_names,
+            array_map(fn ($tz) => (new CarbonTimeZone($tz))->toOffsetName(), $timezone_names)
+        );
 
         $this->update_current_time();
     }

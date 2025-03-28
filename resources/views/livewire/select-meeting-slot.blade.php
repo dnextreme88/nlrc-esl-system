@@ -54,7 +54,7 @@
                         <ul class="*:py-4">
                             @foreach ($available_meeting_slots_time as $meeting_slot_time)
                                 @php
-                                    $student_already_reserved_in_slot = $meeting_slot_time->meeting_slot_users->pluck('id')
+                                    $student_already_reserved_in_slot = $meeting_slot_time->meeting_slots_users->pluck('id')
                                         ->first(fn ($user_id) => $user_id == Auth::user()->id);
                                 @endphp
 
@@ -62,7 +62,7 @@
                                     <div>
                                         <p>
                                             <span class="text-xl text-green-600 dark:text-green-300">&rarr;</span>
-                                            <span class="text-gray-800 dark:text-gray-200 {{ $student_already_reserved_in_slot ? 'line-through decoration-2 decoration-green-600 dark:decoration-green-300' : '' }}">{{ \Carbon\Carbon::parse($meeting_slot_time['start_time'])->toUserTimezone()->format('h:i A') }} ~ {{ \Carbon\Carbon::parse($meeting_slot_time['end_time'])->toUserTimezone()->format('h:i A') }}</span>
+                                            <span class="text-gray-800 dark:text-gray-200 {{ $student_already_reserved_in_slot ? 'line-through decoration-2 decoration-green-600 dark:decoration-green-300' : '' }}">{{ Helpers::parse_time_to_user_timezone($meeting_slot_time['start_time'])->format('h:i A') }} ~ {{ Helpers::parse_time_to_user_timezone($meeting_slot_time['end_time'])->format('h:i A') }}</span>
                                         </p>
                                     </div>
 
@@ -101,7 +101,7 @@
 
             <p class="mt-2">
                 <span class="text-xl text-green-600 dark:text-green-300">&rarr;</span>
-                <span class="font-semibold text-gray-600 dark:text-gray-300">{{ \Carbon\Carbon::parse($start_time)->toUserTimezone()->format('l, F, j Y') }}: {{ \Carbon\Carbon::parse($start_time)->toUserTimezone()->format('h:i A') }} ~ {{ \Carbon\Carbon::parse($end_time)->toUserTimezone()->format('h:i A') }}</span>
+                <span class="font-semibold text-gray-600 dark:text-gray-300">{{ Helpers::parse_time_to_user_timezone($start_time)->format('l, F, j Y') }}: {{ Helpers::parse_time_to_user_timezone($start_time)->format('h:i A') }} ~ {{ Helpers::parse_time_to_user_timezone($end_time)->format('h:i A') }}</span>
             </p>
         </x-slot>
 

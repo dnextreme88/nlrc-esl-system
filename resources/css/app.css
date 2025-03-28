@@ -20,6 +20,19 @@
   }
 }
 
+@font-face {
+  font-family: 'Chalkboard';
+  font-style: normal;
+  font-weight: 200 700;
+  font-display: swap;
+  src: url('../../public/assets/fonts/Chalktastic.ttf') format('truetype'),
+    url('https://fonts.googleapis.com/css?family=Poppins:wght@200;400;700&display=swap') format('woff2');
+}
+
+@theme {
+  --font-chalkboard: 'Chalkboard', sans-serif;
+}
+
 [x-cloak] {
     display: none;
 }

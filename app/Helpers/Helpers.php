@@ -6,6 +6,11 @@ use Carbon\Carbon;
 
 class Helpers
 {
+    public static function parse_time_to_user_timezone($time): Carbon
+    {
+        return Carbon::parse($time)->toUserTimezone();
+    }
+
     public static function populate_time_slots($format = 'H:i'): array
     {
         $time_slots = [];

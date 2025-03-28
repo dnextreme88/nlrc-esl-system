@@ -29,8 +29,8 @@
 
                             <x-select :inline_block="false" wire:model.live="timezone" class="w-full" id="timezone">
                                 <option value="">Select a timezone to use on this website</option>
-                                @foreach ($timezones_list as $timezone)
-                                    <option value="{{ $timezone }}">{{ $timezone }}</option>
+                                @foreach ($timezones_list as $timezone => $utc_offset)
+                                    <option value="{{ $timezone }}">{{ $timezone }} ({{ $utc_offset }})</option>
                                 @endforeach
                             </x-select>
 

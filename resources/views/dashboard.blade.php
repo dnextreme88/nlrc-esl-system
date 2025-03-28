@@ -22,6 +22,10 @@
             <div class="grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-2 *:p-4 sm:*:rounded-lg">
                 @if (Auth::user()->role->name == \App\Enums\Roles::STUDENT->value)
                     <div class="bg-gray-200 dark:bg-gray-600 shadow-md shadow-gray-500 col-span-2">
+                        <livewire:proficiency-tracker />
+                    </div>
+
+                    <div class="bg-gray-200 dark:bg-gray-600 shadow-md shadow-gray-500 col-span-2">
                         <livewire:select-meeting-slot />
                     </div>
                 @endif
