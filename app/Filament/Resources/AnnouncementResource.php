@@ -8,7 +8,7 @@ use App\Filament\Resources\AnnouncementResource\Pages\EditAnnouncement;
 use App\Filament\Resources\AnnouncementResource\Pages\ListAnnouncements;
 use App\Filament\Resources\AnnouncementResource\Pages\ViewAnnouncement;
 use App\Filament\Resources\AnnouncementResource\RelationManagers;
-use App\Mail\SendAnnouncementEmail;
+use App\Mail\AnnouncementEmail;
 use App\Models\Announcement;
 use App\Models\Notification;
 use App\Models\Role;
@@ -47,6 +47,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder AS BuilderQuery;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Notification as LaravelNotification;
 
@@ -200,11 +201,7 @@ class AnnouncementResource extends Resource
                                                     LaravelNotification::send($recipients, new AnnouncementNotification($record));
 
                                                     foreach ($recipients as $user) {
-                                                        // TODO: TO CREATE CLASS
-                                                        /*
-                                                        Mail::to($user->email)->queue(new SendAnnouncementEmail($record, $user));
-                                                        Mail::to($user->email)->send(new SendAnnouncementEmail($record, $user));
-                                                        */
+                                                        Mail::to($user->email)->queue(new AnnouncementEmail($record, $user));
 
                                                         broadcast(new ReceiveAnnouncementEvent($user->id)); // Trigger an event
                                                     }
