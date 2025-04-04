@@ -4,7 +4,7 @@
     'title_text' => null,
 ])
 
-<span>
+<span class="mb-0">
     <img
         class="size-6 rounded-full object-cover border-green-300 border-2"
         src="{{ $src }}"

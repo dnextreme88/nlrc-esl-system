@@ -54,7 +54,7 @@
                                                     :src="$student['student']['profile_photo_url']"
                                                 />
 
-                                                <span class="text-gray-800 dark:text-gray-200">booked on {{ Helpers::parse_time_to_user_timezone($student['created_at'])->format('F j, Y g:i A') }}</span>
+                                                <span class="self-center text-sm text-gray-800 dark:text-gray-200">booked on {{ Helpers::parse_time_to_user_timezone($student['created_at'])->format('F j, Y g:i A') }}</span>
                                             </div>
                                         @endforeach
                                     @else
@@ -81,14 +81,60 @@
                     <span class="text-2xl font-semibold text-gray-800 dark:text-gray-200">{{ Helpers::parse_time_to_user_timezone($current_meeting_slot['start_time'])->format('F j, Y') }}</span>
                 </h3>
 
-                {{-- TODO: TO REFACTOR TO USE ACTUAL MEETING LINK FROM DB (TO BE IMPLEMENTED AS WELL) --}}
-                <p class="break-words text-gray-800 dark:text-gray-200">Join: <a href="https://meet.google.com/usg-ysnc-zks" class="text-green-600 dark:text-green-300 hover:underline" target="_blank">https://meet.google.com/usg-ysnc-zks</a></p>
+                <p class="text-gray-800 dark:text-gray-200">Time: <span class="font-bold">{{ Helpers::parse_time_to_user_timezone($current_meeting_slot['start_time'])->format('g:i A') }} ~ {{ Helpers::parse_time_to_user_timezone($current_meeting_slot['end_time'])->format('g:i A') }}</span></p>
+
+                @if ($current_meeting_slot['meeting_link'])
+                    <p class="break-words text-gray-800 dark:text-gray-200">Join: <a href="{{ $current_meeting_slot['meeting_link'] }}" class="text-green-600 dark:text-green-300 hover:underline" target="_blank">{{ $current_meeting_slot['meeting_link'] }}</a></p>
+                @endif
 
                 <p class="text-gray-800 dark:text-gray-200">Timezone: <strong>{{ Auth::user()->timezone }}</strong>. If this is not correct, please go to your <a wire:navigate class="text-green-600 dark:text-green-300 hover:underline" href="{{ route('settings.time') }}">settings and change it there</a>.</p>
 
                 {{-- TODO: USE ryangjchandler/alpine-clipboard PACKAGE TO ALLOW COPYING TO CLIPBOARD --}}
                 <p class="text-gray-800 dark:text-gray-200">Meeting ID: <span class="font-bold">{{ $current_meeting_slot['meeting_uuid'] }}</span></p>
             </div>
+
+            @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::TEACHER->value]))
+                <div class="p-4 mt-10 flex flex-col space-y-6 border-2 border-gray-300 dark:border-gray-600 lg:col-span-2">
+                    <x-form-section submit="update_meeting_details">
+                        <x-slot name="title">
+                            {{ __('Update your meeting details') }}
+                        </x-slot>
+
+                        <x-slot name="description">
+                            {{ __('Set a meeting link that you and your students will use.') }}
+                        </x-slot>
+
+                        <x-slot name="form">
+                            <div class="col-span-6">
+                                <x-label is_required="true" value="Meeting Link" for="meeting_link" />
+
+                                <x-input wire:model="meeting_link" class="mt-1 block w-full" type="text" id="meeting_link" />
+
+                                <small class="text-gray-600 dark:text-gray-400">You may place any Google Meet or Zoom links</small>
+
+                                <x-input-error class="mt-2" for="meeting_link" />
+                            </div>
+                        </x-slot>
+
+                        <x-slot name="actions">
+                            <x-button wire.loading.attr="disabled" class="my-4 hover:cursor-pointer">
+                                <span wire:loading.flex wire:target="update_meeting_details" class="items-center">
+                                    <x-loading-indicator
+                                        :loader_color_bg="'fill-gray-200 dark:fill-gray-800'"
+                                        :loader_color_spin="'fill-gray-200 dark:fill-gray-800'"
+                                        :show_text="false"
+                                        :size="4"
+                                    />
+
+                                    <span class="ml-2">Saving</span>
+                                </span>
+
+                                <span wire:loading.remove wire:target="update_meeting_details">Save</span>
+                            </x-button>
+                        </x-slot>
+                    </x-form-section>
+                </div>
+            @endif
         @endif
     </div>
 </div>
