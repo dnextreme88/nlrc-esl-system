@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Enums\MeetingStatuses;
 use App\Events\ReceiveMeetingBookedEvent;
 use App\Helpers\Helpers;
+use App\Mail\MeetingBookedEmail;
 use App\Models\MeetingSlot;
 use App\Models\MeetingSlotsUser;
 use App\Models\User;
@@ -12,6 +13,7 @@ use App\Notifications\MeetingBookedNotification;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification as LaravelNotification;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -61,11 +63,9 @@ class SelectMeetingSlot extends Component
             $meeting_teacher = User::find($random_meeting_slot->teacher_id);
             LaravelNotification::send(collect([Auth::user(), $meeting_teacher]), new MeetingBookedNotification($random_meeting_slot));
 
-            // TODO: TO CREATE CLASS
-            /*
-            Mail::to($meeting_teacher->email)->queue(new MeetingBookedEmail($record, $meeting_teacher));
-            Mail::to($meeting_teacher->email)->send(new MeetingBookedEmail($record, $meeting_teacher));
-            */
+            // TODO: We can probably just send the email based on the users' setting preference
+            Mail::to($meeting_teacher->email)->queue(new MeetingBookedEmail($random_meeting_slot, $meeting_teacher)); // Send to teacher
+            Mail::to(Auth::user()->email)->queue(new MeetingBookedEmail($random_meeting_slot, Auth::user())); // Send to student
 
             broadcast(new ReceiveMeetingBookedEvent($meeting_teacher->id)); // Trigger an event
             broadcast(new ReceiveMeetingBookedEvent(Auth::user()->id)); // Trigger an event
