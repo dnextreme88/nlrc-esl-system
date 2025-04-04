@@ -9,3 +9,7 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 Broadcast::channel('receive-announcement.{userId}', function ($user, $userId) {
     return (int) $user->id === (int) $userId;
 });
+
+Broadcast::channel('receive-meeting-booked.{userId}', function ($user, $userId) {
+    return (int) $user->id === (int) $userId;
+});

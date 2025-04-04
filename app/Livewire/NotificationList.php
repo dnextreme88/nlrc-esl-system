@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Helpers\Helpers;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -15,14 +16,17 @@ class NotificationList extends Component
             ->markAsRead();
     }
 
-    public function render()
+    public function mount()
     {
-        $this->user_notifications = Auth::user()->notifications()
-            ->select(['notifications.*', 'announcements.id AS announcement_id', 'announcements.title', 'announcements.slug', 'announcements.description'])
-            ->join('announcements', 'announcements.id', 'data->announcement_id')
+        $notifications_of_user = Auth::user()->notifications()
             ->limit(15)
             ->get();
 
+        $this->user_notifications = Helpers::get_notifications($notifications_of_user);
+    }
+
+    public function render()
+    {
         return view('livewire.notification-list');
     }
 }

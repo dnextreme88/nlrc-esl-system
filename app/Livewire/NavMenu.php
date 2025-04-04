@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Helpers\Helpers;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -16,6 +17,7 @@ class NavMenu extends Component
 
     // Listen to an event
     #[On('echo-private:receive-announcement.{userId},\App\Events\ReceiveAnnouncementEvent')]
+    #[On('echo-private:receive-meeting-booked.{userId},\App\Events\ReceiveMeetingBookedEvent')]
     public function onReceiveAnnouncement($event)
     {
         $this->get_notifications();
@@ -26,13 +28,13 @@ class NavMenu extends Component
         $this->user_notifications_unread_count = Auth::user()->unreadNotifications
             ->count();
 
-        $this->user_notifications = Auth::user()->notifications()
-            ->select(['notifications.*', 'announcements.id AS announcement_id', 'announcements.title', 'announcements.slug', 'announcements.description'])
-            ->join('announcements', 'announcements.id', 'data->announcement_id')
+        $notifications_of_user = Auth::user()->notifications()
             ->limit(5)
             ->get();
 
-        $notifications_unread_on_screen_count = $this->user_notifications->filter(fn ($notif) => $notif->read_at == null)->count();
+        $this->user_notifications = Helpers::get_notifications($notifications_of_user);
+
+        $notifications_unread_on_screen_count = $notifications_of_user->filter(fn ($notif) => $notif->read_at == null)->count();
 
         if ($this->user_notifications_unread_count > $notifications_unread_on_screen_count) {
             $this->user_notifications_unread_count_is_overlap = true;

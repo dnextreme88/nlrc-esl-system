@@ -3,12 +3,16 @@
 namespace App\Livewire;
 
 use App\Enums\MeetingStatuses;
+use App\Events\ReceiveMeetingBookedEvent;
 use App\Helpers\Helpers;
 use App\Models\MeetingSlot;
 use App\Models\MeetingSlotsUser;
+use App\Models\User;
+use App\Notifications\MeetingBookedNotification;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification as LaravelNotification;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Masmerise\Toaster\Toaster;
@@ -35,7 +39,7 @@ class SelectMeetingSlot extends Component
     public function reserve_slot()
     {
         // Assign to a random meeting slot if there are multiple teachers who has the same meeting date and times
-        $random_meeting_slot = MeetingSlot::select(['id', 'start_time', 'end_time'])->where('meeting_date', Carbon::parse($this->start_time)->format('Y-m-d'))
+        $random_meeting_slot = MeetingSlot::select(['id', 'teacher_id', 'start_time', 'end_time'])->where('meeting_date', Carbon::parse($this->start_time)->format('Y-m-d'))
             ->where('start_time', $this->start_time)
             ->where('end_time', $this->end_time)
             ->get()
@@ -53,6 +57,18 @@ class SelectMeetingSlot extends Component
             $this->show_reserve_slot_confirmation_modal = false;
             $this->meeting_date = null;
             $this->is_meeting_date_chosen = false;
+
+            $meeting_teacher = User::find($random_meeting_slot->teacher_id);
+            LaravelNotification::send(collect([Auth::user(), $meeting_teacher]), new MeetingBookedNotification($random_meeting_slot));
+
+            // TODO: TO CREATE CLASS
+            /*
+            Mail::to($meeting_teacher->email)->queue(new MeetingBookedEmail($record, $meeting_teacher));
+            Mail::to($meeting_teacher->email)->send(new MeetingBookedEmail($record, $meeting_teacher));
+            */
+
+            broadcast(new ReceiveMeetingBookedEvent($meeting_teacher->id)); // Trigger an event
+            broadcast(new ReceiveMeetingBookedEvent(Auth::user()->id)); // Trigger an event
 
             Toaster::success('You have successfully booked your slot!');
             $this->dispatch('reserved-slot');
