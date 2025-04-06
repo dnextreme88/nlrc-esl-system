@@ -46,7 +46,7 @@ class MeetingBookedEmail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.meeting_booked',
+            markdown: 'emails.meeting-booked',
             with: [
                 'meeting_slot' => $this->meeting_slot,
                 'user' => $this->user,
