@@ -19,6 +19,12 @@ class MeetingDetail extends Component
     public $meeting_link;
     public $meeting_updates = [];
 
+    #[On('copied-link-to-clipboard')]
+    public function copy_meeting_link_to_clipboard()
+    {
+        Toaster::success('Meeting link copied to clipboard!');
+    }
+
     public function update_meeting_details()
     {
         $this->validate(['meeting_link' => ['required', 'url']]);
