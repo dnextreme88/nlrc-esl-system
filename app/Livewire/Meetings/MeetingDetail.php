@@ -9,20 +9,37 @@ use App\Models\MeetingSlot;
 use App\Models\MeetingSlotsUser;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\On;
 use Livewire\Component;
+use Masmerise\Toaster\Toaster;
 
 class MeetingDetail extends Component
 {
     public $current_meeting_slot;
+    public $meeting_link;
     public $meeting_updates = [];
+
+    #[On('copied-link-to-clipboard')]
+    public function copy_meeting_link_to_clipboard()
+    {
+        Toaster::success('Meeting link copied to clipboard!');
+    }
+
+    public function update_meeting_details()
+    {
+        $this->validate(['meeting_link' => ['required', 'url']]);
+
+        $this->current_meeting_slot->update(['meeting_link' => $this->meeting_link]);
+
+        Toaster::success('Meeting details are now updated!');
+        $this->dispatch('meeting-details-updated');
+    }
 
     public function mount($meeting_uuid)
     {
         $this->current_meeting_slot = MeetingSlot::where('meeting_uuid', $meeting_uuid)->first();
-    }
+        $this->meeting_link = $this->current_meeting_slot->meeting_link;
 
-    public function render()
-    {
         $user = User::findOrFail(Auth::user()->id);
 
         if ($this->current_meeting_slot) {
@@ -64,7 +81,7 @@ class MeetingDetail extends Component
         // Check if the meeting details were updated such as time was changed or date was changed
         // Goes here if there are students booked as it doesn't make sense to go here
         // If there are no booked students even if you update the meeting details
-        if (array_key_exists('1', $this->meeting_updates) && $this->current_meeting_slot->created_at != $this->current_meeting_slot->updated_at) {
+        if (array_key_exists('1', $this->meeting_updates) && $this->current_meeting_slot->meeting_link) {
             $this->meeting_updates[] = [
                 'order' => 3,
                 'headline' => 'Teacher updated meeting details',
@@ -80,6 +97,12 @@ class MeetingDetail extends Component
                 'sub_text' => $this->current_meeting_slot->status,
             ];
         }
+    }
+
+    #[On('meeting-details-updated')]
+    public function render()
+    {
+        $user = User::findOrFail(Auth::user()->id);
 
         if ($this->current_meeting_slot) {
             if ($user->cannot('view', $this->current_meeting_slot)) {

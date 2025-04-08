@@ -2,10 +2,51 @@
 
 namespace App\Helpers;
 
+use App\Models\Announcement;
+use App\Models\MeetingSlot;
 use Carbon\Carbon;
 
 class Helpers
 {
+    public static function get_notifications($notifications): array
+    {
+        $parsed_notifications = [];
+
+        foreach ($notifications as $notification) {
+            if ($notification['type'] == 'announcement-sent') {
+                $announcement = Announcement::find($notification->data['announcement_id']);
+
+                array_push($parsed_notifications, array_merge(
+                    $notification->toArray(),
+                    [
+                        'announcement' => [
+                            'id' => $announcement['id'],
+                            'title' => $announcement['title'],
+                            'slug' => $announcement['slug'],
+                            'description' => $announcement['description'],
+                        ]
+                    ]
+                ));
+            } else if ($notification['type'] == 'meeting-booked') {
+                $meeting = MeetingSlot::find($notification->data['meeting_slot_id']);
+
+                array_push($parsed_notifications, array_merge(
+                    $notification->toArray(),
+                    [
+                        'meeting' => [
+                            'id' => $meeting['id'],
+                            'meeting_uuid' => $meeting['meeting_uuid'],
+                            'start_time' => $meeting['start_time'],
+                            'end_time' => $meeting['end_time'],
+                        ]
+                    ]
+                ));
+            }
+        }
+
+        return $parsed_notifications;
+    }
+
     public static function parse_time_to_user_timezone($time): Carbon
     {
         return Carbon::parse($time)->toUserTimezone();

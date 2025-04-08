@@ -22,7 +22,7 @@ With the release of Laravel 12, item #s 1 - 3 are now run with a single command 
 ``php artisan optimize:clear``
 
 ### Some personal suggestions / personal todos not covered in other sections
-- [ ] Add notification event to notify teachers that their `meeting_slot` was selected and booked by a student. Also, add a way for the teachers to set a meeting_link (GMeet, Zoom etc.). We can also send an email to the teacher's email to notify them about this.
+- [X] Add notification event to notify teachers that their `meeting_slot` was selected and booked by a student. Also, add a way for the teachers to set a meeting_link (GMeet, Zoom etc.). We can also send an email to the teacher's email to notify them about this.
 - [ ] Comments system on a unit detail page? Students may be able to ask for help and teachers may respond etc.
 - [ ] Ratings system on a unit detail page? Just to make the app a little more reactive and lively. We could also show these to the user dashboard whatever units the student has already rated etc.
 

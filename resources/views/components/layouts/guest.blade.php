@@ -36,7 +36,7 @@
         </div>
 
         @filamentScripts
-        @livewireScripts
+        @livewireScriptConfig
         @livewireCalendarScripts
         @vite('resources/js/app.js')
         @stack('modals')

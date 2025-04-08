@@ -1,4 +1,6 @@
+import { Livewire, Alpine } from '../../vendor/livewire/livewire/dist/livewire.esm';
 import axios from 'axios';
+import Clipboard from '@ryangjchandler/alpine-clipboard';
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 import '../../vendor/masmerise/livewire-toaster/resources/js';
@@ -42,3 +44,7 @@ window.darkModeSwitcher = function() {
         }
     }
 }
+
+// REF: https://livewire.laravel.com/docs/installation#manually-bundling-livewire-and-alpine
+Alpine.plugin(Clipboard);
+Livewire.start();
