@@ -50,8 +50,8 @@
                                             <div class="flex space-y-2 gap-3">
                                                 <x-round-image
                                                     :alt_text="$student['student']['last_name']. ', ' .$student['student']['first_name']"
-                                                    :title_text="$student['student']['last_name']. ', ' .$student['student']['first_name']. ' has booked this slot'"
                                                     :src="$student['student']['profile_photo_url']"
+                                                    :title_text="$student['student']['last_name']. ', ' .$student['student']['first_name']. ' has booked this slot'"
                                                 />
 
                                                 <span class="self-center text-sm text-gray-800 dark:text-gray-200">booked on {{ Helpers::parse_time_to_user_timezone($student['created_at'])->format('F j, Y g:i A') }}</span>

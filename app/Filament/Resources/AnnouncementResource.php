@@ -7,14 +7,12 @@ use App\Filament\Resources\AnnouncementResource\Pages\CreateAnnouncement;
 use App\Filament\Resources\AnnouncementResource\Pages\EditAnnouncement;
 use App\Filament\Resources\AnnouncementResource\Pages\ListAnnouncements;
 use App\Filament\Resources\AnnouncementResource\Pages\ViewAnnouncement;
-use App\Filament\Resources\AnnouncementResource\RelationManagers;
 use App\Mail\AnnouncementEmail;
 use App\Models\Announcement;
 use App\Models\Notification;
 use App\Models\Role;
 use App\Models\User;
 use App\Notifications\AnnouncementNotification;
-use Filament\Forms;
 use Filament\Forms\Components\Actions;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\MarkdownEditor;
@@ -35,7 +33,6 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification as FilamentNotification;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
@@ -45,11 +42,11 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Query\Builder AS BuilderQuery;
+use Illuminate\Database\Query\Builder as BuilderQuery;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Notification as LaravelNotification;
+use Illuminate\Support\Str;
 
 class AnnouncementResource extends Resource
 {

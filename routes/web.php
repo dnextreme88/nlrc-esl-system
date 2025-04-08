@@ -5,15 +5,15 @@ use App\Livewire\Announcements\AnnouncementList;
 use App\Livewire\Homepage;
 use App\Livewire\Meetings\MeetingDetail;
 use App\Livewire\Meetings\TeacherAvailabilitySlots;
-use App\Livewire\MyMeetings;
 use App\Livewire\Modules\ModuleDetail;
 use App\Livewire\Modules\ModuleList;
+use App\Livewire\Modules\Units\UnitDetail;
+use App\Livewire\MyMeetings;
 use App\Livewire\NotificationList;
 use App\Livewire\Settings\SecuritySettings;
 use App\Livewire\Settings\SettingsPage;
 use App\Livewire\Settings\TimeSettings;
 use App\Livewire\Settings\UserSettings;
-use App\Livewire\Modules\Units\UnitDetail;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', Homepage::class)->name('home');
