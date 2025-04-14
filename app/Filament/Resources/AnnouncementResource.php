@@ -68,7 +68,7 @@ class AnnouncementResource extends Resource
                                     ->hidden(fn (string $operation): bool => $operation === 'create')
                                     ->label('Author'),
                                 TextInput::make('title')
-                                    ->columnSpan(2)
+                                    ->columnSpan(fn (string $operation): int => $operation === 'create' ? 4 : 2)
                                     ->maxLength(128)
                                     ->minLength(5)
                                     ->required()
