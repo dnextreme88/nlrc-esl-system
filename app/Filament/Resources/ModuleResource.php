@@ -10,8 +10,8 @@ use App\Filament\Resources\ModuleResource\RelationManagers;
 use App\Models\Module;
 use App\Models\Proficiency;
 use Filament\Forms;
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -45,9 +45,8 @@ class ModuleResource extends Resource
                     ->minLength(5)
                     ->required()
                     ->unique(ignoreRecord: true),
-                Textarea::make('description')
+                MarkdownEditor::make('description')
                     ->columnSpan(2)
-                    ->maxLength(500)
                     ->minLength(5)
                     ->required(),
             ])
