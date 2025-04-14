@@ -5,7 +5,6 @@ namespace App\Filament\Resources\AnnouncementResource\Pages;
 use App\Filament\Resources\AnnouncementResource;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 
 class CreateAnnouncement extends CreateRecord
 {
@@ -21,7 +20,6 @@ class CreateAnnouncement extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['user_id'] = Auth::user()->id;
-        $data['slug'] = Str::slug($data['title'], '-');
 
         return $data;
     }
