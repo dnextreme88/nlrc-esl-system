@@ -15,13 +15,6 @@ class EditUnit extends EditRecord
         return [DeleteAction::make()];
     }
 
-    protected function mutateFormDataBeforeSave(array $data): array
-    {
-        $data['slug'] = Str::slug($data['name'], '-');
-
-        return $data;
-    }
-
     public function hasCombinedRelationManagerTabsWithContent(): bool
     {
         return true;

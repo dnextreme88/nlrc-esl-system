@@ -53,9 +53,8 @@ class MeetingDetail extends Component
         // Check if there are students who are already booked on this slot
         if ($this->current_meeting_slot->meeting_slots_users) {
             $students_in_meeting = $this->current_meeting_slot->meeting_slots_users
-                ->map(fn ($student) =>
-                    MeetingSlotsUser::where('meeting_slot_id', $this->current_meeting_slot->id)->isStudentId($student->id)
-                        ->first()
+                ->map(fn ($student) => MeetingSlotsUser::where('meeting_slot_id', $this->current_meeting_slot->id)->isStudentId($student->id)
+                    ->first()
                 )->all();
 
             // Sort students who booked first in ascending order

@@ -5,7 +5,7 @@ namespace Database\Factories;
 use App\Enums\Genders;
 use App\Enums\Roles;
 use App\Models\Role;
-Use Carbon\Carbon;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;

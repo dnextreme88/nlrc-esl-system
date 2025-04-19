@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Clusters\ModuleCluster;
-use App\Filament\Resources\UnitResource\Pages;
 use App\Filament\Resources\UnitResource\Pages\CreateUnit;
 use App\Filament\Resources\UnitResource\Pages\EditUnit;
 use App\Filament\Resources\UnitResource\Pages\ListUnits;

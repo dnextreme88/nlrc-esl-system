@@ -234,8 +234,8 @@
                                                         @foreach (array_slice($as_array, 0, 2) as $student)
                                                             <x-round-image
                                                                 :alt_text="$student['last_name']. ', ' .$student['first_name']"
-                                                                :title_text="$student['last_name']. ', ' .$student['first_name']. ' has booked this slot'"
                                                                 :src="$student['profile_photo_url']"
+                                                                :title_text="$student['last_name']. ', ' .$student['first_name']. ' has booked this slot'"
                                                             />
                                                         @endforeach
 
@@ -323,8 +323,8 @@
                                                         @foreach (array_slice($as_array, 0, 2) as $student)
                                                             <x-round-image
                                                                 :alt_text="$student['last_name']. ', ' .$student['first_name']"
-                                                                :title_text="$student['last_name']. ', ' .$student['first_name']. ' has booked this slot'"
                                                                 :src="$student['profile_photo_url']"
+                                                                :title_text="$student['last_name']. ', ' .$student['first_name']. ' has booked this slot'"
                                                             />
                                                         @endforeach
 

@@ -62,8 +62,8 @@ class TeacherAvailabilitySlots extends Component
                 return Helpers::parse_time_to_user_timezone($val['start_time'])->format('Y-m-d') == $meeting_date;
             });
 
-        $this->count_pending_reserved_slots = count($this->meeting_slots->filter(fn ($val) =>
-            $val['is_opened'] == 1 && $val['meeting_slots_users']->isEmpty()
+        $this->count_pending_reserved_slots = count($this->meeting_slots->filter(
+            fn ($val) => $val['is_opened'] == 1 && $val['meeting_slots_users']->isEmpty()
         ));
 
         $this->is_meeting_date_chosen = true;

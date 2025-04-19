@@ -18,10 +18,10 @@ return new class extends Migration
             $table->string('middle_name', 96)->nullable();
             $table->string('last_name', 96);
             $table->string('email', 128)->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->date('date_of_birth');
             $table->boolean('is_active')->default(1);
             $table->string('gender', 16);
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
             $table->string('password');
             $table->rememberToken();

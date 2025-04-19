@@ -24,8 +24,8 @@ class MeetingSlotSeeder extends Seeder
 
                     $meeting_slot->meeting_slots_users()->attach($meeting_slot->id, [
                         'student_id' => $random_student->id,
-                        'created_at' => Carbon::now(),
-                        'updated_at' => Carbon::now(),
+                        'created_at' => Carbon::now()->addMinutes(5),
+                        'updated_at' => Carbon::now()->addMinutes(5),
                     ]);
 
                     if ($random_number % 2 == 0) { // Add another student if random number is divisible by 2
@@ -36,8 +36,8 @@ class MeetingSlotSeeder extends Seeder
 
                         $meeting_slot->meeting_slots_users()->attach($meeting_slot->id, [
                             'student_id' => $another_random_student->id,
-                            'created_at' => Carbon::now(),
-                            'updated_at' => Carbon::now(),
+                            'created_at' => Carbon::now()->addMinutes(10),
+                            'updated_at' => Carbon::now()->addMinutes(10),
                         ]);
                     }
 

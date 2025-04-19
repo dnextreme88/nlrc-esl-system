@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Module extends Model
 {
@@ -41,5 +42,16 @@ class Module extends Model
     public function units(): HasMany
     {
         return $this->hasMany(Unit::class);
+    }
+
+    protected static function booted()
+    {
+        static::creating(function (self $module) {
+            $module->slug = Str::slug($module->name, '-');
+        });
+
+        static::updating(function (self $module) {
+            $module->slug = Str::slug($module->name, '-');
+        });
     }
 }

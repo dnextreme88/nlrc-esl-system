@@ -6,7 +6,6 @@ use App\Enums\Roles;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 class AnnouncementFactory extends Factory
 {
@@ -20,7 +19,6 @@ class AnnouncementFactory extends Factory
         return [
             'user_id' => $random_admin->id,
             'title' => ucfirst($random_title),
-            'slug' => Str::slug($random_title, '-'),
             'description' => fake()->sentence(fake()->randomDigitNotNull()),
             'tags' => implode(',', fake()->words(3)),
             'created_at' => Carbon::now(),
