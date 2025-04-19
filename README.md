@@ -7,22 +7,40 @@ An English as a Second Language (ESL) system built for Zeldan Nordic Languages R
 ## Useful commands
 
 1. Run server, Vite and listen to Laravel events and queues. This runs the ff. commands concurrently: ``php artisan serve``, ``npm run dev``, and ``php artisan queue:listen`` on a single command
-``composer run dev``
+
+```bash
+composer run dev
+```
 
 2. Start Laravel Reverb WebSocket server. Add a ``--debug`` option at the end to track events
-``php artisan reverb:start``
+```bash
+php artisan reverb:start
+```
 
 3. Build assets for production
-``npm run build``
+
+```bash
+npm run build
+```
 
 4. Clear cache and optimize files
-``php artisan optimize:clear``
+
+```bash
+php artisan optimize:clear
+```
 
 5. Fix code styles based on config from [pint.json](https://github.com/dnextreme88/nlrc-esl-system/blob/main/pint.json)
-``composer run pint``
+
+```bash
+composer run pint
+```
 
 6. Preview code styles that would be fixed when running composer run pint
-``composer run pint-test``
+
+```bash
+composer run pint-test
+```
+
 
 ## Some personal suggestions / personal todos not covered in other sections
 - [X] Add notification event to notify teachers that their meeting was selected and booked by a student. Also, add a way for the teachers to set a meeting_link (GMeet, Zoom etc.). We can also send an email to the teacher's email to notify them about this.
