@@ -18,6 +18,12 @@ An English as a Second Language (ESL) system built for Zeldan Nordic Languages R
 4. Clear cache and optimize files
 ``php artisan optimize:clear``
 
+5. Fix code styles based on config from [pint.json](https://github.com/dnextreme88/nlrc-esl-system/blob/main/pint.json)
+``composer run pint``
+
+6. Preview code styles that would be fixed when running composer run pint
+``composer run pint-test``
+
 ## Some personal suggestions / personal todos not covered in other sections
 - [X] Add notification event to notify teachers that their meeting was selected and booked by a student. Also, add a way for the teachers to set a meeting_link (GMeet, Zoom etc.). We can also send an email to the teacher's email to notify them about this.
 - [ ] Comments system on a unit detail page? Students may be able to ask for help and teachers may respond etc.
