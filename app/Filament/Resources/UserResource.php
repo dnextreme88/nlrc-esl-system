@@ -25,7 +25,10 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class UserResource extends Resource
@@ -100,7 +103,7 @@ class UserResource extends Resource
                                 Placeholder::make('date_of_birth')
                                     ->content(fn (User $user): ?string => Carbon::parse($user->date_of_birth)->format('m/d/Y')),
                                 Placeholder::make('gender')
-                                    ->content(fn (User $user): ?string => $user->gender),
+                                    ->content(fn (User $user): ?string => ucfirst($user->gender)),
                                 Select::make('role_id')
                                     ->relationship('role', 'name', fn ($query) => $query->where('name', '!=', Roles::STUDENT->value))
                                     ->required(),
@@ -143,10 +146,14 @@ class UserResource extends Resource
                 TextColumn::make('email')
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('role.name')
+                    ->label('Role'),
                 TextColumn::make('date_of_birth')
                     ->date()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('gender')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('timezone')
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -161,7 +168,16 @@ class UserResource extends Resource
                     }),
             ])
             ->filters([
-                //
+                SelectFilter::make('role')
+                    ->relationship('role', 'name'),
+                SelectFilter::make('gender')
+                    ->options(collect(Genders::cases())
+                        ->mapWithKeys(fn ($gender) => [$gender->value => $gender->getLabel()])
+                        ->toArray()
+                    ),
+                Filter::make('is_active')
+                    ->label('Toggle active users')
+                    ->query(fn (Builder $query): Builder => $query->where('is_active', true)),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
