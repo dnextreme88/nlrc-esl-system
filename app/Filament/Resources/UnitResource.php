@@ -111,8 +111,8 @@ class UnitResource extends Resource
                     ->label('Module'),
             ])
             ->actions([
-                DeleteAction::make(),
                 EditAction::make(),
+                DeleteAction::make(),
             ])
             ->bulkActions([
                 BulkActionGroup::make([
