@@ -7,6 +7,7 @@ import preset from './vendor/filament/support/tailwind.config.preset'
 export default {
     content: [
         './app/Filament/**/*.php',
+        './resources/**/*.css',
         './resources/**/*.js',
         './resources/views/**/*.blade.php',
         './storage/framework/views/*.php',
