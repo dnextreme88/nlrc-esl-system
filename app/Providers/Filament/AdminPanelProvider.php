@@ -6,6 +6,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\MenuItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -61,6 +62,12 @@ class AdminPanelProvider extends PanelProvider
             ->maxContentWidth(MaxWidth::Full)
             ->topNavigation()
             ->plugin(FilamentProgressbarPlugin::make()->color('#29b'))
-            ->viteTheme('resources/css/filament-admin-theme.css');
+            ->viteTheme('resources/css/filament-admin-theme.css')
+            ->userMenuItems([
+                MenuItem::make('site')
+                    ->icon('heroicon-o-arrow-up-right')
+                    ->label('Go to site')
+                    ->url(url('/'), shouldOpenInNewTab: true),
+            ]);
     }
 }
