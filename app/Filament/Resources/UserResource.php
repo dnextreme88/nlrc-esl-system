@@ -23,6 +23,7 @@ use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
@@ -104,7 +105,12 @@ class UserResource extends Resource
                                     ->content(fn (User $user): ?string => Carbon::parse($user->date_of_birth)->format('m/d/Y')),
                                 Placeholder::make('gender')
                                     ->content(fn (User $user): ?string => ucfirst($user->gender)),
+                                Placeholder::make('role_id')
+                                    ->content(fn (User $user): ?string => $user->role->name)
+                                    ->label('Role')
+                                    ->visible(fn (User $record): bool => $record->role->name == Roles::STUDENT->value),
                                 Select::make('role_id')
+                                    ->hidden(fn (User $record): bool => $record->role->name == Roles::STUDENT->value)
                                     ->relationship('role', 'name', fn ($query) => $query->where('name', '!=', Roles::STUDENT->value))
                                     ->required(),
                                 Select::make('timezone')
@@ -156,6 +162,7 @@ class UserResource extends Resource
                     ->formatStateUsing(fn (string $state): string => ucfirst($state))
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('timezone')
+                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 IconColumn::make('is_active')
                     ->color(fn (string $state): string => match ($state) {
@@ -180,12 +187,10 @@ class UserResource extends Resource
                     ->query(fn (Builder $query): Builder => $query->where('is_active', true)),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                //
             ]);
     }
 
