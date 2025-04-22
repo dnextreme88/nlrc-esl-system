@@ -84,6 +84,8 @@ class UnitsAttachmentRelationManager extends RelationManager
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('file_name', 'asc')
+            ->emptyStateDescription('Add a new attachment by clicking the top-right button')
+            ->emptyStateHeading('No attachments found for this unit')
             ->filters([
                 //
             ])
