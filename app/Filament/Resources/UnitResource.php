@@ -7,6 +7,7 @@ use App\Filament\Resources\UnitResource\Pages\CreateUnit;
 use App\Filament\Resources\UnitResource\Pages\EditUnit;
 use App\Filament\Resources\UnitResource\Pages\ListUnits;
 use App\Filament\Resources\UnitResource\RelationManagers;
+use App\Filament\Resources\UnitResource\RelationManagers\UnitsAssessmentRelationManager;
 use App\Filament\Resources\UnitResource\RelationManagers\UnitsAttachmentRelationManager;
 use App\Models\Module;
 use App\Models\Unit;
@@ -125,6 +126,7 @@ class UnitResource extends Resource
     {
         return [
             UnitsAttachmentRelationManager::class,
+            UnitsAssessmentRelationManager::class,
         ];
     }
 

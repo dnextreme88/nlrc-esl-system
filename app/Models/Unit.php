@@ -21,6 +21,11 @@ class Unit extends Model
         'description',
     ];
 
+    public function assessments(): HasMany
+    {
+        return $this->hasMany(UnitsAssessment::class);
+    }
+
     public function unit_attachments(): HasMany
     {
         return $this->hasMany(UnitsAttachment::class);
