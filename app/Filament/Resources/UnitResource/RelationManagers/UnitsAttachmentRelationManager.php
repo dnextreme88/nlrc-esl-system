@@ -108,8 +108,10 @@ class UnitsAttachmentRelationManager extends RelationManager
                     ->extraModalFooterActions([
                         Action::make('open_in_browser')
                             ->icon('heroicon-o-globe-alt')
-                            ->openUrlInNewTab()
+                            ->label('Open in browser (in a new tab)')
+                            // Do not change the order of this two methods so that the attachment opens on a new tab
                             ->url(fn (UnitsAttachment $record) => asset('storage/' .$record->file_path))
+                            ->openUrlInNewTab(),
                     ])
                     ->icon('heroicon-o-play-circle')
                     ->media(fn (UnitsAttachment $record) => asset('storage/' .$record->file_path)),
