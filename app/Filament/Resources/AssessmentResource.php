@@ -83,14 +83,7 @@ class AssessmentResource extends Resource
                     ->toggleable()
                     ->words(5),
                 IconColumn::make('is_active')
-                    ->color(fn (string $state): string => match ($state) {
-                        '0' => 'danger',
-                        '1' => 'success',
-                    })
-                    ->icon(fn (string $state): string => match ($state) {
-                        '0' => 'heroicon-o-x-circle',
-                        '1' => 'heroicon-s-check-circle',
-                    }),
+                    ->boolean(),
                 TextColumn::make('questionsCount')
                     ->label('# of questions'),
             ])

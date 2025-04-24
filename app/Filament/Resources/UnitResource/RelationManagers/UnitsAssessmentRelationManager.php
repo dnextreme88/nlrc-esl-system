@@ -61,14 +61,7 @@ class UnitsAssessmentRelationManager extends RelationManager
                     ->label('Assessment Type')
                     ->sortable(),
                 IconColumn::make('assessment.is_active')
-                    ->color(fn (string $state): string => match ($state) {
-                        '0' => 'danger',
-                        '1' => 'success',
-                    })
-                    ->icon(fn (string $state): string => match ($state) {
-                        '0' => 'heroicon-o-x-circle',
-                        '1' => 'heroicon-s-check-circle',
-                    })
+                    ->boolean()
                     ->label('Is assessment still active'),
                 TextColumn::make('created_at')
                     ->dateTime()

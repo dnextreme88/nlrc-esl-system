@@ -165,14 +165,7 @@ class UserResource extends Resource
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 IconColumn::make('is_active')
-                    ->color(fn (string $state): string => match ($state) {
-                        '0' => 'danger',
-                        '1' => 'success',
-                    })
-                    ->icon(fn (string $state): string => match ($state) {
-                        '0' => 'heroicon-o-x-circle',
-                        '1' => 'heroicon-s-check-circle',
-                    }),
+                    ->boolean(),
             ])
             ->filters([
                 SelectFilter::make('role')
