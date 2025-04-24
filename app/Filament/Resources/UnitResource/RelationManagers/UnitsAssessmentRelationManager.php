@@ -5,8 +5,10 @@ namespace App\Filament\Resources\UnitResource\RelationManagers;
 use App\Enums\AssessmentTypes;
 use App\Models\Assessment;
 use Filament\Forms;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Actions\CreateAction;
@@ -29,7 +31,8 @@ class UnitsAssessmentRelationManager extends RelationManager
         return $form
             ->schema([
                 Select::make('assessment_id')
-                    ->helperText('Only active assessments will be shown here')
+                    ->helperText('Only active assessments with at least 1 question will be shown here')
+                    ->live()
                     ->relationship(
                         name: 'assessment',
                         titleAttribute: 'title',
@@ -40,10 +43,20 @@ class UnitsAssessmentRelationManager extends RelationManager
                                 ->toArray();
 
                             return $query->where('is_active', true)
+                                ->whereHas('questions')
                                 ->whereNotIn('id', $used_assessment_ids);
                         },
                     )
                     ->required(),
+                Placeholder::make('no_of_questions')
+                    ->content(function (Get $get): int {
+                        $assessment_questions_count = Assessment::find($get('assessment_id'))->questions->count();
+
+                        return $assessment_questions_count;
+                    })
+                    ->label('No. of questions for this assessment')
+                    ->live()
+                    ->visible(fn (Get $get): bool => filled($get('assessment_id'))),
             ])
             ->columns(1);
     }
