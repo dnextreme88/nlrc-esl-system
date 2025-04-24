@@ -21,7 +21,7 @@ class Unit extends Model
         'description',
     ];
 
-    public function assessments(): HasMany
+    public function unit_assessments(): HasMany
     {
         return $this->hasMany(UnitsAssessment::class);
     }

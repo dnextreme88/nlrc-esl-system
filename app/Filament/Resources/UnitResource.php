@@ -77,8 +77,12 @@ class UnitResource extends Resource
                     ->searchable()
                     ->toggleable()
                     ->words(5),
+                IconColumn::make('unit_assessments')
+                    ->boolean()
+                    ->getStateUsing(fn ($record) => $record->unit_assessments()->exists())
+                    ->label('Has Assessments'),
                 IconColumn::make('unit_attachments')
-                    ->boolean() // Automatically handles true/false states
+                    ->boolean()
                     ->getStateUsing(fn ($record) => $record->unit_attachments()->exists())
                     ->label('Has Attachments'),
                 TextColumn::make('created_at')

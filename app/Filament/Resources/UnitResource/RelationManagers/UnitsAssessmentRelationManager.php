@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class UnitsAssessmentRelationManager extends RelationManager
 {
-    protected static string $relationship = 'assessments';
+    protected static string $relationship = 'unit_assessments';
     protected static ?string $title = 'Assessments';
 
     public function form(Form $form): Form
@@ -35,7 +35,7 @@ class UnitsAssessmentRelationManager extends RelationManager
                         titleAttribute: 'title',
                         modifyQueryUsing: function ($query) {
                             $used_assessment_ids = $this->getOwnerRecord()
-                                ->assessments() // Relationship name from Unit to Assessment
+                                ->unit_assessments() // Relationship name of Unit to Assessment
                                 ->pluck('id')
                                 ->toArray();
 
@@ -61,7 +61,6 @@ class UnitsAssessmentRelationManager extends RelationManager
                     ->label('Assessment Type')
                     ->sortable(),
                 IconColumn::make('assessment.is_active')
-                    ->label('Is assessment still active')
                     ->color(fn (string $state): string => match ($state) {
                         '0' => 'danger',
                         '1' => 'success',
@@ -69,7 +68,8 @@ class UnitsAssessmentRelationManager extends RelationManager
                     ->icon(fn (string $state): string => match ($state) {
                         '0' => 'heroicon-o-x-circle',
                         '1' => 'heroicon-s-check-circle',
-                    }),
+                    })
+                    ->label('Is assessment still active'),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->label('Attached on')
@@ -109,7 +109,7 @@ class UnitsAssessmentRelationManager extends RelationManager
                     ->createAnother(false)
                     ->hidden(function (): bool {
                         $used_assessment_ids = $this->getOwnerRecord()
-                            ->assessments() // Relationship name from Unit to Assessment
+                            ->unit_assessments() // Relationship name of Unit to Assessment
                             ->pluck('id')
                             ->toArray();
 
