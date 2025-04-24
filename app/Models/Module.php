@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\IdTrait;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -42,6 +43,13 @@ class Module extends Model
     public function units(): HasMany
     {
         return $this->hasMany(Unit::class);
+    }
+
+    public function unitsCount(): Attribute
+    {
+        return Attribute::make(
+            get: fn (): int => $this->units()->count(),
+        );
     }
 
     protected static function booted()

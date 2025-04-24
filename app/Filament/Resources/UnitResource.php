@@ -43,6 +43,8 @@ class UnitResource extends Resource
         return $form
             ->schema([
                 Select::make('module_id')
+                    // Pull from query string and set it as default if they came from the modules admin panel
+                    ->default(fn (): ?string => request()->get('module_id'))
                     ->relationship('module', 'name')
                     ->required(),
                 TextInput::make('name')
