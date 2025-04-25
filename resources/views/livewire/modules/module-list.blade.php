@@ -11,7 +11,7 @@
 
     <div class="grid grid-cols-1 gap-9 mx-auto space-y-6 max-w-7xl py-12 sm:px-6 lg:px-8 lg:space-y-0 lg:grid-cols-3 lg:place-items-center lg:h-75-vh">
         @foreach ($user_modules as $module)
-            <div class="grid gap-3 p-3 transition-all duration-300 bg-gray-300/50 border-gray-300 place-items-center rounded-xl relative h-full dark:border-gray-700 dark:bg-gray-600/50 hover:bg-gray-400 dark:hover:bg-gray-700 lg:hover:scale-110 {{ !$module->has_access ? 'opacity-60 dark:opacity-50' : '' }}">
+            <div class="grid gap-3 p-3 transition-all duration-300 bg-gray-300/50 border-gray-300 place-items-center rounded-xl relative h-full w-full dark:border-gray-700 dark:bg-gray-600/50 hover:bg-gray-400 dark:hover:bg-gray-700 lg:hover:scale-110 {{ !$module->has_access ? 'opacity-60 dark:opacity-50' : '' }}">
                 @if (!$module->has_access)
                     <div class="block text-sm text-red-900 dark:text-red-300 lg:hidden">You don't have access to this module yet</div>
                 @endif

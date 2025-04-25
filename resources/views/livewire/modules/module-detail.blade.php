@@ -10,7 +10,7 @@
     </x-slot>
 
     <div class="max-w-7xl mx-auto py-12 sm:px-6 lg:px-8">
-        <p class="text-gray-800 dark:text-gray-200">{!! Markdown::parse($current_module->description) !!}</p>
+        <div class="max-w-none text-gray-800 dark:text-gray-200 prose dark:prose-invert">{!! Markdown::parse($current_module->description) !!}</div>
 
         <div class="mt-10 border-2 border-gray-300 dark:border-gray-600 shadow-sm shadow-gray-600">
             @if ($current_module->units->isNotEmpty())
