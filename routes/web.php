@@ -2,6 +2,7 @@
 
 use App\Livewire\Announcements\AnnouncementDetail;
 use App\Livewire\Announcements\AnnouncementList;
+use App\Livewire\Assessments\AssessmentDetail;
 use App\Livewire\Homepage;
 use App\Livewire\Meetings\MeetingDetail;
 use App\Livewire\Meetings\TeacherAvailabilitySlots;
@@ -30,6 +31,15 @@ Route::middleware([
     Route::get('/my-meetings', MyMeetings::class)->name('my-meetings');
     Route::get('/notifications', NotificationList::class)->name('notifications');
 
+    Route::group(['prefix' => 'announcements', 'as' => 'announcements.'], function () {
+        Route::get('/', AnnouncementList::class)->name('index');
+        Route::get('/{id}-{slug}', AnnouncementDetail::class)->name('detail');
+    });
+
+    Route::group(['prefix' => 'assessments', 'as' => 'assessments.'], function () {
+        Route::get('/{id}-{slug}', AssessmentDetail::class)->name('detail');
+    });
+
     Route::group(['prefix' => 'meetings', 'as' => 'meetings.'], function () {
         Route::get('/details/{meeting_uuid}', MeetingDetail::class)->name('detail');
         Route::get('/availability', TeacherAvailabilitySlots::class)->name('availability');
@@ -39,11 +49,6 @@ Route::middleware([
         Route::get('/', ModuleList::class)->name('index');
         Route::get('/{id}-{slug}', ModuleDetail::class)->name('detail');
         Route::get('/{id}-{slug}/units/{unit_id}-{unit_slug}', UnitDetail::class)->name('unit_detail');
-    });
-
-    Route::group(['prefix' => 'announcements', 'as' => 'announcements.'], function () {
-        Route::get('/', AnnouncementList::class)->name('index');
-        Route::get('/{id}-{slug}', AnnouncementDetail::class)->name('detail');
     });
 
     Route::group(['prefix' => 'settings', 'as' => 'settings.'], function () {

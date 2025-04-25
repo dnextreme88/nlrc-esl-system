@@ -10,6 +10,7 @@ use Livewire\Component;
 class UnitDetail extends Component
 {
     public $current_unit;
+    public $assessments;
     public $module_id;
     public $module_slug;
 
@@ -21,6 +22,11 @@ class UnitDetail extends Component
         $this->current_unit = Unit::where('id', $unit_id)->where('slug', $unit_slug)
             ->whereHas('module', fn ($query) => $query->where('id', $id)->where('slug', $slug))
             ->first();
+
+        $this->assessments = $this->current_unit->unit_assessments()
+            ->whereHas('assessment', fn ($query) => $query->where('is_active', true))
+            ->with('assessment')
+            ->get();
     }
 
     public function render()

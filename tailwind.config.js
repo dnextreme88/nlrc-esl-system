@@ -19,6 +19,15 @@ export default {
     darkMode: 'class',
     theme: {
         extend: {
+            animation: {
+                'confetti-fall': 'confettiFall 3.5s linear infinite',
+            },
+            keyframes: {
+                confettiFall: {
+                    '0%': { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                    '100%': { transform: 'translateY(500px) rotate(720deg)', opacity: 0 },
+                },
+            },
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
