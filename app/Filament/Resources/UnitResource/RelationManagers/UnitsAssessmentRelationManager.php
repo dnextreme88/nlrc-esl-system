@@ -39,7 +39,7 @@ class UnitsAssessmentRelationManager extends RelationManager
                         modifyQueryUsing: function ($query) {
                             $used_assessment_ids = $this->getOwnerRecord()
                                 ->unit_assessments() // Relationship name of Unit to Assessment
-                                ->pluck('id')
+                                ->pluck('assessment_id')
                                 ->toArray();
 
                             return $query->where('is_active', true)
