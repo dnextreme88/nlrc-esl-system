@@ -21,6 +21,11 @@ class Unit extends Model
         'description',
     ];
 
+    public function module(): HasOne
+    {
+        return $this->hasOne(Module::class, 'id', 'module_id');
+    }
+
     public function unit_assessments(): HasMany
     {
         return $this->hasMany(UnitsAssessment::class);
@@ -29,11 +34,6 @@ class Unit extends Model
     public function unit_attachments(): HasMany
     {
         return $this->hasMany(UnitsAttachment::class);
-    }
-
-    public function module(): HasOne
-    {
-        return $this->hasOne(Module::class, 'id', 'module_id');
     }
 
     protected static function booted()

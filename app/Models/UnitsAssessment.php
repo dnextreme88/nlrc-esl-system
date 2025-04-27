@@ -13,13 +13,13 @@ class UnitsAssessment extends Model
         'assessment_id',
     ];
 
-    public function unit(): BelongsToMany
-    {
-        return $this->belongsToMany(Unit::class);
-    }
-
     public function assessment(): BelongsTo
     {
         return $this->belongsTo(Assessment::class);
+    }
+
+    public function unit(): BelongsToMany
+    {
+        return $this->belongsToMany(Unit::class);
     }
 }

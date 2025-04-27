@@ -23,11 +23,6 @@ class Module extends Model
         'description',
     ];
 
-    public function proficiency(): BelongsTo
-    {
-        return $this->belongsTo(Proficiency::class);
-    }
-
     public function module_students(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'module_students', 'module_id', 'student_id')
@@ -38,6 +33,11 @@ class Module extends Model
     {
         return $this->belongsToMany(User::class, 'module_teachers', 'module_id', 'teacher_id')
             ->withTimestamps();
+    }
+
+    public function proficiency(): BelongsTo
+    {
+        return $this->belongsTo(Proficiency::class);
     }
 
     public function units(): HasMany
