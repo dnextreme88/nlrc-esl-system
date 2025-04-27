@@ -10,7 +10,9 @@
     </x-slot>
 
     <div class="max-w-7xl mx-auto py-12 sm:px-6 lg:px-8">
-        <div class="max-w-none text-gray-800 dark:text-gray-200 prose dark:prose-invert">{!! Markdown::parse($current_module->description) !!}</div>
+        <x-markdown-parser class="text-gray-800 dark:text-gray-200">
+            {{ $current_module->description }}
+        </x-markdown-parser>
 
         <div class="mt-10 border-2 border-gray-300 dark:border-gray-600 shadow-sm shadow-gray-600">
             @if ($current_module->units->isNotEmpty())
@@ -58,7 +60,9 @@
                                 class="transition-all indent-2 mt-4 mb-6 pr-10"
                                 id="faq-{{ $index }}"
                             >
-                                <p class="text-sm text-gray-600 dark:text-gray-400">{{ $unit->description }}</p>
+                                <x-markdown-parser class="text-sm text-gray-600 dark:text-gray-400">
+                                    {{ $unit->description }}
+                                </x-markdown-parser>
 
                                 <a
                                     wire:navigate

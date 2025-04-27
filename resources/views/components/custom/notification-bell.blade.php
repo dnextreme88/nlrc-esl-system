@@ -32,9 +32,9 @@
                     <div class="flex justify-between gap-3">
                         <div class="flex flex-1 flex-col">
                             <h2 class="dark:text-gray-200 {{ !$notification['read_at'] ? 'font-bold' : '' }}">{{ strip_tags(\Illuminate\Support\Str::limit($notification['announcement']['title'], '24', '...')) }}</h2>
-                            <p class="indent-1 text-gray-800 dark:text-gray-200">
-                                {{ strip_tags(\Illuminate\Support\Str::limit($notification['announcement']['description'], '32', ' (...)')) }}
-                            </p>
+                            <x-markdown-parser text_limit="32" class="indent-1 text-sm text-gray-800 dark:text-gray-200">
+                                {{ $notification['announcement']['description'] }}
+                            </x-markdown-parser>
 
                             <small class="mt-3 dark:text-gray-400">
                                 {{ Helpers::parse_time_to_user_timezone($notification['created_at'])->diffForHumans(\Carbon\Carbon::now()->toUserTimezone(), [

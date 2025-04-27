@@ -10,17 +10,11 @@
     </x-slot>
 
     <div class="grid space-y-6 max-w-7xl mx-auto py-12 sm:px-6 lg:px-8">
-        <a
-            wire:navigate
-            href="{{ route('modules.detail', ['id' => $module_id, 'slug' => $module_slug]) }}"
-            class="text-green-600 dark:text-green-300"
-        >
-            &larr; Back to units page
-        </a>
+        <h3 class="pb-3 text-3xl text-gray-800 dark:text-gray-200">{{ $current_unit->name }}</h3>
 
-        <h3 class="text-3xl pb-4 border-b-2 border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200">{{ $current_unit->name }}</h3>
-
-        <div class="text-base text-gray-600 dark:text-gray-400 md:indent-2">{!! Markdown::parse($current_unit->description) !!}</div>
+        <x-markdown-parser class="mt-4 indent-2 text-gray-800 dark:text-gray-200">
+            {{ $current_unit->description }}
+        </x-markdown-parser>
 
         @if ($current_unit->unit_attachments->isNotEmpty())
             <div class="grid grid-cols-1 md:grid-cols-[180px_1fr]">
@@ -43,41 +37,47 @@
             </div>
         @endif
 
-        <h3 class="text-3xl pb-4 border-b-2 border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200">Assessments</h3>
+        <h3 class="pb-3 text-3xl text-gray-800 dark:text-gray-200">Assessments</h3>
 
-        @forelse ($assessments as $units_assessment)
-            <a
-                wire:navigate
-                href="{{ route('assessments.detail', [
-                    'id' => $units_assessment->assessment->id,
-                    'slug' => $units_assessment->assessment->slug,
-                    'unit_id' => $current_unit->id
-                ]) }}"
-                class="flex justify-between group flex-col md:flex-row md:items-center"
-            >
-                <div class="md:indent-2">
-                    <span class="text-green-600 dark:text-green-300 mr-2">&rarr;</span>
-                    <span class="transition duration-150 text-gray-800 dark:text-gray-200 group-hover:text-green-600 group-hover:dark:text-green-300">
-                        {{ $units_assessment->assessment->title }}
-                    </span>
-
-                    <div class="relative text-sm mt-1 text-gray-600 dark:text-gray-400">
-                        <span class="block md:hidden"> {{-- Always visible on small screens --}}
-                            {{ $units_assessment->assessment->description }}
+        <div class="indent-2 {{ $assessments->count() > 0 ? 'border-2 border-gray-300 dark:border-gray-600 space-y-6 md:space-y-3 p-3 md:p-6' : '' }}">
+            @forelse ($assessments as $units_assessment)
+                <a
+                    wire:navigate
+                    href="{{ route('assessments.detail', [
+                        'id' => $units_assessment->assessment->id,
+                        'slug' => $units_assessment->assessment->slug,
+                        'unit_id' => $current_unit->id
+                    ]) }}"
+                    class="flex justify-between group flex-col md:flex-row md:items-center"
+                >
+                    <div class="indent-2">
+                        <span class="text-green-600 dark:text-green-300 mr-2">&rarr;</span>
+                        <span class="transition duration-150 text-gray-800 dark:text-gray-200 group-hover:text-green-600 group-hover:dark:text-green-300">
+                            {{ $units_assessment->assessment->title }}
                         </span>
 
-                        <span class="absolute opacity-0 translate-y-2 transition-all duration-300 ease-in-out hidden md:block group-hover:opacity-100 group-hover:translate-y-0"> {{-- Hidden & animated on md+ screens --}}
-                            {{ $units_assessment->assessment->description }}
-                        </span>
+                        <div class="relative text-sm mt-1 text-gray-600 dark:text-gray-400">
+                            <span class="block md:hidden"> {{-- Always visible on small screens --}}
+                                {{ $units_assessment->assessment->description }}
+                            </span>
+
+                            <span class="absolute opacity-0 translate-y-2 transition-all duration-300 ease-in-out hidden md:block group-hover:opacity-100 group-hover:translate-y-0"> {{-- Hidden & animated on md+ screens --}}
+                                {{ $units_assessment->assessment->description }}
+                            </span>
+                        </div>
                     </div>
-                </div>
 
-                <span class="w-fit rounded-full px-3 py-2 text-xs font-medium ring-inset ring-1 dark:ring-2 bg-green-200 dark:bg-green-400/10 text-green-800 dark:text-green-300 ring-green-600/40 dark:ring-green-400/30 mt-2 md:mt-0">
-                    {{ $units_assessment->assessment->type }}
-                </span>
-            </a>
-        @empty
-            <p class="text-gray-600 dark:text-gray-400 md:indent-2">This unit has no active assessments.</p>
-        @endforelse
+                    <span class="w-fit rounded-full px-3 py-2 text-xs font-medium ring-inset ring-1 dark:ring-2 bg-green-200 dark:bg-green-400/10 text-green-800 dark:text-green-300 ring-green-600/40 dark:ring-green-400/30 mt-2 md:mt-0">
+                        {{ $units_assessment->assessment->type }}
+                    </span>
+                </a>
+            @empty
+                <p class="text-gray-600 dark:text-gray-400 md:indent-2">This unit has no active assessments.</p>
+            @endforelse
+        </div>
+
+        <div class="border-t border-green-800 dark:border-green-200 mt-4 pt-2 flex flex-row justify-between items-center">
+            <a wire:navigate class="text-gray-800 hover:text-green-600 dark:text-gray-400 dark:hover:text-green-300" href="{{ route('modules.detail', ['id' => $module_id, 'slug' => $module_slug]) }}">&larr; Back</a>
+        </div>
     </div>
 </div>

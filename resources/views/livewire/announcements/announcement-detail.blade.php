@@ -27,10 +27,12 @@
                 <p class="text-gray-600 dark:text-gray-400 text-xs sm:text-sm">Updated on <span class="font-bold">{{ Helpers::parse_time_to_user_timezone($current_announcement['updated_at'])->format('D, M j, Y \a\t g:i A') }}</span></p>
             @endif
 
-            <div class="mt-4 dark:text-gray-400">{!! Markdown::parse($current_announcement['description']) !!}</div>
+            <x-markdown-parser class="mt-4 indent-2 text-gray-800 dark:text-gray-200">
+                {{ $current_announcement['description'] }}
+            </x-markdown-parser>
 
             <div class="border-t border-green-800 dark:border-green-200 mt-4 pt-2 flex flex-row justify-between items-center">
-                <p><a wire:navigate class="text-gray-800 hover:text-green-600 dark:text-gray-400 dark:hover:text-green-300" href="{{ route('announcements.index') }}">&larr; Back</a></p>
+                <a wire:navigate class="text-gray-800 hover:text-green-600 dark:text-gray-400 dark:hover:text-green-300" href="{{ route('announcements.index') }}">&larr; Back</a>
             </div>
         </div>
     </div>
