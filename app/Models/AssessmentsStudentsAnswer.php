@@ -8,10 +8,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class AssessmentsStudentsAnswer extends Model
 {
     protected $fillable = [
+        'assessment_student_id',
         'assessment_choice_id',
         'assessment_question_id',
-        'student_id',
     ];
+
+    public function assessment_student(): BelongsTo
+    {
+        return $this->belongsTo(AssessmentsStudents::class);
+    }
 
     public function choice(): BelongsTo
     {
@@ -21,10 +26,5 @@ class AssessmentsStudentsAnswer extends Model
     public function question(): BelongsTo
     {
         return $this->belongsTo(AssessmentsQuestion::class);
-    }
-
-    public function student(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Livewire\Assessments;
 use App\Models\Assessment;
 use App\Models\AssessmentsChoice;
 use App\Models\AssessmentsQuestion;
+use App\Models\AssessmentsStudents;
 use App\Models\AssessmentsStudentsAnswer;
 use App\Models\Unit;
 use App\Models\User;
@@ -23,6 +24,7 @@ class AssessmentDetail extends Component
     public $correct_answers_count = 0;
     public $correct_answers_of_assessment_count = 0;
     public $unit_id;
+    public $user;
 
     #[On('validating-answers')]
     public function validate_answers($student_answers)
@@ -32,17 +34,22 @@ class AssessmentDetail extends Component
         $this->correct_answers_of_assessment_count = 0;
         $this->correct_answers_count = 0;
 
-        // Save student answers to DB
+        // Save assessment data and student answers to DB
+        $student_assessment = AssessmentsStudents::create([
+            'assessment_id' => $this->current_assessment->id,
+            'student_id' => $this->user->id,
+        ]);
+
         AssessmentsQuestion::where('assessment_id', $this->current_assessment->id)->get()
-            ->map(function ($question, $index) use ($student_answers) {
-                $data = array_map(function ($choice_name) use ($question) {
+            ->map(function ($question, $index) use ($student_assessment, $student_answers) {
+                $data = array_map(function ($choice_name) use ($student_assessment, $question) {
                     $choice = AssessmentsChoice::where('assessment_question_id', $question->id)->where('choice', $choice_name)
                         ->first();
 
                     return [
+                        'assessment_student_id' => $student_assessment->id,
                         'assessment_choice_id' => $choice->id,
                         'assessment_question_id' => $question->id,
-                        'student_id' => Auth::user()->id,
                         'created_at' => Carbon::now(),
                         'updated_at' => Carbon::now(),
                     ];
@@ -94,11 +101,11 @@ class AssessmentDetail extends Component
 
     public function render()
     {
-        $user = User::findOrFail(Auth::user()->id);
+        $this->user = User::findOrFail(Auth::user()->id);
         $unit = Unit::find($this->unit_id);
 
         if ($this->current_assessment) {
-            if ($user->cannot('view', [$this->current_assessment, $unit])) {
+            if ($this->user->cannot('view', [$this->current_assessment, $unit])) {
                 abort(403);
             } else {
                 return view('livewire.assessments.assessment-detail');

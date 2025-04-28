@@ -25,6 +25,11 @@ class Assessment extends Model
         return $this->hasMany(AssessmentsQuestion::class);
     }
 
+    public function students(): HasMany
+    {
+        return $this->hasMany(AssessmentsStudents::class);
+    }
+
     public function questionsCount(): Attribute
     {
         return Attribute::make(
