@@ -39,7 +39,7 @@
 
         <h3 class="pb-3 text-3xl text-gray-800 dark:text-gray-200">Assessments</h3>
 
-        <div class="indent-2 {{ $assessments->count() > 0 ? 'border-2 border-gray-300 dark:border-gray-600 space-y-6 md:space-y-3 p-3 md:p-6' : '' }}">
+        <div class="indent-2 {{ $assessments->count() > 0 ? 'border-2 border-gray-300 dark:border-gray-600 space-y-6 md:space-y-3 py-3 px-4 md:py-5' : '' }}">
             @forelse ($assessments as $units_assessment)
                 <a
                     wire:navigate
@@ -56,7 +56,7 @@
                             {{ $units_assessment->assessment->title }}
                         </span>
 
-                        <div class="relative text-sm mt-1 text-gray-600 dark:text-gray-400">
+                        <div class="relative text-sm mt-1 pb-3 text-gray-600 dark:text-gray-400">
                             <span class="block md:hidden"> {{-- Always visible on small screens --}}
                                 {{ $units_assessment->assessment->description }}
                             </span>
@@ -67,7 +67,7 @@
                         </div>
                     </div>
 
-                    <span class="w-fit rounded-full px-3 py-2 text-xs font-medium ring-inset ring-1 dark:ring-2 bg-green-200 dark:bg-green-400/10 text-green-800 dark:text-green-300 ring-green-600/40 dark:ring-green-400/30 mt-2 md:mt-0">
+                    <span class="w-fit rounded-full px-3 py-2 text-xs self-start font-medium ring-inset ring-1 dark:ring-2 bg-green-200 dark:bg-green-400/10 text-green-800 dark:text-green-300 ring-green-600/40 dark:ring-green-400/30 mt-2 md:mt-0">
                         {{ $units_assessment->assessment->type }}
                     </span>
                 </a>

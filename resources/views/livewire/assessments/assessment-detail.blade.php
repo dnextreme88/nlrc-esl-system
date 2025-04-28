@@ -10,7 +10,7 @@
     </x-slot>
 
     <div class="py-12">
-        {{-- TODO: Add a condition to show the assessment questions only if the student has not taken them yet --}}
+        {{-- TODO: Add a condition to show the assessment only if the student did not score 100% --}}
         {{-- I think the best option without having to create a pivot table of assessments and students it to based it from the --}}
         {{-- assessments_students_answers table, get the student_id and assessment_question_id->assessment->id == ID of this ASSESSMENT --}}
         <div
@@ -147,7 +147,6 @@
                         <h2 class="text-5xl font-bold text-gray-200 drop-shadow-lg">{{ $correct_answers_count }} / {{ $correct_answers_of_assessment_count }}</h2>
                         <p class="mt-3 text-lg font-medium text-gray-600 dark:text-gray-300">({{ $score_percentage }}%)</p>
 
-                        {{-- Show congratulatory "confetti" if student answered all questions --}}
                         @if ($score_percentage == '100')
                             <div class="absolute inset-0 overflow-hidden">
                                 <template x-for="confettiIndex in 18" :key="confettiIndex">
@@ -172,12 +171,27 @@
                     <div class="space-y-4">
                         <template x-for="(question, idx) in questionsArr" :key="idx">
                             <div
-                                x-data="{ isOpen: false }"
+                                x-data="{
+                                    isOpen: false,
+                                    hasAllCorrectAnswers() {
+                                        const correctChoices = question.choices.filter(c => c.is_correct == 1).map(c => c.choice);
+                                        const selectedChoices = studentAnswers[idx + 1] || [];
+
+                                        if (correctChoices.length !== selectedChoices.length) return false;
+
+                                        return correctChoices.every(choice => selectedChoices.includes(choice));
+                                    }
+                                }"
                                 x-bind:class="{'rounded-lg': !isOpen, 'rounded-t-lg': isOpen}"
                                 class="border bg-gray-200 dark:bg-gray-800 shadow-sm"
                             >
                                 <div
-                                    x-bind:class="{'rounded-b-0 rounded-t-lg bg-green-200 dark:bg-green-800': isOpen, 'rounded-lg': !isOpen}"
+                                    x-bind:class="{
+                                        'rounded-b-0 rounded-t-lg': isOpen,
+                                        'rounded-lg': !isOpen,
+                                        'bg-green-200 dark:bg-green-800': hasAllCorrectAnswers(),
+                                        'bg-red-200 dark:bg-red-800': !hasAllCorrectAnswers()
+                                    }"
                                     x-on:click="isOpen = !isOpen"
                                     class="transition duration-300 flex justify-between gap-2 items-center p-3 cursor-pointer hover:bg-green-300 dark:hover:bg-green-600"
                                 >
@@ -218,7 +232,8 @@
                                             <li
                                                 x-bind:class="{
                                                     'font-bold text-green-600': c.is_correct == 1,
-                                                    'text-red-500': studentAnswers[idx + 1]?.includes(c.choice) && c.is_correct == 0
+                                                    'text-red-600': studentAnswers[idx + 1]?.includes(c.choice) && c.is_correct == 0,
+                                                    'bg-gray-600': studentAnswers[idx + 1]?.includes(c.choice)
                                                 }"
                                                 x-text="c.choice"
                                             >

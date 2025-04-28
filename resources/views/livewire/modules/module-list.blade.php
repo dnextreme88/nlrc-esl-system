@@ -41,7 +41,7 @@
                 </span>
 
                 @if (str_word_count($module->description) > 200)
-                    <x-markdown-parser class="place-self-start text-justify text-sm text-gray-800 dark:text-gray-200 line-clamp-8">
+                    <x-markdown-parser class="place-self-start text-justify text-sm text-gray-800 dark:text-gray-200 block lg:hidden line-clamp-8">
                         {{ $module->description }}
                     </x-markdown-parser>
 
@@ -54,7 +54,7 @@
                         Read more
                     </a>
                 @else
-                    <x-markdown-parser class="place-self-start text-justify text-sm text-gray-800 dark:text-gray-200">
+                    <x-markdown-parser class="place-self-start text-justify text-sm text-gray-800 dark:text-gray-200 block lg:hidden">
                         {{ $module->description }}
                     </x-markdown-parser>
                 @endif
