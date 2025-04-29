@@ -54,7 +54,6 @@ class UnitResource extends Resource
                     ->unique(ignoreRecord: true),
                 MarkdownEditor::make('description')
                     ->columnSpan(2)
-                    ->maxLength(500)
                     ->minLength(5)
                     ->required(),
             ]);
