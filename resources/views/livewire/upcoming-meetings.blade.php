@@ -50,7 +50,7 @@
     </div>
 
     @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::STUDENT->value, \App\Enums\Roles::TEACHER->value]))
-        <x-modal wire:model="show_cancel_meeting_modal" :maxWidth="'xl'">
+        <x-modal wire:model="show_cancel_meeting_modal" :max_width="'xl'">
             <div class="my-4 mx-6">
                 <div class="flex justify-between items-center border-b-2 border-b-gray-200">
                     <h3 class="text-2xl text-gray-800 dark:text-gray-200">Cancel Meeting Form</h3>
@@ -91,7 +91,7 @@
             </form>
         </x-modal>
 
-        <x-modal wire:model="show_reschedule_meeting_modal" :maxWidth="'xl'">
+        <x-modal wire:model="show_reschedule_meeting_modal" :max_width="'xl'">
             <div class="my-4 mx-6">
                 <div class="flex justify-between items-center border-b-2 border-b-gray-200">
                     <h3 class="text-2xl text-gray-800 dark:text-gray-200">Reschedule Meeting Form</h3>
