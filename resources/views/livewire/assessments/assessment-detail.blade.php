@@ -82,6 +82,10 @@
 
                         <x-button x-on:click="inIntro = !inIntro" class="w-fit mx-auto lg:mx-0">Start Now</x-button>
                     </div>
+
+                    <div class="p-4 bg-gray-200 dark:bg-gray-600 shadow-md shadow-gray-500 mt-5 lg:mt-10 col-span-1 lg:col-span-2">
+                        <livewire:assessments.attempt-history :assessment_id="$current_assessment['id']" />
+                    </div>
                 </div>
 
                 <div
@@ -193,7 +197,7 @@
                                         'bg-red-200 dark:bg-red-800': !hasAllCorrectAnswers()
                                     }"
                                     x-on:click="isOpen = !isOpen"
-                                    class="transition duration-300 flex justify-between gap-2 items-center p-3 cursor-pointer hover:bg-green-300 dark:hover:bg-green-600"
+                                    class="flex justify-between gap-2 items-center p-3 cursor-pointer"
                                 >
                                     <h3 class="font-semibold text-gray-800 dark:text-gray-200 text-md">
                                         <span x-text="`${idx + 1}. ${question.question}`"></span>
@@ -231,11 +235,12 @@
                                         <template x-for="(c, index) in question.choices" :key="index">
                                             <li
                                                 x-bind:class="{
-                                                    'font-bold text-green-600': c.is_correct == 1,
-                                                    'text-red-600': studentAnswers[idx + 1]?.includes(c.choice) && c.is_correct == 0,
+                                                    'font-bold text-green-500 dark:text-green-600': c.is_correct == 1,
+                                                    'text-red-400 dark:text-red-600': studentAnswers[idx + 1]?.includes(c.choice) && c.is_correct == 0,
                                                     'bg-gray-600': studentAnswers[idx + 1]?.includes(c.choice)
                                                 }"
                                                 x-text="c.choice"
+                                                class="my-1 pl-1 py-1"
                                             >
                                             </li>
                                         </template>

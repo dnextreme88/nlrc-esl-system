@@ -37,4 +37,21 @@ class AssessmentsQuestion extends Model
             get: fn (): int => $this->choices()->where('is_correct', true)->count(),
         );
     }
+
+    // Custom model function
+    protected function get_assessment_questions_and_choices($assessment_id, $slug): array
+    {
+        $assessment_questions = Assessment::where('id', $assessment_id)->where('slug', $slug)
+            ->first()
+            ->questions;
+
+        foreach ($assessment_questions as $index => $question) {
+            $choices = $question->choices;
+
+            $assessment_questions[$index]['choices'] = $choices->toArray();
+            $assessment_questions[$index]['no_of_correct_answers'] = $choices->filter(fn ($choice): bool => $choice->is_correct == true)->count();
+        }
+
+        return $assessment_questions->toArray();
+    }
 }
