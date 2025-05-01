@@ -10,9 +10,6 @@
     </x-slot>
 
     <div class="py-12">
-        {{-- TODO: Add a condition to show the assessment only if the student did not score 100% --}}
-        {{-- I think the best option without having to create a pivot table of assessments and students it to based it from the --}}
-        {{-- assessments_students_answers table, get the student_id and assessment_question_id->assessment->id == ID of this ASSESSMENT --}}
         <div
             x-data="{
                 currentIndex: 0,
@@ -20,11 +17,12 @@
                 inIntro: true,
                 isError: false,
                 isFinalQuestion: false,
+                isPassed: $wire.entangle('is_assessment_passed'),
                 isTransitioning: false,
                 questionsArr: $wire.entangle('current_assessment_questions'),
                 showResults: false,
                 studentAnswerCurrentQuestion: [],
-                studentAnswers: [],
+                studentAnswers: $wire.entangle('student_answers'),
                 submitAnswer() {
                     if (this.studentAnswerCurrentQuestion.length == 0) {
                         this.isError = true
@@ -61,7 +59,8 @@
         >
             <div x-show="!showResults">
                 <div
-                    x-show="inIntro"
+                    x-show="inIntro && !isPassed"
+                    x-cloak
                     x-transition:leave="transition transform duration-500"
                     x-transition:leave-start="opacity-100"
                     x-transition:leave-end="opacity-0 -translate-x-50"
@@ -139,14 +138,14 @@
             </div>
 
             <div
-                x-show="showResults"
+                x-show="showResults || isPassed"
                 x-cloak
                 x-transition:enter="transition ease-out duration-500"
                 x-transition:enter-start="opacity-0 scale-50"
                 x-transition:enter-end="opacity-100 scale-100"
                 class="flex flex-col items-center justify-center mt-12"
             >
-                <div class="max-w-2xl space-y-8 w-[75%] lg:w-full">
+                <div class="max-w-2xl space-y-8 w-[60%] md:w-[75%] lg:w-full">
                     <div class="relative overflow-hidden rounded-xl bg-gradient-to-r from-blue-600/60 to-green-600/60 dark:from-blue-500 dark:to-green-500 p-8 text-center shadow-lg shadow-green-300">
                         <h2 class="text-5xl font-bold text-gray-200 drop-shadow-lg">{{ $correct_answers_count }} / {{ $correct_answers_of_assessment_count }}</h2>
                         <p class="mt-3 text-lg font-medium text-gray-600 dark:text-gray-300">({{ $score_percentage }}%)</p>

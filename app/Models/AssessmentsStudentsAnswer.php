@@ -29,6 +29,20 @@ class AssessmentsStudentsAnswer extends Model
     }
 
     // Custom model function
+    protected function get_student_answers($assessment_student_id): array
+    {
+        $student_answers = AssessmentsStudentsAnswer::where('assessment_student_id', $assessment_student_id)
+            ->with('choice') // Eager load the related choice
+            ->get()
+            ->groupBy('assessment_question_id') // Group by question ID
+            ->map(fn ($group) =>
+                $group->map(fn ($answer) => $answer->choice->choice)->values()->all() // Array of choices for each question
+            )
+            ->toArray();
+
+        return $student_answers;
+    }
+
     protected function get_student_score($assessment_answers, $assessment_questions): array
     {
         $correct_answers_count = 0;

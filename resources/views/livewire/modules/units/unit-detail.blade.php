@@ -40,6 +40,11 @@
         <h3 class="pb-3 text-3xl text-gray-800 dark:text-gray-200">Assessments</h3>
 
         <div class="indent-2 {{ $assessments->count() > 0 ? 'border-2 border-gray-300 dark:border-gray-600 space-y-6 md:space-y-3 py-3 px-4 md:py-5' : '' }}">
+            {{-- TODO:
+                1. Add logic to prevent teachers from taking the assessment but continue to display them
+                2. Add an assessments_students detail page that will be used as the link instead of the assessment link
+                   if they auth user is a teacher, otherwise just use the assessment link for students
+            --}}
             @forelse ($assessments as $units_assessment)
                 <a
                     wire:navigate

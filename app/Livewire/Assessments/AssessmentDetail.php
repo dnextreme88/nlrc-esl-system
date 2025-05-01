@@ -19,6 +19,7 @@ class AssessmentDetail extends Component
 {
     public $current_assessment;
     public $current_assessment_questions;
+    public $is_assessment_passed = false;
     public array $student_answers = [];
     public $score_percentage = '0';
     public $correct_answers_count = 0;
@@ -74,6 +75,23 @@ class AssessmentDetail extends Component
         $this->current_assessment = Assessment::where('id', $id)->where('slug', $slug)
             ->first();
         $this->current_assessment_questions = AssessmentsQuestion::get_assessment_questions_and_choices($id, $slug);
+
+        $latest_attempt = AssessmentsStudents::select(['id', 'created_at'])->studentAssessment($this->current_assessment->id, Auth::user()->id)
+            ->latest()
+            ->first();
+
+        if ($latest_attempt) {
+            $student_answers = AssessmentsStudentsAnswer::get_student_answers($latest_attempt->id);
+            $student_score = AssessmentsStudentsAnswer::get_student_score($student_answers, $this->current_assessment_questions);
+
+            if ($student_score['score_percentage'] == 100.00) {
+                $this->is_assessment_passed = true;
+                $this->student_answers = $student_answers;
+                $this->correct_answers_count = $student_score['correct_answers_count'];
+                $this->correct_answers_of_assessment_count = $student_score['correct_answers_of_assessment_count'];
+                $this->score_percentage = $student_score['score_percentage'];
+            }
+        }
     }
 
     public function render()
