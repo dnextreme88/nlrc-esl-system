@@ -48,8 +48,8 @@ class AssessmentDetail extends Component
 
                     return [
                         'assessment_student_id' => $student_assessment->id,
-                        'assessment_choice_id' => $choice->id,
                         'assessment_question_id' => $question->id,
+                        'assessment_choice_id' => $choice->id,
                         'created_at' => Carbon::now(),
                         'updated_at' => Carbon::now(),
                     ];
@@ -77,7 +77,7 @@ class AssessmentDetail extends Component
         // Compute final score
         $this->score_percentage = $this->correct_answers_count > 0 ? round((($this->correct_answers_count / $this->correct_answers_of_assessment_count) * 100), 2) : 0;
 
-        Toaster::success('Congratulations!' .($this->score_percentage == 100 ? ' You completed this assessment!' : ' You answered all questions of this assessment!'));
+        Toaster::success('Congratulations!' .($this->score_percentage == 100.00 ? ' You completed this assessment!' : ' You answered all questions of this assessment!'));
         $this->dispatch('showed-assessment-results');
     }
 

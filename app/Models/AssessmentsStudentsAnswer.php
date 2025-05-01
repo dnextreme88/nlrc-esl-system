@@ -9,8 +9,8 @@ class AssessmentsStudentsAnswer extends Model
 {
     protected $fillable = [
         'assessment_student_id',
-        'assessment_choice_id',
         'assessment_question_id',
+        'assessment_choice_id',
     ];
 
     public function assessment_student(): BelongsTo

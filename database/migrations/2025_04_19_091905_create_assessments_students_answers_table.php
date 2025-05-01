@@ -17,15 +17,15 @@ return new class extends Migration
             $table->foreign('assessment_student_id')
                 ->references('id')
                 ->on('assessments_students');
-            $table->unsignedBigInteger('assessment_choice_id');
-            $table->foreign('assessment_choice_id')
-                ->references('id')
-                ->on('assessments_choices');
             $table->unsignedBigInteger('assessment_question_id');
             $table->foreign('assessment_question_id')
                 ->references('id')
                 ->on('assessments_questions');
             $table->timestamps();
+            $table->unsignedBigInteger('assessment_choice_id');
+            $table->foreign('assessment_choice_id')
+                ->references('id')
+                ->on('assessments_choices');
         });
     }
 
