@@ -67,9 +67,7 @@
                         </div>
                     </div>
 
-                    <span class="w-fit rounded-full px-3 py-2 text-xs self-start font-medium ring-inset ring-1 dark:ring-2 bg-green-200 dark:bg-green-400/10 text-green-800 dark:text-green-300 ring-green-600/40 dark:ring-green-400/30 mt-2 md:mt-0">
-                        {{ $units_assessment->assessment->type }}
-                    </span>
+                    <x-badge :text="$units_assessment->assessment->type" class="self-start max-w-fit bg-green-200 dark:bg-green-400/10 text-green-800 dark:text-green-300 ring-green-600/40 dark:ring-green-400/60" />
                 </a>
             @empty
                 <p class="text-gray-600 dark:text-gray-400 md:indent-2">This unit has no active assessments.</p>

@@ -40,7 +40,7 @@
                                 <ul class="flex gap-2">
                                     @foreach (explode(',', $announcement['tags']) as $tag)
                                         <li>
-                                            <span class="rounded-full px-3 py-2 text-xs font-medium ring-inset ring-1 dark:ring-2 bg-green-200 dark:bg-green-400/10 text-green-800 dark:text-green-300 ring-green-600/40 dark:ring-green-400/30">{{ $tag }}</span>
+                                            <x-badge :text="$tag" class="max-w-fit bg-green-200 dark:bg-green-400/10 text-green-800 dark:text-green-300 ring-green-600/40 dark:ring-green-400/60" />
                                         </li>
                                     @endforeach
                                 </ul>

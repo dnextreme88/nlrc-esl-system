@@ -9,20 +9,20 @@
 
                 switch ($meeting->status) {
                     case \App\Enums\MeetingStatuses::CANCELLED->value:
-                        $color_classes = 'bg-red-200 text-red-700 ring-red-600';
+                        $color_classes = 'bg-red-200 dark:bg-red-400/10 text-red-800 dark:text-red-300 ring-red-600/40 dark:ring-red-400/60';
 
                         break;
                     case \App\Enums\MeetingStatuses::PENDING->value:
-                        $color_classes = 'bg-yellow-200 text-yellow-700 ring-yellow-600';
+                        $color_classes = 'bg-yellow-200 dark:bg-yellow-400/10 text-yellow-800 dark:text-yellow-300 ring-yellow-600/40 dark:ring-yellow-400/60';
 
                         break;
                 }
             @endphp
 
-            <div class="grid grid-cols-1 md:grid-cols-3 {{ $is_teacher_role ? 'lg:grid-cols-2' : 'sm:grid-cols-2' }}">
-                <div class="col-span-1 md:col-span-2 {{ $is_teacher_role ? 'lg:col-span-1' : '' }}">
+            <div class="grid grid-cols-1 {{ $is_teacher_role ? 'sm:grid-cols-[1fr_minmax(10%,_195px)]' : 'sm:grid-cols-[1fr_minmax(10%,_105px)]' }}">
+                <div>
                     @if ($is_teacher_role)
-                        <x-badge :text="$meeting->status" class="my-3 {{ $color_classes }}" />
+                        <x-badge :text="$meeting->status" class="mb-2 {{ $color_classes }}" />
                     @endif
 
                     <a wire:navigate href="{{ route('meetings.detail', ['meeting_uuid' => $meeting['meeting_uuid']]) }}">
@@ -34,13 +34,13 @@
                     </a>
                 </div>
 
-                <div class="grid grid-cols-1 gap-2 items-center {{ $is_teacher_role ? 'p-4 border-b-2 border-gray-600 md:border-b-0 md:p-0 md:grid-cols-2 lg:self-end lg:mb-4' : 'py-0 px-2 sm:self-center sm:place-self-end' }}">
+                <div class="grid grid-cols-1 gap-2 items-center {{ $is_teacher_role ? 'p-4 border-b-2 border-gray-600 md:border-b-0 md:p-0 md:grid-cols-2 md:self-end md:mb-4' : 'py-0 sm:self-center sm:place-self-end' }}">
                     @if ($is_teacher_role)
                         <button wire:click="cancel_meeting_modal({{ $meeting->id }})" class="transition duration-150 rounded-md py-2 px-4 text-gray-800 dark:text-gray-200 bg-red-300 dark:bg-red-600 hover:bg-red-400 dark:hover:bg-red-700 hover:cursor-pointer {{ $meeting->status == \App\Enums\MeetingStatuses::CANCELLED->value ? 'hidden md:block md:invisible' : '' }}">Cancel</button>
 
                         <button wire:click="reschedule_meeting_modal({{ $meeting->id }})" class="transition duration-150 rounded-md py-2 px-2 text-gray-800 dark:text-gray-200 bg-blue-300 dark:bg-blue-600 hover:bg-blue-400 dark:hover:bg-blue-700 hover:cursor-pointer">Reschedule</button>
                     @else
-                        <x-badge :text="$meeting->status" class="{{ $color_classes }}" />
+                        <x-badge :text="$meeting->status" class="justify-self-start md:justify-self-end {{ $color_classes }}" />
                     @endif
                 </div>
             </div>

@@ -1,22 +1,22 @@
 <div>
     <h3 class="text-3xl text-gray-800 dark:text-gray-200">Attempt History</h3>
 
-    <div class="grid grid-cols-1 gap-2 md:gap-4 *:my-4">
+    <div class="grid grid-cols-1 gap-2 md:gap-4 *:mx-2 *:my-4">
         @forelse ($student_assessments as $assessment)
             @php
                 switch ($assessment['status']) {
                     case 'Failed':
-                        $color_classes = 'bg-red-200 text-red-700 ring-red-600';
+                        $color_classes = 'bg-red-200 dark:bg-red-400/10 text-red-800 dark:text-red-300 ring-red-600/40 dark:ring-red-400/60';
 
                         break;
                     case 'Passed':
-                        $color_classes = 'bg-green-200 text-green-700 ring-green-600';
+                        $color_classes = 'bg-green-200 dark:bg-green-400/10 text-green-800 dark:text-green-300 ring-green-600/40 dark:ring-green-400/60';
 
                         break;
                 }
             @endphp
 
-            <div class="mx-2 grid grid-cols-1 md:grid-cols-[1fr_180px]">
+            <div class="grid grid-cols-1 md:grid-cols-[1fr_180px]">
                 {{-- TODO: REFACTOR LINK TO VIEW STUDENT ANSWERS --}}
                 {{-- <a wire:navigate href="{{ route('meetings.detail', ['meeting_uuid' => $meeting['meeting_uuid']]) }}"> --}}
                 <a wire:navigate href="#">
@@ -27,7 +27,7 @@
                     />
                 </a>
 
-                <x-badge :text="$assessment['status']" class="place-self-start md:place-self-end {{ $color_classes }}" />
+                <x-badge :text="$assessment['status']" class="justify-self-start md:justify-self-end max-w-fit {{ $color_classes }}" />
             </div>
         @empty
             <p class="p-2 text-gray-800 dark:text-gray-200">You currently have not taken this assessment.</p>
