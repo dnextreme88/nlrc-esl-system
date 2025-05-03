@@ -53,21 +53,25 @@
                         'slug' => $units_assessment->assessment->slug,
                         'unit_id' => $current_unit->id
                     ]) }}"
-                    class="flex justify-between group flex-col md:flex-row md:items-center"
+                    class="flex justify-between group flex-col gap-3 md:flex-row md:items-center"
                 >
-                    <div class="indent-2">
+                    <div class="grow-1 indent-2">
                         <span class="text-green-600 dark:text-green-300 mr-2">&rarr;</span>
                         <span class="transition duration-150 text-gray-800 dark:text-gray-200 group-hover:text-green-600 group-hover:dark:text-green-300">
                             {{ $units_assessment->assessment->title }}
                         </span>
 
-                        <div class="relative text-sm mt-1 pb-3 text-gray-600 dark:text-gray-400">
+                        <div class="relative mt-1 pb-3 md:pb-0">
                             <span class="block md:hidden"> {{-- Always visible on small screens --}}
-                                {{ $units_assessment->assessment->description }}
+                                <x-markdown-parser text_limit="100" class="text-gray-600 dark:text-gray-400">
+                                    {{ $units_assessment->assessment->description }}
+                                </x-markdown-parser>
                             </span>
 
-                            <span class="absolute opacity-0 translate-y-2 transition-all duration-300 ease-in-out hidden md:block group-hover:opacity-100 group-hover:translate-y-0"> {{-- Hidden & animated on md+ screens --}}
-                                {{ $units_assessment->assessment->description }}
+                            <span class="absolute opacity-0 translate-y-2 transition-all duration-300 ease-in-out hidden md:block group-hover:opacity-100 group-hover:translate-y-0 group-hover:relative"> {{-- Hidden & animated on md+ screens --}}
+                                <x-markdown-parser text_limit="100" class="text-gray-600 dark:text-gray-400 text-sm">
+                                    {{ $units_assessment->assessment->description }}
+                                </x-markdown-parser>
                             </span>
                         </div>
                     </div>
