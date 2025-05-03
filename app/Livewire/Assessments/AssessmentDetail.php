@@ -30,7 +30,7 @@ class AssessmentDetail extends Component
     #[On('validating-answers')]
     public function validate_answers($student_answers)
     {
-        $student_answers = array_filter($student_answers);
+        $student_answers = array_values(array_filter($student_answers));
 
         $this->correct_answers_of_assessment_count = 0;
         $this->correct_answers_count = 0;
@@ -54,7 +54,7 @@ class AssessmentDetail extends Component
                         'created_at' => Carbon::now(),
                         'updated_at' => Carbon::now(),
                     ];
-                }, $student_answers[($index + 1)]);
+                }, $student_answers[($index)]);
 
                 AssessmentsStudentsAnswer::insert($data);
             });

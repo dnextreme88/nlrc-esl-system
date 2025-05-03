@@ -40,7 +40,7 @@ class AssessmentsStudentsAnswer extends Model
             )
             ->toArray();
 
-        return $student_answers;
+        return array_values($student_answers);
     }
 
     protected function get_student_score($assessment_answers, $assessment_questions): array
@@ -49,7 +49,7 @@ class AssessmentsStudentsAnswer extends Model
         $correct_answers_of_assessment_count = 0;
 
         foreach ($assessment_questions as $question_num => $assessment_question) {
-            $student_answers_for_question = collect($assessment_answers[($question_num + 1)]);
+            $student_answers_for_question = collect($assessment_answers[$question_num]);
 
             $correct_answers_for_question = AssessmentsChoice::select(['id', 'choice', 'is_correct'])->where('assessment_question_id', $assessment_question['id'])
                 ->get()
