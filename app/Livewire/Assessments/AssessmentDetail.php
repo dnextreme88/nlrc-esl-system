@@ -17,6 +17,7 @@ use Masmerise\Toaster\Toaster;
 
 class AssessmentDetail extends Component
 {
+    public $assessment_uuid;
     public $current_assessment;
     public $current_assessment_questions;
     public $is_assessment_passed = false;
@@ -40,6 +41,7 @@ class AssessmentDetail extends Component
             'assessment_id' => $this->current_assessment->id,
             'student_id' => $this->user->id,
         ]);
+        $this->assessment_uuid = $student_assessment->assessment_uuid;
 
         AssessmentsQuestion::where('assessment_id', $this->current_assessment->id)->get()
             ->map(function ($question, $index) use ($student_assessment, $student_answers) {

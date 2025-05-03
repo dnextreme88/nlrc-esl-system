@@ -19,7 +19,7 @@ class AttemptHistory extends Component
         $assessment = Assessment::find($assessment_id);
 
         $this->student_assessment_questions = AssessmentsQuestion::get_assessment_questions_and_choices($assessment_id, $assessment->slug);
-        $this->student_assessments = AssessmentsStudents::select(['id', 'created_at'])->studentAssessment($assessment_id, Auth::user()->id)
+        $this->student_assessments = AssessmentsStudents::select(['id', 'assessment_uuid', 'created_at'])->studentAssessment($assessment_id, Auth::user()->id)
             ->latest()
             ->get()
             ->map(function ($student_assessment) {

@@ -17,9 +17,7 @@
             @endphp
 
             <div class="grid grid-cols-1 md:grid-cols-[1fr_180px]">
-                {{-- TODO: REFACTOR LINK TO VIEW STUDENT ANSWERS --}}
-                {{-- <a wire:navigate href="{{ route('meetings.detail', ['meeting_uuid' => $meeting['meeting_uuid']]) }}"> --}}
-                <a wire:navigate href="#">
+                <a wire:navigate href="{{ route('assessments.result', ['assessment_uuid' => $assessment['assessment_uuid']]) }}">
                     <x-bold-text-with-subtext
                         :text_in_bold="Helpers::parse_time_to_user_timezone($assessment->created_at)->format('M j, Y g:i A')"
                         :subtext="$assessment['score']. '%'"

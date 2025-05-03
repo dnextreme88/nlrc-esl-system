@@ -3,6 +3,8 @@
 use App\Livewire\Announcements\AnnouncementDetail;
 use App\Livewire\Announcements\AnnouncementList;
 use App\Livewire\Assessments\AssessmentDetail;
+use App\Livewire\Assessments\AssessmentList;
+use App\Livewire\Assessments\AssessmentResult;
 use App\Livewire\Homepage;
 use App\Livewire\Meetings\MeetingDetail;
 use App\Livewire\Meetings\TeacherAvailabilitySlots;
@@ -37,6 +39,8 @@ Route::middleware([
     });
 
     Route::group(['prefix' => 'assessments', 'as' => 'assessments.'], function () {
+        Route::get('/', AssessmentList::class)->name('index');
+        Route::get('/answers/{assessment_uuid}', AssessmentResult::class)->name('result');
         Route::get('/{id}-{slug}', AssessmentDetail::class)->name('detail');
     });
 
