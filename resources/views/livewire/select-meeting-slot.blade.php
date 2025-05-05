@@ -87,7 +87,7 @@
         </div>
     </div>
 
-    <x-confirmation-modal wire:model="show_reserve_slot_confirmation_modal" :maxWidth="'xl'">
+    <x-confirmation-modal :max_width="'xl'" :toggle_show_on_click="false" wire:model="show_reserve_slot_confirmation_modal">
         <x-slot name="title">
             <div class="flex justify-between items-center border-b-2 border-b-gray-200">
                 <h3 class="text-2xl text-gray-800 dark:text-gray-200">Confirm Reservation Slot</h3>

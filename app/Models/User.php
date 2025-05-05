@@ -81,14 +81,19 @@ class User extends Authenticatable implements FilamentUser, HasName
         ];
     }
 
+    public function assessments(): HasMany
+    {
+        return $this->hasMany(AssessmentsStudents::class, 'student_id');
+    }
+
+    public function meeting_slots(): HasMany
+    {
+        return $this->hasMany(MeetingSlotsUser::class);
+    }
+
     public function modules(): HasMany
     {
         return $this->hasMany(ModulesStudent::class);
-    }
-
-    public function role(): BelongsTo
-    {
-        return $this->belongsTo(Role::class);
     }
 
     public function proficiencies_users(): BelongsToMany
@@ -97,9 +102,9 @@ class User extends Authenticatable implements FilamentUser, HasName
             ->withTimestamps();
     }
 
-    public function meeting_slots(): HasMany
+    public function role(): BelongsTo
     {
-        return $this->hasMany(MeetingSlotsUser::class);
+        return $this->belongsTo(Role::class);
     }
 
     public function canAccessPanel(Panel $panel): bool

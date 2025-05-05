@@ -11,13 +11,6 @@ class EditAnnouncement extends EditRecord
 {
     protected static string $resource = AnnouncementResource::class;
 
-    protected function afterSave(): void
-    {
-        $announcement = $this->getRecord();
-        $announcement->slug = $announcement->id. '-' .$announcement->slug;
-        $announcement->save();
-    }
-
     protected function getHeaderActions(): array
     {
         return [DeleteAction::make()];

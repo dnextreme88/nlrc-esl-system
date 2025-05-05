@@ -7,6 +7,7 @@ use App\Filament\Resources\UnitResource\Pages\CreateUnit;
 use App\Filament\Resources\UnitResource\Pages\EditUnit;
 use App\Filament\Resources\UnitResource\Pages\ListUnits;
 use App\Filament\Resources\UnitResource\RelationManagers;
+use App\Filament\Resources\UnitResource\RelationManagers\UnitsAssessmentRelationManager;
 use App\Filament\Resources\UnitResource\RelationManagers\UnitsAttachmentRelationManager;
 use App\Models\Module;
 use App\Models\Unit;
@@ -42,6 +43,8 @@ class UnitResource extends Resource
         return $form
             ->schema([
                 Select::make('module_id')
+                    // Pull from query string and set it as default if they came from the modules admin panel
+                    ->default(fn (): ?string => request()->get('module_id'))
                     ->relationship('module', 'name')
                     ->required(),
                 TextInput::make('name')
@@ -51,7 +54,6 @@ class UnitResource extends Resource
                     ->unique(ignoreRecord: true),
                 MarkdownEditor::make('description')
                     ->columnSpan(2)
-                    ->maxLength(500)
                     ->minLength(5)
                     ->required(),
             ]);
@@ -74,8 +76,12 @@ class UnitResource extends Resource
                     ->searchable()
                     ->toggleable()
                     ->words(5),
+                IconColumn::make('unit_assessments')
+                    ->boolean()
+                    ->getStateUsing(fn ($record) => $record->unit_assessments()->exists())
+                    ->label('Has Assessments'),
                 IconColumn::make('unit_attachments')
-                    ->boolean() // Automatically handles true/false states
+                    ->boolean()
                     ->getStateUsing(fn ($record) => $record->unit_attachments()->exists())
                     ->label('Has Attachments'),
                 TextColumn::make('created_at')
@@ -111,8 +117,8 @@ class UnitResource extends Resource
                     ->label('Module'),
             ])
             ->actions([
-                DeleteAction::make(),
                 EditAction::make(),
+                DeleteAction::make(),
             ])
             ->bulkActions([
                 BulkActionGroup::make([
@@ -125,6 +131,7 @@ class UnitResource extends Resource
     {
         return [
             UnitsAttachmentRelationManager::class,
+            UnitsAssessmentRelationManager::class,
         ];
     }
 

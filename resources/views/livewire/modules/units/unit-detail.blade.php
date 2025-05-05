@@ -10,17 +10,11 @@
     </x-slot>
 
     <div class="grid space-y-6 max-w-7xl mx-auto py-12 sm:px-6 lg:px-8">
-        <a
-            wire:navigate
-            href="{{ route('modules.detail', ['id' => $module_id, 'slug' => $module_slug]) }}"
-            class="text-green-600 dark:text-green-300"
-        >
-            &larr; Back to units page
-        </a>
+        <h3 class="pb-3 text-3xl text-gray-800 dark:text-gray-200">{{ $current_unit->name }}</h3>
 
-        <h3 class="text-3xl pb-4 border-b-2 border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200">{{ $current_unit->name }}</h3>
-
-        <div class="text-base text-gray-600 dark:text-gray-400 md:indent-2">{!! Markdown::parse($current_unit->description) !!}</div>
+        <x-markdown-parser class="mt-4 indent-2 text-gray-800 dark:text-gray-200">
+            {{ $current_unit->description }}
+        </x-markdown-parser>
 
         @if ($current_unit->unit_attachments->isNotEmpty())
             <div class="grid grid-cols-1 md:grid-cols-[180px_1fr]">
@@ -42,5 +36,55 @@
                 </div>
             </div>
         @endif
+
+        <h3 class="pb-3 text-3xl text-gray-800 dark:text-gray-200">Assessments</h3>
+
+        <div class="indent-2 {{ $assessments->count() > 0 ? 'border-2 border-gray-300 dark:border-gray-600 space-y-6 md:space-y-3 py-3 px-4 md:py-5' : '' }}">
+            {{-- TODO:
+                1. Add logic to prevent teachers from taking the assessment but continue to display them
+                2. Add an assessments_students detail page that will be used as the link instead of the assessment link
+                   if they auth user is a teacher, otherwise just use the assessment link for students
+            --}}
+            @forelse ($assessments as $units_assessment)
+                <a
+                    wire:navigate
+                    href="{{ route('assessments.detail', [
+                        'id' => $units_assessment->assessment->id,
+                        'slug' => $units_assessment->assessment->slug,
+                        'unit_id' => $current_unit->id
+                    ]) }}"
+                    class="flex justify-between group flex-col gap-3 md:flex-row md:items-center"
+                >
+                    <div class="grow-1 indent-2">
+                        <span class="text-green-600 dark:text-green-300 mr-2">&rarr;</span>
+                        <span class="transition duration-150 text-gray-800 dark:text-gray-200 group-hover:text-green-600 group-hover:dark:text-green-300">
+                            {{ $units_assessment->assessment->title }}
+                        </span>
+
+                        <div class="relative mt-1 pb-3 md:pb-0">
+                            <span class="block md:hidden"> {{-- Always visible on small screens --}}
+                                <x-markdown-parser text_limit="100" class="text-gray-600 dark:text-gray-400">
+                                    {{ $units_assessment->assessment->description }}
+                                </x-markdown-parser>
+                            </span>
+
+                            <span class="absolute opacity-0 translate-y-2 transition-all duration-300 ease-in-out hidden md:block group-hover:opacity-100 group-hover:translate-y-0 group-hover:relative"> {{-- Hidden & animated on md+ screens --}}
+                                <x-markdown-parser text_limit="100" class="text-gray-600 dark:text-gray-400 text-sm">
+                                    {{ $units_assessment->assessment->description }}
+                                </x-markdown-parser>
+                            </span>
+                        </div>
+                    </div>
+
+                    <x-badge :text="$units_assessment->assessment->type" class="self-start max-w-fit bg-green-200 dark:bg-green-400/10 text-green-800 dark:text-green-300 ring-green-600/40 dark:ring-green-400/60" />
+                </a>
+            @empty
+                <p class="text-gray-600 dark:text-gray-400 md:indent-2">This unit has no active assessments.</p>
+            @endforelse
+        </div>
+
+        <div class="border-t border-green-800 dark:border-green-200 mt-4 pt-2 flex flex-row justify-between items-center">
+            <a wire:navigate class="text-gray-800 hover:text-green-600 dark:text-gray-400 dark:hover:text-green-300" href="{{ route('modules.detail', ['id' => $module_id, 'slug' => $module_slug]) }}">&larr; Back</a>
+        </div>
     </div>
 </div>

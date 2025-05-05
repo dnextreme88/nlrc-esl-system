@@ -7,6 +7,7 @@ use App\Filament\Resources\ModuleResource\Pages\CreateModule;
 use App\Filament\Resources\ModuleResource\Pages\EditModule;
 use App\Filament\Resources\ModuleResource\Pages\ListModules;
 use App\Filament\Resources\ModuleResource\RelationManagers;
+use App\Filament\Resources\ModuleResource\RelationManagers\UnitsRelationManager;
 use App\Models\Module;
 use App\Models\Proficiency;
 use Filament\Forms;
@@ -69,6 +70,8 @@ class ModuleResource extends Resource
                     ->searchable()
                     ->toggleable()
                     ->words(5),
+                TextColumn::make('unitsCount')
+                    ->label('# of units'),
                 TextColumn::make('created_at')
                     ->dateTime('M d, Y h:i:s A')
                     ->sortable()
@@ -111,7 +114,7 @@ class ModuleResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            UnitsRelationManager::class,
         ];
     }
 

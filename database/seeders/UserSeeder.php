@@ -76,7 +76,9 @@ class UserSeeder extends Seeder
                 }
             });
 
-        User::factory(3)->students()
+        User::factory()->count(3)
+            ->students()
+            ->sequence(fn ($sequence) => ['email' => 'student' .($sequence->index + 1). '@test.com'])
             ->create()
             ->each(function ($user, $index) {
                 // Logic to populate proficiencies of students

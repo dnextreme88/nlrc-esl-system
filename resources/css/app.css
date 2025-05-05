@@ -33,6 +33,7 @@
   --font-chalkboard: 'Chalkboard', sans-serif;
 }
 
+/* REF: https://alpinejs.dev/directives/cloak */
 [x-cloak] {
-    display: none;
+    display: none !important;
 }

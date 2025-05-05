@@ -6,6 +6,7 @@ use App\Helpers\Helpers;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Masmerise\Toaster\Toaster;
 
 // Using NavigationMenu is conflicting with another class of the same name from Laravel Jetstream
 class NavMenu extends Component
@@ -18,8 +19,10 @@ class NavMenu extends Component
     // Listen to an event
     #[On('echo-private:receive-announcement.{userId},\App\Events\ReceiveAnnouncementEvent')]
     #[On('echo-private:receive-meeting-booked.{userId},\App\Events\ReceiveMeetingBookedEvent')]
-    public function onReceiveAnnouncement($event)
+    public function onReceiveNotification($event)
     {
+        Toaster::info('You have received a new notification!');
+
         $this->get_notifications();
     }
 

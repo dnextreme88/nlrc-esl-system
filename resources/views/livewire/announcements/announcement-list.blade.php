@@ -40,26 +40,30 @@
                                 <ul class="flex gap-2">
                                     @foreach (explode(',', $announcement['tags']) as $tag)
                                         <li>
-                                            <span class="rounded-full px-3 py-2 text-xs font-medium ring-inset ring-1 dark:ring-2 bg-green-200 dark:bg-green-400/10 text-green-800 dark:text-green-300 ring-green-600/40 dark:ring-green-400/30">{{ $tag }}</span>
+                                            <x-badge :text="$tag" class="max-w-fit bg-green-200 dark:bg-green-400/10 text-green-800 dark:text-green-300 ring-green-600/40 dark:ring-green-400/60" />
                                         </li>
                                     @endforeach
                                 </ul>
                             @endif
 
                             @if (str_word_count($announcement['description']) > 200)
-                                <div class="mt-4 indent-2 text-justify line-clamp-3 dark:text-gray-400">{!! Markdown::parse($announcement['description']) !!}</div>
+                                <x-markdown-parser class="mt-4 indent-2 text-justify text-gray-800 dark:text-gray-200 line-clamp-8">
+                                    {{ $announcement['description'] }}
+                                </x-markdown-parser>
 
                                 <a
                                     wire:navigate
                                     wire:click="set_is_read('{{ $announcement->id }}')"
                                     href="{{ route('announcements.detail', ['id' => $announcement->data['announcement_id'], 'slug' => $announcement['slug']]) }}"
-                                    class="inline-block mb-4 text-gray-800 hover:text-green-600 dark:text-gray-200 dark:hover:text-green-300 transition duration-150 ease-in-out"
+                                    class="inline-block mt-2 mb-3 transition duration-150 ease-in-out text-green-600 dark:text-green-300 hover:underline"
                                     title="Click me to read more"
                                 >
                                     Read more
                                 </a>
                             @else
-                                <div class="mt-4 indent-2 text-justify dark:text-gray-400">{!! Markdown::parse($announcement['description']) !!}</div>
+                                <x-markdown-parser class="mt-4 indent-2 text-justify text-gray-800 dark:text-gray-200">
+                                    {{ $announcement['description'] }}
+                                </x-markdown-parser>
                             @endif
                         </div>
                     </div>

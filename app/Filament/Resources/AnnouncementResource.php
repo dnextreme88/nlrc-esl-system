@@ -60,25 +60,31 @@ class AnnouncementResource extends Resource
             ->schema([
                 Tabs::make('Tabs')
                     ->tabs([
-                        Tab::make('Announcement Information')
+                        Tab::make('Announcement Details')
                             ->schema([
                                 Placeholder::make('user_id')
-                                    ->columnSpan(2)
+                                    ->columnSpan([
+                                        'md' => 2,
+                                        'lg' => 1,
+                                    ])
                                     ->content(fn (Announcement $record): string => $record->user->first_name)
                                     ->hidden(fn (string $operation): bool => $operation === 'create')
                                     ->label('Author'),
                                 TextInput::make('title')
-                                    ->columnSpan(fn (string $operation): int => $operation === 'create' ? 4 : 2)
+                                    ->columnSpan([
+                                        'md' => 2,
+                                        'lg' => 1,
+                                    ])
                                     ->maxLength(128)
                                     ->minLength(5)
                                     ->required()
                                     ->unique(ignoreRecord: true),
                                 MarkdownEditor::make('description')
-                                    ->columnSpan(4)
+                                    ->columnSpan(['md' => 2])
                                     ->disableToolbarButtons(['attachFiles'])
                                     ->required(fn (string $operation): bool => $operation === 'create'),
                                 TagsInput::make('tags')
-                                    ->columnSpan(4)
+                                    ->columnSpan(['md' => 2])
                                     ->extraAttributes(['class' => 'lowercase'])
                                     ->helperText('To add the tag, press the Enter, Tab, or comma (,) keys. Each tag is limited to 32 characters only.')
                                     ->nestedRecursiveRules(['max:32', 'min:2'])
@@ -112,7 +118,7 @@ class AnnouncementResource extends Resource
                                     ->hidden(fn (string $operation): bool => $operation === 'create')
                                     ->label('Updated on'),
                             ])
-                            ->columns(4),
+                            ->columns(['md' => 2]),
                         Tab::make('Send Announcement')
                             ->schema([
                                 Select::make('send_to_list')

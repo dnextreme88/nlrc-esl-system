@@ -97,6 +97,10 @@
                                 {{ __('Announcements') }}
                             </x-dropdown-link>
 
+                            <x-dropdown-link wire:navigate href="{{ route('assessments.index') }}">
+                                {{ __('Assessments') }}
+                            </x-dropdown-link>
+
                             <!-- Account Management -->
                             <div class="block px-4 py-2 text-xs text-gray-600 dark:text-gray-400">
                                 {{ __('Manage Account') }}
@@ -219,6 +223,10 @@
 
                 <x-responsive-nav-link wire:navigate href="{{ route('announcements.index') }}" :active="request()->routeIs('announcements.index')">
                     {{ __('Announcements') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link wire:navigate href="{{ route('assessments.index') }}" :active="request()->routeIs('assessments.index')">
+                    {{ __('Assessments') }}
                 </x-responsive-nav-link>
 
                 <!-- Account Management -->

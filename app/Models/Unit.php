@@ -21,14 +21,19 @@ class Unit extends Model
         'description',
     ];
 
-    public function unit_attachments(): HasMany
-    {
-        return $this->hasMany(UnitsAttachment::class);
-    }
-
     public function module(): HasOne
     {
         return $this->hasOne(Module::class, 'id', 'module_id');
+    }
+
+    public function unit_assessments(): HasMany
+    {
+        return $this->hasMany(UnitsAssessment::class);
+    }
+
+    public function unit_attachments(): HasMany
+    {
+        return $this->hasMany(UnitsAttachment::class);
     }
 
     protected static function booted()

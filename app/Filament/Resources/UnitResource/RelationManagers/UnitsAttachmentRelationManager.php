@@ -84,6 +84,8 @@ class UnitsAttachmentRelationManager extends RelationManager
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('file_name', 'asc')
+            ->emptyStateDescription('Add a new attachment by clicking the top-right button')
+            ->emptyStateHeading('No attachments found for this unit')
             ->filters([
                 //
             ])
@@ -106,14 +108,13 @@ class UnitsAttachmentRelationManager extends RelationManager
                     ->extraModalFooterActions([
                         Action::make('open_in_browser')
                             ->icon('heroicon-o-globe-alt')
-                            ->openUrlInNewTab()
+                            ->label('Open in browser (in a new tab)')
+                            // Do not change the order of this two methods so that the attachment opens on a new tab
                             ->url(fn (UnitsAttachment $record) => asset('storage/' .$record->file_path))
+                            ->openUrlInNewTab(),
                     ])
                     ->icon('heroicon-o-play-circle')
                     ->media(fn (UnitsAttachment $record) => asset('storage/' .$record->file_path)),
-                DeleteAction::make()
-                    ->after(fn (UnitsAttachment $record): bool => Storage::disk('public')->delete($record->file_path))
-                    ->modalHeading('Delete attachment?'),
                 EditAction::make()
                     ->modalHeading('Edit attachment')
                     ->mutateFormDataUsing(function (array $data): array {
@@ -121,7 +122,10 @@ class UnitsAttachmentRelationManager extends RelationManager
                         $data['description'] = trim($data['description']);
 
                         return $data;
-                    })
+                    }),
+                DeleteAction::make()
+                    ->after(fn (UnitsAttachment $record): bool => Storage::disk('public')->delete($record->file_path))
+                    ->modalHeading('Delete attachment?'),
             ])
             ->bulkActions([
                 BulkActionGroup::make([

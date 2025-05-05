@@ -10,7 +10,9 @@
     </x-slot>
 
     <div class="max-w-7xl mx-auto py-12 sm:px-6 lg:px-8">
-        <p class="text-gray-800 dark:text-gray-200">{!! Markdown::parse($current_module->description) !!}</p>
+        <x-markdown-parser class="text-gray-800 dark:text-gray-200">
+            {{ $current_module->description }}
+        </x-markdown-parser>
 
         <div class="mt-10 border-2 border-gray-300 dark:border-gray-600 shadow-sm shadow-gray-600">
             @if ($current_module->units->isNotEmpty())
@@ -18,47 +20,13 @@
 
                 <dl class="px-4 divide-y divide-gray-600 py-6 space-y-4">
                     @foreach ($current_module->units as $index => $unit)
-                        <div x-data="{ isOpened: false }">
-                            <dt class="my-4">
-                                <button
-                                    x-on:click="isOpened = !isOpened;"
-                                    class="flex w-full items-start justify-between text-gray-800 dark:text-gray-200 hover:cursor-pointer group"
-                                    aria-controls="faq-{{ $index }}"
-                                    aria-expanded="false"
-                                    type="button"
-                                >
-                                    <span class="text-xl font-semibold transition duration-150 group-hover:scale-105 group-hover:text-green-600 group-hover:dark:text-green-300">{{ $unit->name }}</span>
-                                    <span class="ml-6 flex h-7 items-center">
-                                        <svg
-                                            x-bind:class="{ 'rotate-180': isOpened, 'rotate-90': !isOpened }"
-                                            class="size-6 transition duration-300 ease-in-out group-hover:scale-105 group-hover:text-green-600 group-hover:dark:text-green-300"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            stroke-width="1.5"
-                                            stroke="currentColor"
-                                            aria-hidden="true"
-                                            data-slot="icon"
-                                        >
-                                            {{-- Plus icon --}}
-                                            <path x-bind:class="{'hidden': isOpened, 'inline-flex': !isOpened }" stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
-                                            {{-- Minus icon --}}
-                                            <path x-bind:class="{'hidden': !isOpened, 'inline-flex': isOpened }" stroke-linecap="round" stroke-linejoin="round" d="M18 12H6" />
-                                        </svg>
-                                    </span>
-                                </button>
-                            </dt>
+                        <x-accordion-toggle :content_classes="'indent-2 mt-4 pr-10'" :index="$index" :is_opened="'false'" :parent_classes="'my-4'">
+                            <x-slot name="title">{{ $unit->name }}</x-slot>
 
-                            <dd
-                                x-show="isOpened"
-                                x-transition:enter="ease-out duration-300"
-                                x-transition:enter-start="opacity-0 transform -translate-y-2"
-                                x-transition:enter-end="opacity-100 transform translate-y-0"
-                                x-transition:leave="ease-in duration-300"
-                                x-transition:leave-end="opacity-0 transform -translate-y-4"
-                                class="transition-all indent-2 mt-4 mb-6 pr-10"
-                                id="faq-{{ $index }}"
-                            >
-                                <p class="text-sm text-gray-600 dark:text-gray-400">{{ $unit->description }}</p>
+                            <x-slot name="content">
+                                <x-markdown-parser class="text-sm text-gray-600 dark:text-gray-400">
+                                    {{ $unit->description }}
+                                </x-markdown-parser>
 
                                 <a
                                     wire:navigate
@@ -72,8 +40,8 @@
                                 >
                                     Take me to this unit &rarr;
                                 </a>
-                            </dd>
-                        </div>
+                            </x-slot>
+                        </x-accordion-toggle>
                     @endforeach
                 </dl>
             @else

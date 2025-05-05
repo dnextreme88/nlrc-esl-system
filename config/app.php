@@ -139,5 +139,6 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         'Helpers' => App\Helpers\Helpers::class,
         'Markdown' => Illuminate\Mail\Markdown::class,
+        'SpatieMarkdown' => Spatie\LaravelMarkdown\MarkdownRenderer::class,
     ])->toArray(),
 ];

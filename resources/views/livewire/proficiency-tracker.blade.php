@@ -7,9 +7,7 @@
                 </div>
 
                 <div>
-                    <h3 class="text-gray-800 dark:text-gray-200 text-2xl font-semibold">{{ $student_proficiency->proficiency->name }}</h3>
-
-                    <span class="text-sm text-gray-600 dark:text-gray-400">{{ $student_proficiency->proficiency->description }}</span>
+                    <x-bold-text-with-subtext :text_in_bold="$student_proficiency->proficiency->name" :subtext="$student_proficiency->proficiency->description" />
                 </div>
 
                 {{-- TODO: This should be based on the number of modules the student completed
@@ -19,9 +17,12 @@
                 --}}
 
                 <div class="grid grid-cols-1 items-center md:grid-cols-[minmax(10%,_21%)_1fr] md:col-span-2 lg:col-span-1 lg:block lg:items-start">
-                    <h3 class="text-gray-800 dark:text-gray-200 text-2xl font-semibold">Achieved on</h4>
-
-                    <span class="text-sm text-gray-600 dark:text-gray-400 md:text-xl lg:text-sm">{{ Helpers::parse_time_to_user_timezone($student_proficiency->created_at)->format('M d, Y g:i A') }}</span>
+                    <x-bold-text-with-subtext
+                        :text_in_bold="'Achieved on'"
+                        :subtext="Helpers::parse_time_to_user_timezone($student_proficiency->created_at)->format('M d, Y g:i A')"
+                        :subtext_classes="'md:text-xl lg:text-sm'"
+                        class="transition duration-150 hover:text-green-600 dark:hover:text-green-300 md:text-lg lg:text-2xl"
+                    />
                 </div>
             </div>
         @endforeach

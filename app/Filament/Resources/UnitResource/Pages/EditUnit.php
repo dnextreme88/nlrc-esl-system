@@ -14,9 +14,4 @@ class EditUnit extends EditRecord
     {
         return [DeleteAction::make()];
     }
-
-    public function hasCombinedRelationManagerTabsWithContent(): bool
-    {
-        return true;
-    }
 }
