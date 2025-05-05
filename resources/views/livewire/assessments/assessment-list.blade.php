@@ -12,18 +12,24 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             @if (count($assessments) > 0)
-                @foreach ($assessments as $assessment)
+                @foreach ($assessments as $index => $assessment)
                     <div class="mb-4 mt-2 shadow-lg shadow-gray-300 dark:shadow-gray-600 first:mt-4">
-                        <div class="flex justify-between gap-3 p-2 bg-gray-200 dark:bg-gray-600 sm:p-4">
-                            <div class="flex flex-1 flex-col">
-                                <h2 class="text-gray-800 dark:text-gray-200 font-bold">{{ $assessment['title'] }}</h2>
-                            </div>
-                        </div>
+                        <x-accordion-toggle :content_classes="'bg-gray-100 dark:bg-gray-800'" :header_classes="'pr-3'" :index="$index" :is_opened="'true'" :parent_classes="'bg-gray-300 dark:bg-gray-600'">
+                            <x-slot name="title">
+                                <div class="flex justify-between gap-3 p-2 sm:p-4">
+                                    <div class="flex flex-1 flex-col">
+                                        <h2 class="text-gray-800 dark:text-gray-200 font-bold">{{ $assessment['title'] }}</h2>
+                                    </div>
+                                </div>
+                            </x-slot>
 
-                        <div class="p-2 sm:p-4">
-                            {{-- :key param in Livewire components is used to uniquely identify each state, especially for paginated content like this --}}
-                            <livewire:assessments.attempt-history :key="$assessment['id']" :assessment_id="$assessment['id']" />
-                        </div>
+                            <x-slot name="content">
+                                <div class="p-2 sm:p-4">
+                                    {{-- :key param in Livewire components is used to uniquely identify each state, especially for paginated content like this --}}
+                                    <livewire:assessments.attempt-history :key="$assessment['id']" :assessment_id="$assessment['id']" />
+                                </div>
+                            </x-slot>
+                        </x-accordion-toggle>
                     </div>
                 @endforeach
 
