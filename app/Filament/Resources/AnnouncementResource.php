@@ -259,8 +259,7 @@ class AnnouncementResource extends Resource
             ->filters([
                 SelectFilter::make('user')
                     ->label('Staff Name')
-                    ->options(User::select(['id', 'first_name'])
-                        ->whereRaw('role_id IN(1, 2, 4)')
+                    ->options(fn () => User::select(['id', 'first_name'])->whereRaw('role_id IN(1, 2, 4)')
                         ->get()
                         ->pluck('first_name', 'id')
                     )

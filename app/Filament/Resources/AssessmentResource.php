@@ -77,6 +77,7 @@ class AssessmentResource extends Resource
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('type')
+                    ->badge()
                     ->formatStateUsing(fn (string $state): string => AssessmentTypes::from($state)->getLabel()),
                 TextColumn::make('description')
                     ->searchable()
@@ -89,7 +90,7 @@ class AssessmentResource extends Resource
             ])
             ->filters([
                 SelectFilter::make('type')
-                    ->options(collect(AssessmentTypes::cases())
+                    ->options(fn () => collect(AssessmentTypes::cases())
                         ->mapWithKeys(fn ($assessment_type) => [$assessment_type->value => $assessment_type->getLabel()])
                         ->toArray()
                     ),
