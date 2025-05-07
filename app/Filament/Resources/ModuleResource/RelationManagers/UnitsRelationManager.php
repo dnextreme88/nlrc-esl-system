@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class UnitsRelationManager extends RelationManager
 {
     protected static string $relationship = 'units';
-    protected static ?string $title = 'Units under this module';
+    protected static ?string $title = 'Included Units';
 
     public function form(Form $form): Form
     {

@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
@@ -23,16 +22,14 @@ class Module extends Model
         'description',
     ];
 
-    public function module_students(): BelongsToMany
+    public function module_students(): HasMany
     {
-        return $this->belongsToMany(User::class, 'module_students', 'module_id', 'student_id')
-            ->withTimestamps();
+        return $this->hasMany(ModulesStudent::class);
     }
 
-    public function module_teachers(): BelongsToMany
+    public function module_teachers(): HasMany
     {
-        return $this->belongsToMany(User::class, 'module_teachers', 'module_id', 'teacher_id')
-            ->withTimestamps();
+        return $this->hasMany(ModulesTeacher::class);
     }
 
     public function proficiency(): BelongsTo
@@ -43,6 +40,20 @@ class Module extends Model
     public function units(): HasMany
     {
         return $this->hasMany(Unit::class);
+    }
+
+    public function studentsCount(): Attribute
+    {
+        return Attribute::make(
+            get: fn (): int => $this->module_students()->count(),
+        );
+    }
+
+    public function teachersCount(): Attribute
+    {
+        return Attribute::make(
+            get: fn (): int => $this->module_teachers()->count(),
+        );
     }
 
     public function unitsCount(): Attribute

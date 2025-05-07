@@ -150,6 +150,7 @@ class UserResource extends Resource
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('role.name')
+                    ->badge()
                     ->label('Role'),
                 TextColumn::make('date_of_birth')
                     ->date()
