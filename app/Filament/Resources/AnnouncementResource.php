@@ -39,6 +39,7 @@ use Illuminate\Database\Query\Builder as BuilderQuery;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification as LaravelNotification;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
 class AnnouncementResource extends Resource
@@ -52,18 +53,11 @@ class AnnouncementResource extends Resource
         return $form
             ->schema([
                 Placeholder::make('user_id')
-                    ->columnSpan([
-                        'md' => 2,
-                        'lg' => 1,
-                    ])
                     ->content(fn (Announcement $record): string => $record->user->first_name)
                     ->hidden(fn (string $operation): bool => $operation === 'create')
                     ->label('Author'),
                 TextInput::make('title')
-                    ->columnSpan([
-                        'md' => 2,
-                        'lg' => 1,
-                    ])
+                    ->columnSpan(['md' => 2])
                     ->maxLength(128)
                     ->minLength(5)
                     ->required()
@@ -106,8 +100,7 @@ class AnnouncementResource extends Resource
                     ->content(fn (Announcement $announcement): string => $announcement->updated_at->isoFormat('LLL'))
                     ->hidden(fn (string $operation): bool => $operation === 'create')
                     ->label('Updated on'),
-            ])
-            ->columns(1);
+            ]);
     }
 
     public static function table(Table $table): Table
@@ -122,10 +115,16 @@ class AnnouncementResource extends Resource
                 TextColumn::make('title')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('description')
-                    ->markdown()
-                    ->words(5),
                 TextColumn::make('tags')
+                    ->formatStateUsing(function (string $state) {
+                        $tags = array_map('trim', explode(',', $state));
+                        $badges = collect($tags)->map(
+                            fn ($tag): string => "<span class='inline-flex items-center px-2 py-1 rounded-lg text-xs font-medium mr-1 bg-transparent border-2 text-gray-800 dark:text-gray-200 border-green-300 dark:border-green-600'>{$tag}</span>"
+                        )->implode(' ');
+
+                        return new HtmlString($badges);
+                    })
+                    ->html()
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')

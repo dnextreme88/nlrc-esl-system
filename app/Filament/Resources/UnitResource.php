@@ -72,10 +72,6 @@ class UnitResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->words(5),
-                TextColumn::make('description')
-                    ->searchable()
-                    ->toggleable()
-                    ->words(5),
                 IconColumn::make('unit_assessments')
                     ->boolean()
                     ->getStateUsing(fn ($record) => $record->unit_assessments()->exists())

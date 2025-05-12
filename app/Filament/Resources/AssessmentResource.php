@@ -85,10 +85,6 @@ class AssessmentResource extends Resource implements HasKnowledgeBase
                 TextColumn::make('type')
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => AssessmentTypes::from($state)->getLabel()),
-                TextColumn::make('description')
-                    ->searchable()
-                    ->toggleable()
-                    ->words(5),
                 IconColumn::make('is_active')
                     ->boolean(),
                 TextColumn::make('questionsCount')

@@ -74,10 +74,6 @@ class ModuleResource extends Resource implements HasKnowledgeBase
                     ->searchable()
                     ->sortable()
                     ->words(5),
-                TextColumn::make('description')
-                    ->searchable()
-                    ->toggleable()
-                    ->words(5),
                 TextColumn::make('unitsCount')
                     ->label('Units'),
                 TextColumn::make('studentsCount')
