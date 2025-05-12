@@ -12,7 +12,9 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\MaxWidth;
+use Filament\View\PanelsRenderHook;
 use Filament\Widgets;
+use Guava\FilamentKnowledgeBase\KnowledgeBasePlugin;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -61,7 +63,13 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->maxContentWidth(MaxWidth::Full)
             ->topNavigation()
-            ->plugin(FilamentProgressbarPlugin::make()->color('#29b'))
+            ->plugins([
+                KnowledgeBasePlugin::make()
+                    ->disableKnowledgeBasePanelButton()
+                    ->helpMenuRenderHook(PanelsRenderHook::USER_MENU_BEFORE)
+                    ->openDocumentationInNewTab(),
+                FilamentProgressbarPlugin::make()->color('#29b'),
+            ])
             ->viteTheme('resources/css/filament-admin-theme.css')
             ->userMenuItems([
                 MenuItem::make('site')

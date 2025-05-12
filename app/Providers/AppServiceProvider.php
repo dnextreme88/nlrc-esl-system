@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
+use Guava\FilamentKnowledgeBase\Filament\Panels\KnowledgeBasePanel;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -12,7 +13,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        KnowledgeBasePanel::configureUsing(
+            fn (KnowledgeBasePanel $panel) => $panel
+                ->brandName(config('app.name', 'NLRC-ESL'). ' Docs')
+                ->disableBreadcrumbs()
+                ->viteTheme('resources/css/filament-admin-theme.css')
+        );
     }
 
     /**

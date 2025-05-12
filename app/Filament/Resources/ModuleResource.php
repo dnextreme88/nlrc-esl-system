@@ -26,15 +26,21 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
+use Guava\FilamentKnowledgeBase\Contracts\HasKnowledgeBase;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class ModuleResource extends Resource
+class ModuleResource extends Resource implements HasKnowledgeBase
 {
     protected static ?string $model = Module::class;
     protected static ?string $activeNavigationIcon = 'heroicon-s-document-text';
     protected static ?string $cluster = ModuleCluster::class;
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
+
+    public static function getDocumentation(): array
+    {
+        return ['modules.intro'];
+    }
 
     public static function form(Form $form): Form
     {
