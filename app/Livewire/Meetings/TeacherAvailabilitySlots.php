@@ -16,41 +16,50 @@ class TeacherAvailabilitySlots extends Component
 {
     public array $possible_dates = [];
     public array $time_slots = [];
-    public $meeting_slots;
+    public $meeting_slots = [];
     public $meeting_date;
     public int $count_pending_reserved_slots = 0;
     public bool $is_meeting_date_chosen = false;
+    public $show_update_slots_confirmation_modal = false;
     public $time_in_user_timezone_tomorrow;
 
-    #[On('saving-reservation-slots')]
-    public function reserve_slots($reserved_slots)
+    public function reserve_slot_modal()
     {
-        $start_times = array_column($reserved_slots, 'start_time');
-        $end_times = array_column($reserved_slots, 'end_time');
+        $this->show_update_slots_confirmation_modal = true;
+    }
 
-        foreach ($reserved_slots as $index => $value) {
+    #[On('updating-slots')]
+    public function update_slots($slots_to_update)
+    {
+        foreach ($slots_to_update as $slot) {
+            $spliced_start_time = explode(' ', $slot['start_time']);
+            $spliced_end_time = explode(' ', $slot['end_time']);
+            $start_date = $this->meeting_date. ' ' .$spliced_start_time[0];
+
             MeetingSlot::updateOrCreate(
                 [
                     'teacher_id' => Auth::user()->id,
-                    'meeting_date' => Carbon::parse($start_times[$index], Auth::user()->timezone)->setTimezone('UTC')->format('Y-m-d'),
-                    'start_time' => Carbon::parse($start_times[$index], Auth::user()->timezone)->setTimezone('UTC')->format('Y-m-d H:i:s'),
-                    'end_time' => Carbon::parse($end_times[$index], Auth::user()->timezone)->setTimezone('UTC')->format('Y-m-d H:i:s'),
+                    'meeting_date' => Carbon::parse($start_date, Auth::user()->timezone)->setTimezone('UTC')->format('Y-m-d'),
+                    'start_time' => Carbon::parse($start_date, Auth::user()->timezone)->setTimezone('UTC')->format('Y-m-d H:i:s'),
+                    'end_time' => Carbon::parse($this->meeting_date. ' ' .$spliced_end_time[0], Auth::user()->timezone)->setTimezone('UTC')->format('Y-m-d H:i:s'),
                 ],
-                ['is_opened' => $value['is_opened']]
+                ['is_opened' => $slot['is_opened']]
             );
         }
 
         // Reset
+        $this->show_update_slots_confirmation_modal = false;
         $this->meeting_date = null;
         $this->is_meeting_date_chosen = false;
 
         Toaster::success('You have successfully updated your availabilities!');
-        $this->dispatch('updated-reserved-slots');
     }
 
     public function show_available_times_for_selected_date()
     {
         $this->validate(['meeting_date' => ['required', 'date', 'date_format:Y-m-d']]);
+
+        $this->time_slots = Helpers::populate_time_slots('H:i A'); // Not necessary, it's just to ensure that 12:00 AM goes first before 1:00 AM
 
         $meeting_date = $this->meeting_date;
 
@@ -60,6 +69,13 @@ class TeacherAvailabilitySlots extends Component
             ->get()
             ->filter(function ($val) use ($meeting_date) {
                 return Helpers::parse_time_to_user_timezone($val['start_time'])->format('Y-m-d') == $meeting_date;
+            })
+            ->map(function ($slot) {
+                $slot->start_time = Helpers::parse_time_to_user_timezone($slot->start_time)->format('H:i A');
+                $slot->end_time = Helpers::parse_time_to_user_timezone($slot->end_time)->format('H:i A');
+                $slot->route = route('meetings.detail', ['meeting_uuid' => $slot->meeting_uuid]);
+
+                return $slot;
             });
 
         $this->count_pending_reserved_slots = count($this->meeting_slots->filter(
@@ -68,7 +84,7 @@ class TeacherAvailabilitySlots extends Component
 
         $this->is_meeting_date_chosen = true;
 
-        $this->dispatch('rendered-time-slots');
+        $this->dispatch('rendered-time-slots', meeting_slots: $this->meeting_slots->values()->toArray(), time_slots: $this->time_slots);
     }
 
     public function mount()
@@ -78,13 +94,7 @@ class TeacherAvailabilitySlots extends Component
         $next_28_days = $time_in_user_timezone->copy()->addDays(28);
 
         // Get the dates starting tomorrow
-        $period = CarbonPeriod::create($this->time_in_user_timezone_tomorrow, '1 day', $next_28_days);
-
-        foreach ($period as $date) {
-            $this->possible_dates[] = $date;
-        }
-
-        $this->time_slots = Helpers::populate_time_slots('H:i:s'); // Not necessary, it's just to ensure that 12:00 AM goes first before 1:00 AM
+        $this->possible_dates = CarbonPeriod::create($this->time_in_user_timezone_tomorrow, '1 day', $next_28_days)->toArray();
     }
 
     #[On('rendered-time-slots')]
