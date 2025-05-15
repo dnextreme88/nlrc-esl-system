@@ -27,7 +27,7 @@
                                     </a>
                                 </h2>
 
-                                <p class="text-gray-600 dark:text-gray-400 text-sm">Posted by {{ \App\Models\User::find($announcement->data['user_id'])->name }} on <span class="font-bold">{{ Helpers::parse_time_to_user_timezone($announcement->data['created_at'])->format('D, F j, Y \a\t h:i A') }}</span></p>
+                                <p class="text-gray-600 dark:text-gray-400 text-sm">Posted by {{ \App\Models\User::find($announcement->data['user_id'])->full_name }} on <span class="font-bold">{{ Helpers::parse_time_to_user_timezone($announcement->data['created_at'])->format('D, F j, Y \a\t h:i A') }}</span></p>
                             </div>
 
                             <div class="flex items-center">

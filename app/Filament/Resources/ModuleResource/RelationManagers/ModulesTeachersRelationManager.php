@@ -42,9 +42,8 @@ class ModulesTeachersRelationManager extends RelationManager
 
                         $query->where('is_active', true)
                             ->whereNotIn('id', $used_teacher_ids)
-                            ->whereHas('role', fn ($query) =>
-                                $query->where('name', Roles::HEAD_TEACHER->value)
-                                    ->orWhere('name', Roles::TEACHER->value)
+                            ->whereHas('role', fn ($query) => $query->where('name', Roles::HEAD_TEACHER->value)
+                                ->orWhere('name', Roles::TEACHER->value)
                             )
                             ->orderBy('last_name')
                             ->orderBy('first_name')

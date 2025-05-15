@@ -13,9 +13,7 @@ class MeetingsChart extends ChartWidget
 {
     protected static ?string $heading = 'Meetings';
     protected static ?string $pollingInterval = null; // Avoid refreshing the chart data
-
     public ?string $filter = 'this_week';
-
     public $start_value;
     public $end_value;
     public $extra_description;
@@ -137,7 +135,7 @@ class MeetingsChart extends ChartWidget
         ];
     }
 
-    public function getColumnSpan(): int | string | array
+    public function getColumnSpan(): int|string|array
     {
         return 2;
     }

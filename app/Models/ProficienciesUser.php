@@ -14,7 +14,6 @@ class ProficienciesUser extends Model
         'proficiency_id',
         'student_id',
     ];
-
     protected $table = 'proficiencies_users';
 
     public function proficiency(): BelongsTo
