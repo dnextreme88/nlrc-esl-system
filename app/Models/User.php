@@ -114,7 +114,14 @@ class User extends Authenticatable implements FilamentUser, HasName
 
     public function getFilamentName(): string
     {
-        return $this->last_name. ', ' .$this->first_name. ' ' .$this->middle_name;
+        return $this->fullName;
+    }
+
+    public function fullName(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes): string => $this->last_name. ', ' .$this->first_name. ' ' .$this->middle_name
+        );
     }
 
     public function profilePhotoUrl(): Attribute

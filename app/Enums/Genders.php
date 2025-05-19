@@ -15,7 +15,7 @@ enum Genders: string
         };
     }
 
-    public function getColor(): string | array | null
+    public function getColor(): string|array|null
     {
         return match ($this) {
             self::FEMALE => 'danger',

@@ -143,16 +143,14 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('first_name')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('last_name')
-                    ->searchable()
-                    ->sortable(),
+                TextColumn::make('full_name')
+                    ->searchable(['first_name', 'middle_name', 'last_name'])
+                    ->sortable(['first_name']),
                 TextColumn::make('email')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('role.name')
+                    ->badge()
                     ->label('Role'),
                 TextColumn::make('date_of_birth')
                     ->date()
@@ -171,7 +169,7 @@ class UserResource extends Resource
                 SelectFilter::make('role')
                     ->relationship('role', 'name'),
                 SelectFilter::make('gender')
-                    ->options(collect(Genders::cases())
+                    ->options(fn () => collect(Genders::cases())
                         ->mapWithKeys(fn ($gender) => [$gender->value => $gender->getLabel()])
                         ->toArray()
                     ),

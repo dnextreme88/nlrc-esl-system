@@ -48,6 +48,7 @@ class AssessmentsQuestionRelationManager extends RelationManager
                         fn (): Closure => function (string $attribute, $value, Closure $fail) {
                             $number_of_choices = count($value);
                             $array_as_collection = collect($value);
+
                             if (!is_array($value) || $number_of_choices < 2) {
                                 $fail('This question must have at least two choices.');
                             }
@@ -92,8 +93,7 @@ class AssessmentsQuestionRelationManager extends RelationManager
             ->filters([
                 Filter::make('questions_more_than_1_answer')
                     ->label('Toggle questions with more than 1 answer')
-                    ->query(fn (Builder $query) =>
-                        $query->whereHas('choices', function ($q) {
+                    ->query(fn (Builder $query) => $query->whereHas('choices', function ($q) {
                             $q->where('is_correct', true);
                         }, '>=', 2)
                     ),
@@ -109,12 +109,10 @@ class AssessmentsQuestionRelationManager extends RelationManager
                     ->color('info')
                     ->icon('heroicon-o-eye')
                     ->modalCancelActionLabel('Close')
-                    ->modalContent(fn ($record) =>
-                        view('filament.assessment-answer-keys', [
-                            'assessment_question' => $record,
-                            'assessment_choices' => $record->choices()->get(),
-                        ])
-                    )
+                    ->modalContent(fn ($record) => view('filament.assessment-answer-keys', [
+                        'assessment_question' => $record,
+                        'assessment_choices' => $record->choices()->get(),
+                    ]))
                     ->modalHeading('Answer keys')
                     ->modalSubmitAction(false),
                 EditAction::make(),

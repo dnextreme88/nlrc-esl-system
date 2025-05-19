@@ -1,43 +1,20 @@
 <div>
     <h3 class="text-3xl text-gray-800 dark:text-gray-200">Reserve your slot</h3>
 
-    <p class="mx-2 my-4 text-gray-800 dark:text-gray-200">Pick a date and a time below to schedule a meeting with a teacher. Your current timezone is <strong>{{ Auth::user()->timezone }}</strong>. If this is not correct, please go to your <a wire:navigate class="text-green-600 dark:text-green-300 hover:underline" href="{{ route('settings.time') }}">settings and change it there</a>.</p>
+    <p class="mx-2 my-4 text-gray-800 dark:text-gray-200">Select a date from the calendar and pick a slot to schedule a meeting with a teacher. Your current timezone is <strong>{{ Auth::user()->timezone }}</strong>. If this is not correct, please go to your <a wire:navigate class="text-green-600 dark:text-green-300 hover:underline" href="{{ route('settings.time') }}">settings and change it there</a>.</p>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 *:my-4 *:px-2">
-        <form wire:submit.prevent="show_available_times_for_selected_date">
-            <div class="grid grid-cols-1 items-center sm:grid-cols-[200px_220px]">
-                <x-label is_required="true" value="{{ __('Meeting Date') }}" for="meeting_date" />
-
-                <x-select wire:model="meeting_date" name="meeting_date">
-                    <option value="">Select a date</option>
-                    @foreach ($possible_dates as $date)
-                        <option value="{{ \Carbon\Carbon::parse($date)->format('Y-m-d') }}">{{ \Carbon\Carbon::parse($date)->format('F d, Y') }}</option>
-                    @endforeach
-                </x-select>
-
-                @error ('meeting_date')
-                    <div class="text-red-500 text-sm mt-2 col-span-2 text-end">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <div class="col-span-2">
-                <x-button class="my-4 hover:cursor-pointer">
-                    <span wire:loading.flex wire:target="show_available_times_for_selected_date" class="items-center">
-                        <x-loading-indicator
-                            :loader_color_bg="'fill-gray-200 dark:fill-gray-800'"
-                            :loader_color_spin="'fill-gray-200 dark:fill-gray-800'"
-                            :show_text="false"
-                            :size="4"
-                        />
-                    </span>
-
-                    <span class="ml-2">Show time slots</span>
-                </x-button>
-            </div>
-        </form>
+    <div
+        x-data="{
+            availableMeetings: $wire.entangle('available_meetings'),
+            isLoading: $wire.entangle('is_loading'),
+        }"
+        x-init="$wire.on('show-times-for-date', () => isLoading = true)"
+        class="grid grid-cols-1 gap-2 lg:grid-cols-2 *:my-4 *:px-2"
+    >
+        <livewire:Calendar :dates="$possible_dates" />
 
         <div>
-            <span wire:loading.flex wire:target="show_available_times_for_selected_date" class="items-center">
+            <span x-show="isLoading" class="items-center">
                 <x-loading-indicator
                     :loader_color_bg="'fill-gray-800 dark:fill-gray-200'"
                     :loader_color_spin="'fill-gray-800 dark:fill-gray-200'"
@@ -46,43 +23,46 @@
                 />
             </span>
 
-            <div wire:loading.remove wire:target="show_available_times_for_selected_date">
-                @if ($is_meeting_date_chosen)
-                    @if ($available_meeting_slots_time->isNotEmpty())
-                        <h4 class="text-lg text-gray-800 dark:text-gray-200">Available time slots for {{ \Carbon\Carbon::parse($meeting_date)->format('F j, Y') }}</h4>
-
-                        <ul class="*:py-4">
-                            @foreach ($available_meeting_slots_time as $meeting_slot_time)
-                                @php
-                                    $student_already_reserved_in_slot = $meeting_slot_time->meeting_slots_users->pluck('id')
-                                        ->first(fn ($user_id) => $user_id == Auth::user()->id);
-                                @endphp
-
-                                <li class="px-4 items-center grid grid-cols-1 gap-3 sm:grid-cols-2 lg:px-2">
-                                    <div>
-                                        <p>
-                                            <span class="text-xl text-green-600 dark:text-green-300">&rarr;</span>
-                                            <span class="text-gray-800 dark:text-gray-200 {{ $student_already_reserved_in_slot ? 'line-through decoration-2 decoration-green-600 dark:decoration-green-300' : '' }}">{{ Helpers::parse_time_to_user_timezone($meeting_slot_time['start_time'])->format('h:i A') }} ~ {{ Helpers::parse_time_to_user_timezone($meeting_slot_time['end_time'])->format('h:i A') }}</span>
-                                        </p>
-                                    </div>
-
-                                    @if ($student_already_reserved_in_slot)
-                                        <p class="text-base text-start text-gray-600 dark:text-gray-300 sm:text-sm sm:text-end">You already reserved this slot</p>
-                                    @else
-                                        <x-secondary-button
-                                            wire:click="reserve_slot_modal('{{ $meeting_slot_time['start_time'] }}', '{{ $meeting_slot_time['end_time'] }}')"
-                                            class="justify-self-start sm:justify-self-end"
-                                        >
-                                            Book this time
-                                        </x-secondary-button>
-                                    @endif
-                                </li>
-                            @endforeach
-                        </ul>
-                    @else
-                        <p class="px-4 text-red-800 dark:text-red-200">This date has no available meeting slots.</p>
-                    @endif
+            <div x-show="!isLoading && availableMeetings?.length != 0">
+                @if (count($available_meetings) > 0)
+                    <h4 class="text-lg text-gray-800 dark:text-gray-200">Available time slots for {{ $meeting_date }}</h4>
                 @endif
+
+                <ul class="*:py-4">
+                    @foreach ($available_meetings as $meeting_slot_time)
+                        <li class="px-4 items-center grid grid-cols-1 gap-3 sm:grid-cols-2 lg:px-2">
+                            <div>
+                                <p>
+                                    <span class="text-xl text-green-600 dark:text-green-300">&rarr;</span>
+                                    <span class="text-gray-800 dark:text-gray-200 {{ $meeting_slot_time['is_student_in_slot'] ? 'line-through decoration-2 decoration-green-600 dark:decoration-green-300' : '' }}">{{ $meeting_slot_time['time'] }}</span>
+                                </p>
+                            </div>
+
+                            @if ($meeting_slot_time['is_student_in_slot'])
+                                <p class="text-base text-start text-gray-600 dark:text-gray-300 sm:text-sm sm:text-end">You already reserved this slot</p>
+                            @else
+                                <x-secondary-button
+                                    wire:click="reserve_slot_modal('{{ $meeting_slot_time['start_time'] }}', '{{ $meeting_slot_time['end_time'] }}')"
+                                    class="justify-self-start sm:justify-self-end"
+                                >
+                                    <span
+                                        wire:loading.flex wire:target="reserve_slot_modal('{{ $meeting_slot_time['start_time'] }}', '{{ $meeting_slot_time['end_time'] }}')"
+                                        class="items-center"
+                                    >
+                                        <x-loading-indicator
+                                            :loader_color_bg="'fill-gray-800 dark:fill-gray-200'"
+                                            :loader_color_spin="'fill-gray-800 dark:fill-gray-200'"
+                                            :show_text="false"
+                                            :size="4"
+                                        />
+                                    </span>
+
+                                    <span class="ms-2">Book this time</span>
+                                </x-secondary-button>
+                            @endif
+                        </li>
+                    @endforeach
+                </ul>
             </div>
         </div>
     </div>

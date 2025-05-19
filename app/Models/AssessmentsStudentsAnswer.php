@@ -35,9 +35,7 @@ class AssessmentsStudentsAnswer extends Model
             ->with('choice') // Eager load the related choice
             ->get()
             ->groupBy('assessment_question_id') // Group by question ID
-            ->map(fn ($group) =>
-                $group->map(fn ($answer) => $answer->choice->choice)->values()->all() // Array of choices for each question
-            )
+            ->map(fn ($group) => $group->map(fn ($answer) => $answer->choice->choice)->values()->all()) // Array of choices for each question
             ->toArray();
 
         return array_values($student_answers);

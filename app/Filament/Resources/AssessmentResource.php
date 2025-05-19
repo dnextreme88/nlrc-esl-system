@@ -28,15 +28,21 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
+use Guava\FilamentKnowledgeBase\Contracts\HasKnowledgeBase;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class AssessmentResource extends Resource
+class AssessmentResource extends Resource implements HasKnowledgeBase
 {
     protected static ?string $model = Assessment::class;
     protected static ?string $activeNavigationIcon = 'heroicon-s-pencil-square';
     protected static ?string $cluster = AssessmentCluster::class;
     protected static ?string $navigationIcon = 'heroicon-o-pencil-square';
+
+    public static function getDocumentation(): array
+    {
+        return ['assessments.intro'];
+    }
 
     public static function form(Form $form): Form
     {
@@ -77,11 +83,8 @@ class AssessmentResource extends Resource
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('type')
+                    ->badge()
                     ->formatStateUsing(fn (string $state): string => AssessmentTypes::from($state)->getLabel()),
-                TextColumn::make('description')
-                    ->searchable()
-                    ->toggleable()
-                    ->words(5),
                 IconColumn::make('is_active')
                     ->boolean(),
                 TextColumn::make('questionsCount')
@@ -89,7 +92,7 @@ class AssessmentResource extends Resource
             ])
             ->filters([
                 SelectFilter::make('type')
-                    ->options(collect(AssessmentTypes::cases())
+                    ->options(fn () => collect(AssessmentTypes::cases())
                         ->mapWithKeys(fn ($assessment_type) => [$assessment_type->value => $assessment_type->getLabel()])
                         ->toArray()
                     ),

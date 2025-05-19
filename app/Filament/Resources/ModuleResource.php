@@ -7,6 +7,8 @@ use App\Filament\Resources\ModuleResource\Pages\CreateModule;
 use App\Filament\Resources\ModuleResource\Pages\EditModule;
 use App\Filament\Resources\ModuleResource\Pages\ListModules;
 use App\Filament\Resources\ModuleResource\RelationManagers;
+use App\Filament\Resources\ModuleResource\RelationManagers\ModulesStudentsRelationManager;
+use App\Filament\Resources\ModuleResource\RelationManagers\ModulesTeachersRelationManager;
 use App\Filament\Resources\ModuleResource\RelationManagers\UnitsRelationManager;
 use App\Models\Module;
 use App\Models\Proficiency;
@@ -24,15 +26,21 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
+use Guava\FilamentKnowledgeBase\Contracts\HasKnowledgeBase;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class ModuleResource extends Resource
+class ModuleResource extends Resource implements HasKnowledgeBase
 {
     protected static ?string $model = Module::class;
     protected static ?string $activeNavigationIcon = 'heroicon-s-document-text';
     protected static ?string $cluster = ModuleCluster::class;
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
+
+    public static function getDocumentation(): array
+    {
+        return ['modules.intro'];
+    }
 
     public static function form(Form $form): Form
     {
@@ -66,12 +74,12 @@ class ModuleResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->words(5),
-                TextColumn::make('description')
-                    ->searchable()
-                    ->toggleable()
-                    ->words(5),
                 TextColumn::make('unitsCount')
-                    ->label('# of units'),
+                    ->label('Units'),
+                TextColumn::make('studentsCount')
+                    ->label('Enrolled students'),
+                TextColumn::make('teachersCount')
+                    ->label('Enrolled teachers'),
                 TextColumn::make('created_at')
                     ->dateTime('M d, Y h:i:s A')
                     ->sortable()
@@ -114,6 +122,8 @@ class ModuleResource extends Resource
     public static function getRelations(): array
     {
         return [
+            ModulesStudentsRelationManager::class,
+            ModulesTeachersRelationManager::class,
             UnitsRelationManager::class,
         ];
     }

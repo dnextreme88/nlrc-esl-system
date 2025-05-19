@@ -28,7 +28,7 @@ enum Proficiencies: string
         return match ($label) {
             self::ADVANCED => 'Can understand a wide range of demanding, longer texts and recognize subtle differences in meaning.',
             self::BEGINNER => 'Can understand and use simple phrases and sentences related to everyday needs.',
-            self::INTERMEDIATE => 'Can understand the main points of clear standard input on familiar matters.`',
+            self::INTERMEDIATE => 'Can understand the main points of clear standard input on familiar matters.',
             self::MASTERY => 'Can understand virtually everything heard or read with ease.',
             self::PRE_INTERMEDIATE => 'Can understand and use common phrases and sentences to cope with everyday situations.',
             self::UPPER_INTERMEDIATE => 'Can understand the main ideas of complex text on both concrete and abstract topics.',

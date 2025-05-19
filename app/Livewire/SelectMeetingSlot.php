@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Notifications\MeetingBookedNotification;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification as LaravelNotification;
@@ -22,14 +23,40 @@ use Masmerise\Toaster\Toaster;
 class SelectMeetingSlot extends Component
 {
     public array $possible_dates = [];
-    public $available_meeting_slots_time = [];
+    public $available_meetings = [];
     public $meeting_date;
-    public bool $is_meeting_date_chosen = false;
     public $show_reserve_slot_confirmation_modal;
     public $start_time;
     public $end_time;
-    public $time_in_user_timezone_tomorrow;
+    public $is_loading = false;
     public int $max_students_per_slot = 5;
+
+    public function get_pending_slots($meeting_date): Collection
+    {
+        $available_meetings = MeetingSlot::where('status', MeetingStatuses::PENDING->value)->where('is_opened', 1)
+            ->orderBy('start_time', 'ASC')
+            ->get()
+            ->filter(function ($meeting_slot) use ($meeting_date) {
+                return Helpers::parse_time_to_user_timezone($meeting_slot['start_time'])->format('Y-m-d') == $meeting_date;
+            });
+
+        $meeting_slot_ids = $available_meetings->pluck('id');
+
+        $booked_meeting_slots = MeetingSlotsUser::select(['meeting_slots_users.meeting_slot_id AS id', 'meeting_slots.start_time'])->whereIn('meeting_slot_id', $meeting_slot_ids)
+            ->isStudentId(Auth::user()->id)
+            ->join('meeting_slots', 'meeting_slots_users.meeting_slot_id', 'meeting_slots.id')
+            ->get();
+
+        // Check for duplicate start_time fields if more than 1 teacher has booked the same slot on the same meeting_date
+        // Then remove any duplicates from the original collection since the student has already booked this start_time
+        // And remove other duplicate start_times in case the student hasn't booked any slots
+        $available_meetings = $available_meetings->reject(function ($slot) use ($booked_meeting_slots) {
+            return $booked_meeting_slots->contains('start_time', $slot['start_time']) &&
+                !$booked_meeting_slots->firstWhere('id', $slot['id']);
+        })->unique('start_time');
+
+        return $available_meetings;
+    }
 
     public function reserve_slot_modal($start_time, $end_time)
     {
@@ -57,8 +84,7 @@ class SelectMeetingSlot extends Component
             ]);
 
             $this->show_reserve_slot_confirmation_modal = false;
-            $this->meeting_date = null;
-            $this->is_meeting_date_chosen = false;
+            $this->available_meetings = [];
 
             $meeting_teacher = User::find($random_meeting_slot->teacher_id);
             LaravelNotification::send(collect([Auth::user(), $meeting_teacher]), new MeetingBookedNotification($random_meeting_slot));
@@ -75,62 +101,50 @@ class SelectMeetingSlot extends Component
         }
     }
 
-    public function show_available_times_for_selected_date()
+    #[On('show-times-for-date')]
+    public function show_available_times_for_selected_date($meeting_date)
     {
-        $this->validate(['meeting_date' => ['required', 'date', 'date_format:Y-m-d']]);
+        $this->available_meetings = [];
 
-        $meeting_date = $this->meeting_date;
+        $this->meeting_date = Carbon::parse($meeting_date)->format('F j, Y');
+        $pending_slots = $this->get_pending_slots($meeting_date);
+        $this->available_meetings = $pending_slots->map(function ($meeting_slot_time) {
+            $is_student_in_slot = $meeting_slot_time->meeting_slots_users->pluck('id')
+                ->contains(fn ($user_id) => $user_id == Auth::user()->id);
 
-        // TODO: TO REFACTOR LOGIC TO LIMIT 5 STUDENTS PER MEETING SLOT PER UNIQUE TEACHER
-        $this->available_meeting_slots_time = [];
-        $available_meeting_slots_time = MeetingSlot::where('status', MeetingStatuses::PENDING->value)->where('is_opened', 1)
-            ->orderBy('start_time', 'ASC')
-            ->get()
-            ->filter(function ($meeting_slot) use ($meeting_date) {
-                return Helpers::parse_time_to_user_timezone($meeting_slot['start_time'])->format('Y-m-d') == $meeting_date;
-            });
+            $meeting_slot_time = [
+                'start_time' => $meeting_slot_time['start_time'],
+                'end_time' => $meeting_slot_time['end_time'],
+                'time' => Helpers::parse_time_to_user_timezone($meeting_slot_time['start_time'])->format('h:i A').  ' ~ ' .Helpers::parse_time_to_user_timezone($meeting_slot_time['end_time'])->format('h:i A'),
+                'is_student_in_slot' => $is_student_in_slot,
+            ];
 
-        $meeting_slot_ids = $available_meeting_slots_time->pluck('id');
+            return $meeting_slot_time;
+        });
 
-        $booked_meeting_slots = MeetingSlotsUser::select(['meeting_slots_users.meeting_slot_id AS id', 'meeting_slots.start_time'])->whereIn('meeting_slot_id', $meeting_slot_ids)->isStudentId(Auth::user()->id)
-            ->join('meeting_slots', 'meeting_slots_users.meeting_slot_id', 'meeting_slots.id')
-            ->get();
-
-        $modified_available_meeting_slots_time = $available_meeting_slots_time;
-
-        foreach ($available_meeting_slots_time as $available_meeting_slot) {
-            // Check for duplicate start_time fields that usually happens if more than 1 teacher has booked the same slot
-            // on the same meeting_date
-            if ($booked_meeting_slots->contains('start_time', $available_meeting_slot['start_time'])) {
-                $meeting_slot_to_be_removed = $booked_meeting_slots->firstWhere('id', $available_meeting_slot['id']);
-
-                // Remove any duplicates from the original collection since the student has already booked this start_time
-                if (!$meeting_slot_to_be_removed) {
-                    $modified_available_meeting_slots_time = $modified_available_meeting_slots_time->reject(function ($slot) use ($available_meeting_slot) {
-                        return $slot['id'] == $available_meeting_slot['id'];
-                    });
-                }
-            }
-        }
-
-        // Remove any other duplicate start_times just in case the student hasn't booked any slots for a particular meeting_date
-        $this->available_meeting_slots_time = $modified_available_meeting_slots_time->unique('start_time');
-
-        $this->is_meeting_date_chosen = true;
+        $this->is_loading = false;
     }
 
     public function mount()
     {
         $time_in_user_timezone = Carbon::now()->toUserTimezone();
-        $this->time_in_user_timezone_tomorrow = $time_in_user_timezone->copy()->tomorrow();
+        $time_in_user_timezone_tomorrow = $time_in_user_timezone->copy()->tomorrow();
         $next_28_days = $time_in_user_timezone->copy()->addDays(28);
 
-        // Get the dates starting tomorrow
-        $period = CarbonPeriod::create($this->time_in_user_timezone_tomorrow, '1 day', $next_28_days);
+        // Get all dates and determine which dates has pending meetings
+        $all_dates = collect(CarbonPeriod::create($time_in_user_timezone_tomorrow, '1 day', $next_28_days))
+            ->map(function ($carbon_instance) {
+                $date = Carbon::parse($carbon_instance)->format('Y-m-d');
+                $modified_available_meetings = $this->get_pending_slots($date);
 
-        foreach ($period as $date) {
-            $this->possible_dates[] = $date;
-        }
+                $this->possible_dates[$date] = $modified_available_meetings->map(fn ($meeting_slot_time) => [
+                    'id' => $meeting_slot_time['id'],
+                    'is_student_in_slot' => $meeting_slot_time->meeting_slots_users->pluck('id')
+                        ->contains(fn ($user_id) => $user_id == Auth::user()->id),
+                    'start_time' => Helpers::parse_time_to_user_timezone($meeting_slot_time['start_time'])->format('h:i A'),
+                    'end_time' => Helpers::parse_time_to_user_timezone($meeting_slot_time['end_time'])->format('h:i A'),
+                ]);
+            });
     }
 
     #[On('reserved-slot')]

@@ -79,11 +79,11 @@
                         <x-loading-indicator
                             :loader_color_bg="'fill-gray-200 dark:fill-gray-800'"
                             :loader_color_spin="'fill-gray-200 dark:fill-gray-800'"
-                            :show_text="false"
+                            :show_text="true"
+                            :text="'Submitting'"
+                            :text_color="'text-gray-200 dark:text-gray-800'"
                             :size="4"
                         />
-
-                        <span class="ml-2">Submitting</span>
                     </span>
 
                     <span wire:loading.remove wire:target="cancel_meeting">Submit</span>
@@ -141,11 +141,11 @@
                         <x-loading-indicator
                             :loader_color_bg="'fill-gray-200 dark:fill-gray-800'"
                             :loader_color_spin="'fill-gray-200 dark:fill-gray-800'"
-                            :show_text="false"
+                            :show_text="true"
+                            :text="'Submitting'"
+                            :text_color="'text-gray-200 dark:text-gray-800'"
                             :size="4"
                         />
-
-                        <span class="ml-2">Submitting</span>
                     </span>
 
                     <span wire:loading.remove wire:target="reschedule_meeting">Submit</span>
