@@ -2,7 +2,10 @@
 
 namespace App\Enums;
 
-enum Genders: string
+use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasLabel;
+
+enum Genders: string implements HasColor, HasLabel
 {
     case FEMALE = 'female';
     case MALE = 'male';

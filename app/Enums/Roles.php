@@ -2,7 +2,9 @@
 
 namespace App\Enums;
 
-enum Roles: string
+use Filament\Support\Contracts\HasLabel;
+
+enum Roles: string implements HasLabel
 {
     case ADMIN = 'Admin';
     case HEAD_TEACHER = 'Head Teacher';

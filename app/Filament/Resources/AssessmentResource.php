@@ -84,6 +84,7 @@ class AssessmentResource extends Resource implements HasKnowledgeBase
                     ->sortable(),
                 TextColumn::make('type')
                     ->badge()
+                    ->color(fn (string $state): string => AssessmentTypes::from($state)->getColor())
                     ->formatStateUsing(fn (string $state): string => AssessmentTypes::from($state)->getLabel()),
                 IconColumn::make('is_active')
                     ->boolean(),

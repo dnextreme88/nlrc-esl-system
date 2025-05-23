@@ -157,6 +157,7 @@ class UserResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('gender')
                     ->badge()
+                    ->color(fn (string $state): string => Genders::from($state)->getColor())
                     ->formatStateUsing(fn (string $state): string => ucfirst($state))
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('timezone')
