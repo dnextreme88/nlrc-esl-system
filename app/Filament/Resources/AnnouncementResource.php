@@ -34,6 +34,7 @@ use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Guava\FilamentKnowledgeBase\Contracts\HasKnowledgeBase;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as BuilderQuery;
 use Illuminate\Support\Collection;
@@ -42,11 +43,16 @@ use Illuminate\Support\Facades\Notification as LaravelNotification;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
-class AnnouncementResource extends Resource
+class AnnouncementResource extends Resource implements HasKnowledgeBase
 {
     protected static ?string $model = Announcement::class;
     protected static ?string $activeNavigationIcon = 'heroicon-s-megaphone';
     protected static ?string $navigationIcon = 'heroicon-o-megaphone';
+
+    public static function getDocumentation(): array
+    {
+        return ['announcements.intro'];
+    }
 
     public static function form(Form $form): Form
     {
