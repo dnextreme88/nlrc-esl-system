@@ -6,8 +6,8 @@ use App\Enums\MeetingStatuses;
 use App\Events\ReceiveMeetingBookedEvent;
 use App\Helpers\Helpers;
 use App\Mail\MeetingBookedEmail;
-use App\Models\MeetingSlot;
-use App\Models\MeetingSlotsUser;
+use App\Models\Meetings\Meeting;
+use App\Models\Meetings\MeetingUser;
 use App\Models\User;
 use App\Notifications\MeetingBookedNotification;
 use Carbon\Carbon;
@@ -20,7 +20,7 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 use Masmerise\Toaster\Toaster;
 
-class SelectMeetingSlot extends Component
+class SelectMeeting extends Component
 {
     public array $possible_dates = [];
     public $available_meetings = [];
@@ -33,26 +33,26 @@ class SelectMeetingSlot extends Component
 
     public function get_pending_slots($meeting_date): Collection
     {
-        $available_meetings = MeetingSlot::where('status', MeetingStatuses::PENDING->value)->where('is_opened', 1)
+        $available_meetings = Meeting::where('status', MeetingStatuses::PENDING->value)->where('is_opened', 1)
             ->orderBy('start_time', 'ASC')
             ->get()
-            ->filter(function ($meeting_slot) use ($meeting_date) {
-                return Helpers::parse_time_to_user_timezone($meeting_slot['start_time'])->format('Y-m-d') == $meeting_date;
+            ->filter(function ($meeting) use ($meeting_date) {
+                return Helpers::parse_time_to_user_timezone($meeting['start_time'])->format('Y-m-d') == $meeting_date;
             });
 
-        $meeting_slot_ids = $available_meetings->pluck('id');
+        $meeting_ids = $available_meetings->pluck('id');
 
-        $booked_meeting_slots = MeetingSlotsUser::select(['meeting_slots_users.meeting_slot_id AS id', 'meeting_slots.start_time'])->whereIn('meeting_slot_id', $meeting_slot_ids)
+        $booked_meetings = MeetingUser::select(['meeting_users.meeting_id AS id', 'meetings.start_time'])->whereIn('meeting_id', $meeting_ids)
             ->isStudentId(Auth::user()->id)
-            ->join('meeting_slots', 'meeting_slots_users.meeting_slot_id', 'meeting_slots.id')
+            ->join('meetings', 'meeting_users.meeting_id', 'meetings.id')
             ->get();
 
         // Check for duplicate start_time fields if more than 1 teacher has booked the same slot on the same meeting_date
         // Then remove any duplicates from the original collection since the student has already booked this start_time
-        // And remove other duplicate start_times in case the student hasn't booked any slots
-        $available_meetings = $available_meetings->reject(function ($slot) use ($booked_meeting_slots) {
-            return $booked_meeting_slots->contains('start_time', $slot['start_time']) &&
-                !$booked_meeting_slots->firstWhere('id', $slot['id']);
+        // And remove other duplicate start_times in case the student hasn't booked yet
+        $available_meetings = $available_meetings->reject(function ($slot) use ($booked_meetings) {
+            return $booked_meetings->contains('start_time', $slot['start_time']) &&
+                !$booked_meetings->firstWhere('id', $slot['id']);
         })->unique('start_time');
 
         return $available_meetings;
@@ -67,17 +67,17 @@ class SelectMeetingSlot extends Component
 
     public function reserve_slot()
     {
-        // Assign to a random meeting slot if there are multiple teachers who has the same meeting date and times
-        $random_meeting_slot = MeetingSlot::select(['id', 'teacher_id', 'start_time', 'end_time'])->where('meeting_date', Carbon::parse($this->start_time)->format('Y-m-d'))
+        // Assign to a random meeting if there are multiple teachers who has the same date and times
+        $random_meeting = Meeting::select(['id', 'teacher_id', 'start_time', 'end_time'])->where('meeting_date', Carbon::parse($this->start_time)->format('Y-m-d'))
             ->where('start_time', $this->start_time)
             ->where('end_time', $this->end_time)
             ->get()
             ->filter(fn ($val): bool => $val->students_count <= $this->max_students_per_slot);
 
-        if ($random_meeting_slot->isNotEmpty()) {
-            $random_meeting_slot = $random_meeting_slot->random();
+        if ($random_meeting->isNotEmpty()) {
+            $random_meeting = $random_meeting->random();
 
-            $random_meeting_slot->meeting_slots_users()->attach($random_meeting_slot->id, [
+            $random_meeting->meeting_users()->attach($random_meeting->id, [
                 'student_id' => Auth::user()->id,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -86,12 +86,12 @@ class SelectMeetingSlot extends Component
             $this->show_reserve_slot_confirmation_modal = false;
             $this->available_meetings = [];
 
-            $meeting_teacher = User::find($random_meeting_slot->teacher_id);
-            LaravelNotification::send(collect([Auth::user(), $meeting_teacher]), new MeetingBookedNotification($random_meeting_slot));
+            $meeting_teacher = User::find($random_meeting->teacher_id);
+            LaravelNotification::send(collect([Auth::user(), $meeting_teacher]), new MeetingBookedNotification($random_meeting));
 
             // TODO: We can probably just send the email based on the users' setting preference
-            Mail::to($meeting_teacher->email)->queue(new MeetingBookedEmail($random_meeting_slot, $meeting_teacher)); // Send to teacher
-            Mail::to(Auth::user()->email)->queue(new MeetingBookedEmail($random_meeting_slot, Auth::user())); // Send to student
+            Mail::to($meeting_teacher->email)->queue(new MeetingBookedEmail($random_meeting, $meeting_teacher)); // Send to teacher
+            Mail::to(Auth::user()->email)->queue(new MeetingBookedEmail($random_meeting, Auth::user())); // Send to student
 
             broadcast(new ReceiveMeetingBookedEvent($meeting_teacher->id)); // Trigger an event
             broadcast(new ReceiveMeetingBookedEvent(Auth::user()->id)); // Trigger an event
@@ -108,18 +108,18 @@ class SelectMeetingSlot extends Component
 
         $this->meeting_date = Carbon::parse($meeting_date)->format('F j, Y');
         $pending_slots = $this->get_pending_slots($meeting_date);
-        $this->available_meetings = $pending_slots->map(function ($meeting_slot_time) {
-            $is_student_in_slot = $meeting_slot_time->meeting_slots_users->pluck('id')
+        $this->available_meetings = $pending_slots->map(function ($meeting_time) {
+            $is_student_in_slot = $meeting_time->meeting_users->pluck('id')
                 ->contains(fn ($user_id) => $user_id == Auth::user()->id);
 
-            $meeting_slot_time = [
-                'start_time' => $meeting_slot_time['start_time'],
-                'end_time' => $meeting_slot_time['end_time'],
-                'time' => Helpers::parse_time_to_user_timezone($meeting_slot_time['start_time'])->format('h:i A').  ' ~ ' .Helpers::parse_time_to_user_timezone($meeting_slot_time['end_time'])->format('h:i A'),
+            $meeting_time = [
+                'start_time' => $meeting_time['start_time'],
+                'end_time' => $meeting_time['end_time'],
+                'time' => Helpers::parse_time_to_user_timezone($meeting_time['start_time'])->format('h:i A').  ' ~ ' .Helpers::parse_time_to_user_timezone($meeting_time['end_time'])->format('h:i A'),
                 'is_student_in_slot' => $is_student_in_slot,
             ];
 
-            return $meeting_slot_time;
+            return $meeting_time;
         });
 
         $this->is_loading = false;
@@ -137,12 +137,12 @@ class SelectMeetingSlot extends Component
                 $date = Carbon::parse($carbon_instance)->format('Y-m-d');
                 $modified_available_meetings = $this->get_pending_slots($date);
 
-                $this->possible_dates[$date] = $modified_available_meetings->map(fn ($meeting_slot_time) => [
-                    'id' => $meeting_slot_time['id'],
-                    'is_student_in_slot' => $meeting_slot_time->meeting_slots_users->pluck('id')
+                $this->possible_dates[$date] = $modified_available_meetings->map(fn ($meeting_time) => [
+                    'id' => $meeting_time['id'],
+                    'is_student_in_slot' => $meeting_time->meeting_users->pluck('id')
                         ->contains(fn ($user_id) => $user_id == Auth::user()->id),
-                    'start_time' => Helpers::parse_time_to_user_timezone($meeting_slot_time['start_time'])->format('h:i A'),
-                    'end_time' => Helpers::parse_time_to_user_timezone($meeting_slot_time['end_time'])->format('h:i A'),
+                    'start_time' => Helpers::parse_time_to_user_timezone($meeting_time['start_time'])->format('h:i A'),
+                    'end_time' => Helpers::parse_time_to_user_timezone($meeting_time['end_time'])->format('h:i A'),
                 ]);
             });
     }
@@ -150,6 +150,6 @@ class SelectMeetingSlot extends Component
     #[On('reserved-slot')]
     public function render()
     {
-        return view('livewire.select-meeting-slot');
+        return view('livewire.select-meeting');
     }
 }

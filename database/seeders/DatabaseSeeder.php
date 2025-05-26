@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
             ModuleSeeder::class,
             UnitSeeder::class,
             UserSeeder::class,
-            MeetingSlotSeeder::class,
+            MeetingSeeder::class,
             AssessmentSeeder::class,
             AnnouncementSeeder::class,
         ]);

@@ -12,8 +12,8 @@
     @endif
     <br /><br />
 
-    **Meeting Date**: {{ \Carbon\Carbon::parse($meeting_slot['start_time'], 'UTC')->setTimezone($user->timezone)->format('F j, Y') }}
-    **Duration**: {{ \Carbon\Carbon::parse($meeting_slot['start_time'], 'UTC')->setTimezone($user->timezone)->format('g:i A') }} ~ {{ \Carbon\Carbon::parse($meeting_slot['end_time'], 'UTC')->setTimezone($user->timezone)->format('g:i A') }}
+    **Meeting Date**: {{ \Carbon\Carbon::parse($meeting['start_time'], 'UTC')->setTimezone($user->timezone)->format('F j, Y') }}
+    **Duration**: {{ \Carbon\Carbon::parse($meeting['start_time'], 'UTC')->setTimezone($user->timezone)->format('g:i A') }} ~ {{ \Carbon\Carbon::parse($meeting['end_time'], 'UTC')->setTimezone($user->timezone)->format('g:i A') }}
     **Your timezone**: {{ $user->timezone }}
 
     ---

@@ -8,7 +8,7 @@ trait DateTrait
 {
     // Prefixing functions with scope allow you to chain query constraints,
     // which is useful for code readability and the DRY principle
-    // Sample usage: $meetings_asc_order = MeetingSlot::getMeetingDates('past')->get();
+    // Sample usage: $meetings_asc_order = Meeting::getMeetingDates('past')->get();
     protected function scopeGetMeetingDates($query, $tense)
     {
         $operator = '';

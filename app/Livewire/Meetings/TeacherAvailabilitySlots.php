@@ -4,7 +4,7 @@ namespace App\Livewire\Meetings;
 
 use App\Enums\MeetingStatuses;
 use App\Helpers\Helpers;
-use App\Models\MeetingSlot;
+use App\Models\Meetings\Meeting;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +16,7 @@ class TeacherAvailabilitySlots extends Component
 {
     public array $possible_dates = [];
     public array $time_slots = [];
-    public $meeting_slots = [];
+    public $meetings = [];
     public $meeting_date;
     public int $count_pending_reserved_slots = 0;
     public bool $is_meeting_date_chosen = false;
@@ -36,7 +36,7 @@ class TeacherAvailabilitySlots extends Component
             $spliced_end_time = explode(' ', $slot['end_time']);
             $start_date = $this->meeting_date. ' ' .$spliced_start_time[0];
 
-            MeetingSlot::updateOrCreate(
+            Meeting::updateOrCreate(
                 [
                     'teacher_id' => Auth::user()->id,
                     'meeting_date' => Carbon::parse($start_date, Auth::user()->timezone)->setTimezone('UTC')->format('Y-m-d'),
@@ -63,9 +63,9 @@ class TeacherAvailabilitySlots extends Component
 
         $meeting_date = $this->meeting_date;
 
-        $this->meeting_slots = MeetingSlot::isTeacherId(Auth::user()->id)
+        $this->meetings = Meeting::isTeacherId(Auth::user()->id)
             ->where('status', MeetingStatuses::PENDING->value)
-            ->with('meeting_slots_users')
+            ->with('meeting_users')
             ->get()
             ->filter(function ($val) use ($meeting_date) {
                 return Helpers::parse_time_to_user_timezone($val['start_time'])->format('Y-m-d') == $meeting_date;
@@ -78,13 +78,13 @@ class TeacherAvailabilitySlots extends Component
                 return $slot;
             });
 
-        $this->count_pending_reserved_slots = count($this->meeting_slots->filter(
-            fn ($val) => $val['is_opened'] == 1 && $val['meeting_slots_users']->isEmpty()
+        $this->count_pending_reserved_slots = count($this->meetings->filter(
+            fn ($val) => $val['is_opened'] == 1 && $val['meeting_users']->isEmpty()
         ));
 
         $this->is_meeting_date_chosen = true;
 
-        $this->dispatch('rendered-time-slots', meeting_slots: $this->meeting_slots->values()->toArray(), time_slots: $this->time_slots);
+        $this->dispatch('rendered-time-slots', meetings: $this->meetings->values()->toArray(), time_slots: $this->time_slots);
     }
 
     public function mount()

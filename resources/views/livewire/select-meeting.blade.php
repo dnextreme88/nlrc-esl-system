@@ -29,24 +29,24 @@
                 @endif
 
                 <ul class="*:py-4">
-                    @foreach ($available_meetings as $meeting_slot_time)
+                    @foreach ($available_meetings as $meeting_time)
                         <li class="px-4 items-center grid grid-cols-1 gap-3 sm:grid-cols-2 lg:px-2">
                             <div>
                                 <p>
                                     <span class="text-xl text-green-600 dark:text-green-300">&rarr;</span>
-                                    <span class="text-gray-800 dark:text-gray-200 {{ $meeting_slot_time['is_student_in_slot'] ? 'line-through decoration-2 decoration-green-600 dark:decoration-green-300' : '' }}">{{ $meeting_slot_time['time'] }}</span>
+                                    <span class="text-gray-800 dark:text-gray-200 {{ $meeting_time['is_student_in_slot'] ? 'line-through decoration-2 decoration-green-600 dark:decoration-green-300' : '' }}">{{ $meeting_time['time'] }}</span>
                                 </p>
                             </div>
 
-                            @if ($meeting_slot_time['is_student_in_slot'])
+                            @if ($meeting_time['is_student_in_slot'])
                                 <p class="text-base text-start text-gray-600 dark:text-gray-300 sm:text-sm sm:text-end">You already reserved this slot</p>
                             @else
                                 <x-secondary-button
-                                    wire:click="reserve_slot_modal('{{ $meeting_slot_time['start_time'] }}', '{{ $meeting_slot_time['end_time'] }}')"
+                                    wire:click="reserve_slot_modal('{{ $meeting_time['start_time'] }}', '{{ $meeting_time['end_time'] }}')"
                                     class="justify-self-start sm:justify-self-end"
                                 >
                                     <span
-                                        wire:loading.flex wire:target="reserve_slot_modal('{{ $meeting_slot_time['start_time'] }}', '{{ $meeting_slot_time['end_time'] }}')"
+                                        wire:loading.flex wire:target="reserve_slot_modal('{{ $meeting_time['start_time'] }}', '{{ $meeting_time['end_time'] }}')"
                                         class="items-center"
                                     >
                                         <x-loading-indicator

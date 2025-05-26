@@ -3,7 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Enums\MeetingStatuses;
-use App\Models\MeetingSlot;
+use App\Models\Meetings\Meeting;
 use Carbon\CarbonPeriod;
 use Filament\Widgets\ChartWidget;
 use Flowframe\Trend\Trend;
@@ -22,7 +22,7 @@ class MeetingsChart extends ChartWidget
     {
         $today = now();
 
-        $base_query = MeetingSlot::whereHas('meeting_slots_users');
+        $base_query = Meeting::whereHas('meeting_users');
 
         $cancelled_meetings = Trend::query($base_query->clone()->where('status', MeetingStatuses::CANCELLED))->dateColumn('meeting_date');
         $completed_meetings = Trend::query($base_query->clone()->where('status', MeetingStatuses::COMPLETED))->dateColumn('meeting_date');

@@ -4,7 +4,7 @@
     @endif
     class="bg-gray-200 rounded-lg border py-2 px-3 shadow-md cursor-pointer transition duration-300 hover:bg-green-100 dark:hover:bg-green-300"
 >
-    <a wire:navigate href="{{ route('meetings.detail', ['meeting_uuid' => $event['meeting_slot']['meeting_uuid']]) }}">
+    <a wire:navigate href="{{ route('meetings.detail', ['meeting_uuid' => $event['meeting']['meeting_uuid']]) }}">
         <p class="text-sm font-medium">
             {{ $event['title'] ?? 'No title' }}
         </p>

@@ -2,7 +2,7 @@
     x-data="{
         isMeetingDateChosen: $wire.entangle('is_meeting_date_chosen'),
         meetingDate: $wire.entangle('meeting_date'),
-        meetingSlots: [],
+        meetings: [],
         timeSlots: [],
         reserveSlots() {
             const openedTimeSlots = this.timeSlots.filter(slot =>
@@ -17,12 +17,12 @@
     }"
     x-init="
         $wire.on('rendered-time-slots', data => {
-            meetingSlots = data.meeting_slots
+            meetings = data.meetings
             timeSlots = data.time_slots
 
             timeSlots.forEach((slot, idx) => {
                 timeSlots[idx].is_opened = false
-                const hasTime = meetingSlots.find(ms => ms.start_time == slot.start_time)
+                const hasTime = meetings.find(ms => ms.start_time == slot.start_time)
 
                 if (hasTime) {
                     timeSlots[idx] = {
@@ -30,7 +30,7 @@
                         id: hasTime.id,
                         route: hasTime.route,
                         is_opened: hasTime.is_opened == 1 ? true : false,
-                        students: hasTime.meeting_slots_users,
+                        students: hasTime.meeting_users,
                     }
                 }
             })
@@ -212,27 +212,6 @@
                                     <span x-cloak class="ms-2">Update slots for this date</span>
                                 </x-secondary-button>
                             </div>
-
-                            {{--
-                                @if (count($available_meeting_slots_time) > 0)
-                                    <h4 class="text-lg text-gray-800 dark:text-gray-200">Available time slots for {{ \Carbon\Carbon::parse($meeting_date)->format('F j, Y') }}</h4>
-
-                                    <ul class="*:py-4">
-                                        @foreach ($available_meeting_slots_time as $meeting_slot_time)
-                                            <li class="px-4 items-center grid grid-cols-1 gap-3 sm:grid-cols-2 lg:px-2">
-                                                <p>
-                                                    <span class="text-xl text-green-600 dark:text-green-300">&rarr;</span>
-                                                    <span class="text-gray-800 dark:text-gray-200">{{ $meeting_slot_time['start_time'] }} ~ {{ $meeting_slot_time['end_time'] }}</span>
-                                                </p>
-
-                                                <x-secondary-button wire:click="reserve_slot_modal('{{ $meeting_slot_time['start_time'] }}', '{{ $meeting_slot_time['end_time'] }}')" class="justify-self-start sm:justify-self-end">Book this time</x-secondary-button>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                @else
-                                    <p class="px-4 text-red-800 dark:text-red-200">This date has no available meeting slots.</p>
-                                @endif --}}
-                            {{-- @endif --}}
                         </div>
                     </div>
                 </div>

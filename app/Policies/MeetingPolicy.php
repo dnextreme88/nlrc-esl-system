@@ -3,14 +3,14 @@
 namespace App\Policies;
 
 use App\Enums\Roles;
-use App\Models\MeetingSlot;
-use App\Models\MeetingSlotsUser;
+use App\Models\Meetings\Meeting;
+use App\Models\Meetings\MeetingUser;
 use App\Models\User;
 
-class MeetingSlotPolicy
+class MeetingPolicy
 {
     // SAMPLE USAGE IN CONTROLLERS
-    // if ($user->cannot('view', $current_meeting_slot)) {
+    // if ($user->cannot('view', $current_meeting)) {
     //     abort(403);
     // }
 
@@ -19,13 +19,13 @@ class MeetingSlotPolicy
         return $user->role->name == Roles::ADMIN->value;
     }
 
-    public function view(?User $user, MeetingSlot $meeting_slot): bool
+    public function view(?User $user, Meeting $meeting): bool
     {
         if (in_array($user->role->name, [Roles::HEAD_TEACHER->value, Roles::TEACHER->value])) {
-            $user_has_meeting = MeetingSlot::where('id', $meeting_slot->id)->isTeacherId($user->id)
+            $user_has_meeting = Meeting::where('id', $meeting->id)->isTeacherId($user->id)
                 ->first();
         } else if ($user->role->name == Roles::STUDENT->value) {
-            $user_has_meeting = MeetingSlotsUser::where('meeting_slot_id', $meeting_slot->id)->isStudentId($user->id)
+            $user_has_meeting = MeetingUser::where('meeting_id', $meeting->id)->isStudentId($user->id)
                 ->first();
         }
 
@@ -37,22 +37,22 @@ class MeetingSlotPolicy
         return in_array($user->role->name, [Roles::ADMIN->value, Roles::HEAD_TEACHER->value, Roles::TEACHER->value]);
     }
 
-    public function update(User $user, MeetingSlot $meeting_slot): bool
+    public function update(User $user, Meeting $meeting): bool
     {
         return in_array($user->role->name, [Roles::ADMIN->value, Roles::HEAD_TEACHER->value, Roles::TEACHER->value]);
     }
 
-    public function delete(User $user, MeetingSlot $meeting_slot): bool
+    public function delete(User $user, Meeting $meeting): bool
     {
         return in_array($user->role->name, [Roles::ADMIN->value, Roles::HEAD_TEACHER->value, Roles::TEACHER->value]);
     }
 
-    public function restore(User $user, MeetingSlot $meeting_slot): bool
+    public function restore(User $user, Meeting $meeting): bool
     {
         return $user->role->name == Roles::ADMIN->value;
     }
 
-    public function forceDelete(User $user, MeetingSlot $meeting_slot): bool
+    public function forceDelete(User $user, Meeting $meeting): bool
     {
         return $user->role->name == Roles::ADMIN->value;
     }

@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use App\Models\MeetingSlot;
+use App\Models\Meetings\Meeting;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -17,15 +17,15 @@ class MeetingBookedEmail extends Mailable implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    protected MeetingSlot $meeting_slot;
+    protected Meeting $meeting;
     protected User $user;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(MeetingSlot $meeting_slot, User $user)
+    public function __construct(Meeting $meeting, User $user)
     {
-        $this->meeting_slot = $meeting_slot;
+        $this->meeting = $meeting;
         $this->user = $user;
     }
 
@@ -48,7 +48,7 @@ class MeetingBookedEmail extends Mailable implements ShouldQueue
         return new Content(
             markdown: 'emails.meeting-booked',
             with: [
-                'meeting_slot' => $this->meeting_slot,
+                'meeting' => $this->meeting,
                 'user' => $this->user,
             ]
         );

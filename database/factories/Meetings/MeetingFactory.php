@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\Meetings;
 
 use App\Enums\MeetingStatuses;
 use App\Enums\Roles;
@@ -10,7 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Ramsey\Uuid\Uuid;
 
-class MeetingSlotFactory extends Factory
+class MeetingFactory extends Factory
 {
     public function definition(): array
     {

@@ -64,7 +64,7 @@
             </div>
 
             <form wire:submit.prevent="cancel_meeting" class="my-4 mx-6">
-                <input wire:model="meeting_slot_id" type="hidden" />
+                <input wire:model="meeting_id" type="hidden" />
 
                 <x-label is_required="true" value="{{ __('Reason') }}" for="cancel_reason" />
 
@@ -105,7 +105,7 @@
             </div>
 
             <form wire:submit.prevent="reschedule_meeting" class="my-4 mx-6">
-                <input wire:model="meeting_slot_id" type="hidden" />
+                <input wire:model="meeting_id" type="hidden" />
 
                 <x-label is_required="true" value="{{ __('New Meeting Date') }}" class="my-4" for="reschedule_new_date" />
 

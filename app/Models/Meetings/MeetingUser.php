@@ -1,25 +1,27 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Meetings;
 
+use App\Models\Meetings\Meeting;
+use App\Models\User;
 use App\Traits\DateTrait;
 use App\Traits\IdTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class MeetingSlotsUser extends Model
+class MeetingUser extends Model
 {
     use DateTrait;
     use IdTrait;
 
     protected $fillable = [
-        'meeting_slot_id',
+        'meeting_id',
         'student_id',
     ];
 
-    public function meeting_slot(): BelongsTo
+    public function meeting(): BelongsTo
     {
-        return $this->belongsTo(MeetingSlot::class);
+        return $this->belongsTo(Meeting::class);
     }
 
     public function student(): BelongsTo

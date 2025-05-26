@@ -3,7 +3,7 @@
 namespace App\Helpers;
 
 use App\Models\Announcement;
-use App\Models\MeetingSlot;
+use App\Models\Meetings\Meeting;
 use Carbon\Carbon;
 
 class Helpers
@@ -28,7 +28,7 @@ class Helpers
                     ]
                 ));
             } else if ($notification['type'] == 'meeting-booked') {
-                $meeting = MeetingSlot::find($notification->data['meeting_slot_id']);
+                $meeting = Meeting::find($notification->data['meeting_id']);
 
                 array_push($parsed_notifications, array_merge(
                     $notification->toArray(),

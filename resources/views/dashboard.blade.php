@@ -26,7 +26,7 @@
                     </div>
 
                     <div class="bg-gray-200 dark:bg-gray-600 shadow-md shadow-gray-500 col-span-2">
-                        <livewire:select-meeting-slot />
+                        <livewire:select-meeting />
                     </div>
                 @endif
 

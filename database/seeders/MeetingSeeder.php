@@ -3,18 +3,17 @@
 namespace Database\Seeders;
 
 use App\Enums\Roles;
-use App\Models\MeetingSlot;
+use App\Models\Meetings\Meeting;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
-class MeetingSlotSeeder extends Seeder
+class MeetingSeeder extends Seeder
 {
     public function run(): void
     {
-        MeetingSlot::factory(12)->create()
-            ->each(function ($meeting_slot, $index) {
-                // Logic to select random students reserved in slots
+        Meeting::factory(12)->create()
+            ->each(function ($meeting, $index) {
                 $random_number = rand(2, 30);
 
                 if ($random_number % 3 == 0) { // Divisible by 3
@@ -22,7 +21,7 @@ class MeetingSlotSeeder extends Seeder
                         ->inRandomOrder()
                         ->first();
 
-                    $meeting_slot->meeting_slots_users()->attach($meeting_slot->id, [
+                    $meeting->meeting_users()->attach($meeting->id, [
                         'student_id' => $random_student->id,
                         'created_at' => Carbon::now()->addMinutes(5),
                         'updated_at' => Carbon::now()->addMinutes(5),
@@ -34,15 +33,15 @@ class MeetingSlotSeeder extends Seeder
                             ->inRandomOrder()
                             ->first();
 
-                        $meeting_slot->meeting_slots_users()->attach($meeting_slot->id, [
+                        $meeting->meeting_users()->attach($meeting->id, [
                             'student_id' => $another_random_student->id,
                             'created_at' => Carbon::now()->addMinutes(10),
                             'updated_at' => Carbon::now()->addMinutes(10),
                         ]);
                     }
 
-                    $meeting_slot->is_opened = 1;
-                    $meeting_slot->save();
+                    $meeting->is_opened = 1;
+                    $meeting->save();
                 }
             });
     }

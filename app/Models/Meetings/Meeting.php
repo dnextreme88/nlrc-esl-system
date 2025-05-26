@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Meetings;
 
+use App\Models\User;
 use App\Traits\DateTrait;
 use App\Traits\IdTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Ramsey\Uuid\Uuid;
 
-class MeetingSlot extends Model
+class Meeting extends Model
 {
     use DateTrait;
     use HasFactory;
@@ -28,9 +29,9 @@ class MeetingSlot extends Model
         'is_opened',
     ];
 
-    public function meeting_slots_users(): BelongsToMany
+    public function meeting_users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'meeting_slots_users', 'meeting_slot_id', 'student_id')
+        return $this->belongsToMany(User::class, 'meeting_users', 'meeting_id', 'student_id')
             ->withTimestamps();
     }
 
@@ -41,13 +42,13 @@ class MeetingSlot extends Model
 
     public function getStudentsCountAttribute()
     {
-        return $this->meeting_slots_users()->count();
+        return $this->meeting_users()->count();
     }
 
     public static function booted(): void
     {
-        static::creating(function (self $meeting_slot) {
-            $meeting_slot->meeting_uuid = Uuid::uuid4()->toString();
+        static::creating(function (self $meeting) {
+            $meeting->meeting_uuid = Uuid::uuid4()->toString();
         });
     }
 }

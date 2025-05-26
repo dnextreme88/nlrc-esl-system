@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('meeting_slots', function (Blueprint $table) {
+        Schema::table('meetings', function (Blueprint $table) {
             $table->string('meeting_link', 192)
                 ->after('end_time')
                 ->nullable();
@@ -23,7 +23,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('meeting_slots', function (Blueprint $table) {
+        Schema::table('meetings', function (Blueprint $table) {
             $table->dropColumn(['meeting_link']);
         });
     }

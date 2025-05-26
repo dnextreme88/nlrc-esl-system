@@ -2,7 +2,7 @@
 
 namespace App\Notifications;
 
-use App\Models\MeetingSlot;
+use App\Models\Meetings\Meeting;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -12,14 +12,14 @@ class MeetingBookedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public $meeting_slot;
+    public $meeting;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(MeetingSlot $meeting_slot)
+    public function __construct(Meeting $meeting)
     {
-        $this->meeting_slot = $meeting_slot;
+        $this->meeting = $meeting;
     }
 
     /**
@@ -51,10 +51,10 @@ class MeetingBookedNotification extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         return [
-            'meeting_slot_id' => $this->meeting_slot->id,
-            'teacher_id' => $this->meeting_slot->teacher_id, // User id who made the meeting
-            'meeting_uuid' => $this->meeting_slot->meeting_uuid, // Will be used as a link to the meeting detail page
-            'created_at' => $this->meeting_slot->created_at,
+            'meeting_id' => $this->meeting->id,
+            'teacher_id' => $this->meeting->teacher_id, // User id who made the meeting
+            'meeting_uuid' => $this->meeting->meeting_uuid, // Will be used as a link to the meeting detail page
+            'created_at' => $this->meeting->created_at,
         ];
     }
 

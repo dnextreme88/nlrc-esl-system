@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('meeting_slots', function (Blueprint $table) {
+        Schema::create('meetings', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('teacher_id');
             $table->foreign('teacher_id')
@@ -27,12 +27,12 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('meeting_slots_users', function (Blueprint $table) {
+        Schema::create('meeting_users', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('meeting_slot_id');
-            $table->foreign('meeting_slot_id')
+            $table->unsignedBigInteger('meeting_id');
+            $table->foreign('meeting_id')
                 ->references('id')
-                ->on('meeting_slots');
+                ->on('meetings');
             $table->unsignedBigInteger('student_id')->nullable();
             $table->timestamps();
         });
@@ -43,8 +43,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('meeting_slots_users');
+        Schema::dropIfExists('meeting_users');
 
-        Schema::dropIfExists('meeting_slots');
+        Schema::dropIfExists('meetings');
     }
 };
