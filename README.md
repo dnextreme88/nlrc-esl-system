@@ -4,38 +4,65 @@ An English as a Second Language (ESL) system built for Zeldan Nordic Languages R
 
 **Planned release**: sometime in May 2025
 
-## Useful commands
+## Running the app
 
-1. Run server, Vite and listen to Laravel events and queues. This runs the ff. commands concurrently: ``php artisan serve``, ``npm run dev``, and ``php artisan queue:listen`` on a single command
+1. Install Composer packages defined in [composer.json](https://github.com/dnextreme88/nlrc-esl-system/blob/main/composer.json)
+
+```bash
+composer i
+```
+
+2. Install Node packages defined in [package.json](https://github.com/dnextreme88/nlrc-esl-system/blob/main/package.json)
+
+```bash
+npm i
+```
+
+3. Run server, Vite and listen to Laravel events and queues. This runs the ff. commands concurrently: ``php artisan serve``, ``npm run dev``, and ``php artisan queue:listen`` on a single command
 
 ```bash
 composer run dev
 ```
 
-2. Start Laravel Reverb WebSocket server. Add a ``--debug`` option at the end to track events
+4. Run a fresh migration and seed it to populate your database
+
+```bash
+php artisan migrate:fresh --seed
+```
+
+5. Install Laravel Reverb and update your ``.env`` file
+
+```bash
+php artisan reverb:install
+```
+
+6. Start Laravel Reverb WebSocket server. Add a ``--debug`` option at the end to track events
+
 ```bash
 php artisan reverb:start
 ```
 
-3. Build assets for production
+7. Build assets for production
 
 ```bash
 npm run build
 ```
 
-4. Clear cache and optimize files
+## Useful commands
+
+1. Clear cache and optimize files
 
 ```bash
 php artisan optimize:clear
 ```
 
-5. Fix code styles based on config from [pint.json](https://github.com/dnextreme88/nlrc-esl-system/blob/main/pint.json)
+2. Fix code styles based on config from [pint.json](https://github.com/dnextreme88/nlrc-esl-system/blob/main/pint.json)
 
 ```bash
 composer run pint
 ```
 
-6. Preview code styles that would be fixed when running composer run pint
+3. Preview code styles that would be fixed when running composer run pint
 
 ```bash
 composer run pint-test
