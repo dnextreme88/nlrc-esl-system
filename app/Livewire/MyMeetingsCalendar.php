@@ -31,11 +31,10 @@ class MyMeetingsCalendar extends LivewireCalendar
                 }
 
                 $meeting_start_time = Helpers::parse_time_to_user_timezone($slot->start_time);
-                $meeting_end_time = Helpers::parse_time_to_user_timezone($slot->end_time);
 
                 $meetings[] = [
                     'id' => $slot->id,
-                    'title' => $meeting_start_time->format('h:i A'). ' ~ ' .$meeting_end_time->format('h:i A'),
+                    'title' => $slot->duration,
                     'description' => count($students) > 0 ? $students : 'N/A',
                     'date' => $meeting_start_time,
                     'meeting' => $slot,
@@ -47,11 +46,10 @@ class MyMeetingsCalendar extends LivewireCalendar
 
             foreach ($meetings_for_student as $slot) {
                 $meeting_start_time = Helpers::parse_time_to_user_timezone($slot->meeting->start_time);
-                $meeting_end_time = Helpers::parse_time_to_user_timezone($slot->meeting->end_time);
 
                 $meetings[] = [
                     'id' => $slot->meeting->id,
-                    'title' => $meeting_start_time->format('h:i A'). ' ~ ' .$meeting_end_time->format('h:i A'),
+                    'title' => $slot->meeting->duration,
                     'description' => $slot->meeting->teacher->profile_photo_url,
                     'date' => $meeting_start_time,
                     'meeting' => $slot->meeting,

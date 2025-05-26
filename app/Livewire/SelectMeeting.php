@@ -115,7 +115,7 @@ class SelectMeeting extends Component
             $meeting_time = [
                 'start_time' => $meeting_time['start_time'],
                 'end_time' => $meeting_time['end_time'],
-                'time' => Helpers::parse_time_to_user_timezone($meeting_time['start_time'])->format('h:i A').  ' ~ ' .Helpers::parse_time_to_user_timezone($meeting_time['end_time'])->format('h:i A'),
+                'time' => $meeting_time->duration,
                 'is_student_in_slot' => $is_student_in_slot,
             ];
 

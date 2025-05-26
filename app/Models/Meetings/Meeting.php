@@ -2,9 +2,11 @@
 
 namespace App\Models\Meetings;
 
+use App\Helpers\Helpers;
 use App\Models\User;
 use App\Traits\DateTrait;
 use App\Traits\IdTrait;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -40,9 +42,18 @@ class Meeting extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function getStudentsCountAttribute()
+    public function duration(): Attribute
     {
-        return $this->meeting_users()->count();
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes): string => Helpers::parse_time_to_user_timezone($this->start_time)->format('h:i A'). ' ~ ' .Helpers::parse_time_to_user_timezone($this->end_time)->format('h:i A')
+        );
+    }
+
+    public function studentsCount(): Attribute
+    {
+        return Attribute::make(
+            get: fn (): int => $this->meeting_users()->count(),
+        );
     }
 
     public static function booted(): void
