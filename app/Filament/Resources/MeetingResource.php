@@ -19,15 +19,21 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Guava\FilamentKnowledgeBase\Contracts\HasKnowledgeBase;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\HtmlString;
 
-class MeetingResource extends Resource
+class MeetingResource extends Resource implements HasKnowledgeBase
 {
     protected static ?string $model = Meeting::class;
     protected static ?string $activeNavigationIcon = 'heroicon-s-calendar';
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
+
+    public static function getDocumentation(): array
+    {
+        return ['meetings.intro'];
+    }
 
     public static function form(Form $form): Form
     {
