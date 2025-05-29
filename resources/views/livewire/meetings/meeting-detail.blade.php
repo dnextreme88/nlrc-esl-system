@@ -129,7 +129,15 @@
         </div>
 
         @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::TEACHER->value]) && !$is_meeting_done)
+            <p>Carbon utc: {{ \Carbon\Carbon::now()->format('F j, Y h:i A') }}</p>
+            <p>User time ({{ Auth::user()->timezone }}): {{ Helpers::parse_time_to_user_timezone(\Carbon\Carbon::now())->format('F j, Y h:i A') }}</p>
+            <p>Meeting time ({{ Auth::user()->timezone }}): {{ Helpers::parse_time_to_user_timezone($current_meeting['start_time'])->format('F j, Y h:i A') }}</p>
+            <p>Meeting time (end) ({{ Auth::user()->timezone }}): {{ Helpers::parse_time_to_user_timezone($current_meeting['end_time'])->format('F j, Y h:i A') }}</p>
             <div class="p-4 mt-10 flex flex-col space-y-6 border-2 border-gray-300 dark:border-gray-600 lg:col-span-2">
+                <div class="p-2">
+                    <button wire:click="cancel_meeting_modal" class="transition duration-150 rounded-md py-2 px-4 text-gray-800 dark:text-gray-200 bg-red-300 dark:bg-red-600 hover:bg-red-400 dark:hover:bg-red-700 hover:cursor-pointer {{ $current_meeting->status == \App\Enums\MeetingStatuses::CANCELLED->value ? 'hidden md:block md:invisible' : '' }}">Cancel Meeting</button>
+                </div>
+
                 <x-form-section submit="update_meeting_details">
                     <x-slot name="title">
                         {{ __('Update your meeting details') }}
@@ -185,4 +193,43 @@
             </div>
         @endif
     </div>
+
+    @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::TEACHER->value]) && !$is_meeting_done)
+        <x-modal wire:model="show_cancel_meeting_modal" :max_width="'xl'">
+            <div class="my-4 mx-6">
+                <div class="flex justify-between items-center border-b-2 border-b-gray-200">
+                    <h3 class="text-2xl text-gray-800 dark:text-gray-200">Cancel Meeting Form</h3>
+
+                    <button wire:click="$toggle('show_cancel_meeting_modal')" class="text-xl p-4 text-gray-800 dark:text-gray-200 hover:cursor-pointer">&times;</button>
+                </div>
+
+                <p class="my-6 text-gray-700 dark:text-gray-400"><strong>Note:</strong> Cancelling a meeting will incur a penalty.</p>
+
+                <p class="mb-8 text-gray-700 dark:text-gray-400">Please provide us with more information by filling out the details below.</p>
+            </div>
+
+            <form wire:submit.prevent="cancel_meeting" class="my-4 mx-6">
+                <x-label is_required="true" value="{{ __('Reason') }}" for="cancel_reason" />
+
+                <x-textarea wire:model="cancel_reason" class="placeholder-gray-700 dark:placeholder-gray-400" id="cancel_reason" placeholder="Please state your reason here" />
+
+                <x-input-error class="mt-2" for="cancel_reason" />
+
+                <x-button class="my-4 hover:cursor-pointer">
+                    <span wire:loading.flex wire:target="cancel_meeting" class="items-center">
+                        <x-loading-indicator
+                            :loader_color_bg="'fill-gray-200 dark:fill-gray-800'"
+                            :loader_color_spin="'fill-gray-200 dark:fill-gray-800'"
+                            :show_text="true"
+                            :text="'Submitting'"
+                            :text_color="'text-gray-200 dark:text-gray-800'"
+                            :size="4"
+                        />
+                    </span>
+
+                    <span wire:loading.remove wire:target="cancel_meeting">Submit</span>
+                </x-button>
+            </form>
+        </x-modal>
+    @endif
 </div>

@@ -17,39 +17,11 @@ class UpcomingMeetings extends Component
 {
     public $meetings = [];
     public $meeting_id;
-    public bool $show_cancel_meeting_modal = false;
-    public $cancel_reason = '';
     public bool $show_reschedule_meeting_modal = false;
     public $reschedule_new_date;
     public $reschedule_new_start_time;
     public $reschedule_reason = '';
     public $start_times = [];
-
-    public function cancel_meeting_modal($meeting_id)
-    {
-        $this->show_cancel_meeting_modal = true;
-        $this->meeting_id = $meeting_id;
-    }
-
-    public function cancel_meeting()
-    {
-        $this->validate([
-            'meeting_id' => ['required', 'exists:meetings,id'],
-            'cancel_reason' => ['required', 'max:255'],
-        ]);
-
-        Meeting::where('id', $this->meeting_id)
-            ->update([
-                'notes' => $this->cancel_reason,
-                'status' => MeetingStatuses::CANCELLED->value,
-            ]);
-
-        $this->reset();
-        $this->show_cancel_meeting_modal = false;
-
-        Toaster::success('You have successfully cancelled your meeting!');
-        $this->dispatch('cancelled-meeting');
-    }
 
     public function reschedule_meeting_modal($meeting_id)
     {
@@ -82,7 +54,6 @@ class UpcomingMeetings extends Component
         $this->dispatch('rescheduled-meeting');
     }
 
-    #[On('cancelled-meeting')]
     #[On('rescheduled-meeting')]
     public function render()
     {

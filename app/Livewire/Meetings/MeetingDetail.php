@@ -17,12 +17,14 @@ use Masmerise\Toaster\Toaster;
 
 class MeetingDetail extends Component
 {
+    public string $cancel_reason = '';
     public $current_meeting;
     public bool $allow_meeting_link_edit = true;
     public bool $is_meeting_done = false;
     public $meeting_link;
     public $meeting_status;
     public $meeting_updates = [];
+    public bool $show_cancel_meeting_modal = false;
     public $valid_statuses;
 
     #[On('copied-link-to-clipboard')]
@@ -37,6 +39,27 @@ class MeetingDetail extends Component
         $is_time_less_than_end_time = Helpers::parse_time_to_user_timezone(Carbon::now()) < Helpers::parse_time_to_user_timezone($this->current_meeting->end_time);
 
         return $is_time_less_than_end_time;
+    }
+
+    public function cancel_meeting_modal()
+    {
+        $this->show_cancel_meeting_modal = true;
+    }
+
+    public function cancel_meeting()
+    {
+        $this->validate(['cancel_reason' => ['required', 'min:5', 'max:255']]);
+
+        $this->current_meeting->update([
+            'notes' => $this->cancel_reason,
+            'status' => MeetingStatuses::CANCELLED->value,
+        ]);
+
+        $this->cancel_reason = '';
+        $this->show_cancel_meeting_modal = false;
+
+        Toaster::success('Meeting has been cancelled');
+        $this->dispatch('cancelled-meeting');
     }
 
     public function update_meeting_details()
@@ -135,6 +158,7 @@ class MeetingDetail extends Component
         }
     }
 
+    #[On('cancelled-meeting')]
     #[On('updated-meeting')]
     public function render()
     {

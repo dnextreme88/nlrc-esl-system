@@ -34,10 +34,8 @@
                     </a>
                 </div>
 
-                <div class="grid grid-cols-1 gap-2 items-center {{ $is_teacher_role ? 'p-4 border-b-2 border-gray-600 md:border-b-0 md:p-0 md:grid-cols-2 md:self-end md:mb-4' : 'py-0 sm:self-center sm:place-self-end' }}">
+                <div class="grid grid-cols-1 gap-2 items-center py-0 sm:self-center sm:place-self-end">
                     @if ($is_teacher_role)
-                        <button wire:click="cancel_meeting_modal({{ $meeting->id }})" class="transition duration-150 rounded-md py-2 px-4 text-gray-800 dark:text-gray-200 bg-red-300 dark:bg-red-600 hover:bg-red-400 dark:hover:bg-red-700 hover:cursor-pointer {{ $meeting->status == \App\Enums\MeetingStatuses::CANCELLED->value ? 'hidden md:block md:invisible' : '' }}">Cancel</button>
-
                         <button wire:click="reschedule_meeting_modal({{ $meeting->id }})" class="transition duration-150 rounded-md py-2 px-2 text-gray-800 dark:text-gray-200 bg-blue-300 dark:bg-blue-600 hover:bg-blue-400 dark:hover:bg-blue-700 hover:cursor-pointer">Reschedule</button>
                     @else
                         <x-badge :text="$meeting->status" class="justify-self-start md:justify-self-end {{ $color_classes }}" />
@@ -50,47 +48,6 @@
     </div>
 
     @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::STUDENT->value, \App\Enums\Roles::TEACHER->value]))
-        <x-modal wire:model="show_cancel_meeting_modal" :max_width="'xl'">
-            <div class="my-4 mx-6">
-                <div class="flex justify-between items-center border-b-2 border-b-gray-200">
-                    <h3 class="text-2xl text-gray-800 dark:text-gray-200">Cancel Meeting Form</h3>
-
-                    <button wire:click="$toggle('show_cancel_meeting_modal')" class="text-xl p-4 text-gray-800 dark:text-gray-200 hover:cursor-pointer">&times;</button>
-                </div>
-
-                <p class="my-6 text-gray-700 dark:text-gray-400"><strong>Note:</strong> Cancelling a meeting will incur a penalty.</p>
-
-                <p class="mb-8 text-gray-700 dark:text-gray-400">Please provide us with more information by filling out the details below.</p>
-            </div>
-
-            <form wire:submit.prevent="cancel_meeting" class="my-4 mx-6">
-                <input wire:model="meeting_id" type="hidden" />
-
-                <x-label is_required="true" value="{{ __('Reason') }}" for="cancel_reason" />
-
-                <x-textarea wire:model="cancel_reason" class="placeholder-gray-700 dark:placeholder-gray-400" id="cancel_reason" placeholder="Please state your reason here" />
-
-                @error ('cancel_reason')
-                    <div class="text-red-500 text-sm mb-2">{{ $message }}</div>
-                @enderror
-
-                <x-button class="my-4 hover:cursor-pointer">
-                    <span wire:loading.flex wire:target="cancel_meeting" class="items-center">
-                        <x-loading-indicator
-                            :loader_color_bg="'fill-gray-200 dark:fill-gray-800'"
-                            :loader_color_spin="'fill-gray-200 dark:fill-gray-800'"
-                            :show_text="true"
-                            :text="'Submitting'"
-                            :text_color="'text-gray-200 dark:text-gray-800'"
-                            :size="4"
-                        />
-                    </span>
-
-                    <span wire:loading.remove wire:target="cancel_meeting">Submit</span>
-                </x-button>
-            </form>
-        </x-modal>
-
         <x-modal wire:model="show_reschedule_meeting_modal" :max_width="'xl'">
             <div class="my-4 mx-6">
                 <div class="flex justify-between items-center border-b-2 border-b-gray-200">
