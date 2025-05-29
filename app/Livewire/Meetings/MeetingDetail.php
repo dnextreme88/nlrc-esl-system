@@ -8,7 +8,9 @@ use App\Helpers\Helpers;
 use App\Models\Meetings\Meeting;
 use App\Models\Meetings\MeetingUser;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Masmerise\Toaster\Toaster;
@@ -16,8 +18,12 @@ use Masmerise\Toaster\Toaster;
 class MeetingDetail extends Component
 {
     public $current_meeting;
+    public bool $allow_meeting_link_edit = true;
+    public bool $is_meeting_done = false;
     public $meeting_link;
+    public $meeting_status;
     public $meeting_updates = [];
+    public $valid_statuses;
 
     #[On('copied-link-to-clipboard')]
     public function copy_meeting_link_to_clipboard()
@@ -25,20 +31,47 @@ class MeetingDetail extends Component
         Toaster::success('Meeting link copied to clipboard!');
     }
 
+    public function is_current_time_less_than_end_time()
+    {
+        // Check to allow teachers to edit the meeting link before meeting ends
+        $is_time_less_than_end_time = Helpers::parse_time_to_user_timezone(Carbon::now()) < Helpers::parse_time_to_user_timezone($this->current_meeting->end_time);
+
+        return $is_time_less_than_end_time;
+    }
+
     public function update_meeting_details()
     {
-        $this->validate(['meeting_link' => ['required', 'url']]);
+        $this->allow_meeting_link_edit = $this->is_current_time_less_than_end_time();
 
-        $this->current_meeting->update(['meeting_link' => $this->meeting_link]);
+        // Validate based on which field is shown
+        if ($this->allow_meeting_link_edit && !$this->is_meeting_done) {
+            $this->validate(['meeting_link' => ['required', 'url']]);
+        } else {
+            $this->validate(['meeting_status' => ['required', Rule::in($this->valid_statuses)]]);
+        }
+
+        $fields_to_update = ['meeting_link' => $this->meeting_link];
+
+        // TODO: OPTIONAL: WHEN RESOLVING A MEETING THAT CONCLUDED, SEND AN EMAIL TO THE RECIPIENTS TO NOTIFY THEM ABOUT IT
+        if ($this->meeting_status != null) {
+            $fields_to_update['status'] = $this->meeting_status;
+        }
+
+        $this->current_meeting->update($fields_to_update);
 
         Toaster::success('Meeting details are now updated!');
-        $this->dispatch('meeting-details-updated');
+        $this->dispatch('updated-meeting');
     }
 
     public function mount($meeting_uuid)
     {
         $this->current_meeting = Meeting::where('meeting_uuid', $meeting_uuid)->first();
+        $this->is_meeting_done = $this->current_meeting->status != MeetingStatuses::PENDING->value;
         $this->meeting_link = $this->current_meeting->meeting_link;
+        $this->valid_statuses = collect(MeetingStatuses::cases())
+            ->reject(fn ($case) => $case === MeetingStatuses::PENDING)
+            ->map(fn ($case) => $case->value)
+            ->all();
 
         $user = User::findOrFail(Auth::user()->id);
 
@@ -92,7 +125,7 @@ class MeetingDetail extends Component
             }
 
             // Check if the meeting has reached some sort of conclusion
-            if ($this->current_meeting->status != MeetingStatuses::PENDING->value) {
+            if ($this->is_meeting_done) {
                 $this->meeting_updates[] = [
                     'order' => 4,
                     'headline' => 'Meeting resolved',
@@ -102,9 +135,12 @@ class MeetingDetail extends Component
         }
     }
 
-    #[On('meeting-details-updated')]
+    #[On('updated-meeting')]
     public function render()
     {
+        $this->allow_meeting_link_edit = $this->is_current_time_less_than_end_time();
+        $this->is_meeting_done = $this->current_meeting->status != MeetingStatuses::PENDING->value;
+
         $user = User::findOrFail(Auth::user()->id);
 
         if ($this->current_meeting) {
