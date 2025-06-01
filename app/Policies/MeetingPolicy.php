@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Enums\Roles;
+use App\Helpers\Helpers;
 use App\Models\Meetings\Meeting;
 use App\Models\Meetings\MeetingUser;
 use App\Models\User;
@@ -16,44 +16,63 @@ class MeetingPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->role->name == Roles::ADMIN->value;
+        $is_admin_role = Helpers::is_admin_role();
+
+        return $is_admin_role;
     }
 
     public function view(?User $user, Meeting $meeting): bool
     {
-        if (in_array($user->role->name, [Roles::HEAD_TEACHER->value, Roles::TEACHER->value])) {
+        $is_admin_role = Helpers::is_admin_role();
+        $is_student_role = Helpers::is_student_role();
+        $is_teacher_role = Helpers::is_teacher_role();
+
+        if ($is_teacher_role) {
             $user_has_meeting = Meeting::where('id', $meeting->id)->isTeacherId($user->id)
                 ->first();
-        } else if ($user->role->name == Roles::STUDENT->value) {
+        } else if ($is_student_role) {
             $user_has_meeting = MeetingUser::where('meeting_id', $meeting->id)->isStudentId($user->id)
                 ->first();
         }
 
-        return $user_has_meeting || $user->role->name == Roles::ADMIN->value ? true : false;
+        return $user_has_meeting || $is_admin_role ? true : false;
     }
 
     public function create(User $user): bool
     {
-        return in_array($user->role->name, [Roles::ADMIN->value, Roles::HEAD_TEACHER->value, Roles::TEACHER->value]);
+        $is_admin_role = Helpers::is_admin_role();
+        $is_teacher_role = Helpers::is_teacher_role();
+
+        return $is_admin_role || $is_teacher_role;
     }
 
     public function update(User $user, Meeting $meeting): bool
     {
-        return in_array($user->role->name, [Roles::ADMIN->value, Roles::HEAD_TEACHER->value, Roles::TEACHER->value]);
+        $is_admin_role = Helpers::is_admin_role();
+        $is_teacher_role = Helpers::is_teacher_role();
+
+        return $is_admin_role || $is_teacher_role;
     }
 
     public function delete(User $user, Meeting $meeting): bool
     {
-        return in_array($user->role->name, [Roles::ADMIN->value, Roles::HEAD_TEACHER->value, Roles::TEACHER->value]);
+        $is_admin_role = Helpers::is_admin_role();
+        $is_teacher_role = Helpers::is_teacher_role();
+
+        return $is_admin_role || $is_teacher_role;
     }
 
     public function restore(User $user, Meeting $meeting): bool
     {
-        return $user->role->name == Roles::ADMIN->value;
+        $is_admin_role = Helpers::is_admin_role();
+
+        return $is_admin_role;
     }
 
     public function forceDelete(User $user, Meeting $meeting): bool
     {
-        return $user->role->name == Roles::ADMIN->value;
+        $is_admin_role = Helpers::is_admin_role();
+
+        return $is_admin_role;
     }
 }

@@ -45,7 +45,7 @@ class UserFactory extends Factory
     public function admins(): static
     {
         return $this->state(fn (array $attributes) => [
-            'role_id' => Role::where('name', Roles::ADMIN->value)->first()
+            'role_id' => Role::isAdmin()->first()
                 ->id,
             'timezone' => 'UTC',
         ]);
@@ -65,7 +65,7 @@ class UserFactory extends Factory
     public function students(): static
     {
         return $this->state(fn (array $attributes) => [
-            'role_id' => Role::where('name', Roles::STUDENT->value)->first()
+            'role_id' => Role::isStudent()->first()
                 ->id,
             'timezone' => 'Asia/Manila',
         ]);

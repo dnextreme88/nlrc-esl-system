@@ -11,6 +11,9 @@ use Masmerise\Toaster\Toaster;
 // Using NavigationMenu is conflicting with another class of the same name from Laravel Jetstream
 class NavMenu extends Component
 {
+    public bool $is_admin_role;
+    public bool $is_student_role;
+    public bool $is_teacher_role;
     public $user_notifications = [];
     public $user_notifications_unread_count = 0;
     public $user_notifications_unread_count_is_overlap = false;
@@ -47,6 +50,9 @@ class NavMenu extends Component
     public function mount()
     {
         $this->userId = Auth::user()->id;
+        $this->is_admin_role = Helpers::is_admin_role();
+        $this->is_student_role = Helpers::is_student_role();
+        $this->is_teacher_role = Helpers::is_teacher_role();
     }
 
     #[On('mark-is-read')]

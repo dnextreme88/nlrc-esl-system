@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Enums\Roles;
+use App\Helpers\Helpers;
 use App\Models\Module;
 use App\Models\ModulesStudent;
 use App\Models\ModulesTeacher;
@@ -17,15 +17,20 @@ class ModulePolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->role->name == Roles::ADMIN->value;
+        $is_admin_role = Helpers::is_admin_role();
+
+        return $is_admin_role;
     }
 
     public function view(?User $user, Module $module): bool
     {
-        if (in_array($user->role->name, [Roles::HEAD_TEACHER->value, Roles::TEACHER->value])) {
+        $is_student_role = Helpers::is_student_role();
+        $is_teacher_role = Helpers::is_teacher_role();
+
+        if ($is_teacher_role) {
             $user_has_access_to_module = ModulesTeacher::isModuleId($module->id)->isTeacherId($user->id)
                 ->first();
-        } else if ($user->role->name == Roles::STUDENT->value) {
+        } else if ($is_student_role) {
             $user_has_access_to_module = ModulesStudent::isModuleId($module->id)->isStudentId($user->id)
                 ->first();
         }
@@ -35,17 +40,23 @@ class ModulePolicy
 
     public function create(User $user): bool
     {
-        return $user->role->name == Roles::ADMIN->value;
+        $is_admin_role = Helpers::is_admin_role();
+
+        return $is_admin_role;
     }
 
     public function update(User $user, Module $module): bool
     {
-        return $user->role->name == Roles::ADMIN->value;
+        $is_admin_role = Helpers::is_admin_role();
+
+        return $is_admin_role;
     }
 
     public function delete(User $user, Module $module): bool
     {
-        return $user->role->name == Roles::ADMIN->value;
+        $is_admin_role = Helpers::is_admin_role();
+
+        return $is_admin_role;
     }
 
     public function restore(User $user, Module $module): bool

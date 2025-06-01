@@ -2,9 +2,11 @@
 
 namespace App\Helpers;
 
+use App\Enums\Roles;
 use App\Models\Announcement;
 use App\Models\Meetings\Meeting;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class Helpers
 {
@@ -45,6 +47,21 @@ class Helpers
         }
 
         return $parsed_notifications;
+    }
+
+    public static function is_admin_role(): bool
+    {
+        return Auth::user()->role->name == Roles::ADMIN->value;
+    }
+
+    public static function is_student_role(): bool
+    {
+        return Auth::user()->role->name == Roles::STUDENT->value;
+    }
+
+    public static function is_teacher_role(): bool
+    {
+        return in_array(Auth::user()->role->name, [Roles::HEAD_TEACHER->value, Roles::TEACHER->value]);
     }
 
     public static function parse_time_to_user_timezone($time): Carbon

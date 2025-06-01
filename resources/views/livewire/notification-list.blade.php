@@ -60,9 +60,9 @@
                                 <div class="flex flex-1 flex-col">
                                     <h2 class="dark:text-gray-200 {{ !$notification['read_at'] ? 'font-bold' : '' }}">Meeting booked</h2>
                                     <p class="indent-1 text-gray-800 dark:text-gray-200">
-                                        @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::TEACHER->value]))
+                                        @if ($is_teacher_role)
                                             A student has booked a meeting with you! Please update your meeting details.
-                                        @elseif (Auth::user()->role->name == \App\Enums\Roles::STUDENT->value)
+                                        @elseif ($is_student_role)
                                             You have booked this meeting. View your meeting details by clicking this notification.
                                         @endif
                                     </p>

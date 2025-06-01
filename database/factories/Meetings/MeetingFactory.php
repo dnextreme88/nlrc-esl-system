@@ -3,7 +3,6 @@
 namespace Database\Factories\Meetings;
 
 use App\Enums\MeetingStatuses;
-use App\Enums\Roles;
 use App\Helpers\Helpers;
 use App\Models\User;
 use Carbon\Carbon;
@@ -16,10 +15,7 @@ class MeetingFactory extends Factory
     {
         $time_slots = Helpers::populate_time_slots('H:i:s');
 
-        $random_teacher = User::whereHas('role', fn ($query) => $query->where('name', Roles::HEAD_TEACHER->value)
-            ->orWhere('name', Roles::TEACHER->value)
-        )
-            ->inRandomOrder()
+        $random_teacher = User::whereHas('role', fn ($query) => $query->isTeacher())->inRandomOrder()
             ->first();
         $random_time = fake()->randomElement($time_slots);
         $random_date = fake()->dateTimeBetween('-1 week', '+7 days')->format('Y-m-d');

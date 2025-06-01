@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\ModuleResource\RelationManagers;
 
-use App\Enums\Roles;
 use App\Models\ModulesStudent;
 use App\Models\User;
 use Filament\Forms;
@@ -42,7 +41,7 @@ class ModulesStudentsRelationManager extends RelationManager
 
                         $query->where('is_active', true)
                             ->whereNotIn('id', $used_student_ids)
-                            ->whereHas('role', fn ($query) => $query->where('name', Roles::STUDENT->value))
+                            ->whereHas('role', fn ($query) => $query->isStudent())
                             ->orderBy('last_name')
                             ->orderBy('first_name')
                             ->orderBy('middle_name');

@@ -25,7 +25,7 @@ class UserSeeder extends Seeder
         $default_pass = Hash::make('password');
 
         User::create([
-            'role_id' => Role::where('name', Roles::ADMIN->value)->first()->id,
+            'role_id' => Role::isAdmin()->first()->id,
             'first_name' => Roles::ADMIN->value,
             'last_name' => 'User',
             'email' => 'admin@test.com',

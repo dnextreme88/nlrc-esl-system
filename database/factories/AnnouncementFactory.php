@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Enums\Roles;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -11,7 +10,7 @@ class AnnouncementFactory extends Factory
 {
     public function definition(): array
     {
-        $random_admin = User::whereHas('role', fn ($query) => $query->where('name', Roles::ADMIN->value))->inRandomOrder()
+        $random_admin = User::whereHas('role', fn ($query) => $query->isAdmin())->inRandomOrder()
             ->first();
 
         $random_title = implode(' ', fake()->words(fake()->randomDigitNotNull()));

@@ -6,11 +6,10 @@ use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
-use App\Enums\Roles;
+use App\Helpers\Helpers;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -28,9 +27,9 @@ class FortifyServiceProvider extends ServiceProvider
         {
             public function toResponse($request): RedirectResponse
             {
-                $can_access_admin = Auth::user()->role->name == Roles::ADMIN->value;
+                $is_admin_role = Helpers::is_admin_role();
 
-                $user_route = match ($can_access_admin) {
+                $user_route = match ($is_admin_role) {
                     true => 'admin',
                     false => route('dashboard')
                 };

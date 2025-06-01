@@ -12,7 +12,7 @@
         <p class="mt-2">
             @if ($event['description'])
                 <div class="flex -space-x-2">
-                    @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::TEACHER->value]))
+                    @if (Helpers::is_teacher_role())
                         @foreach (array_slice($event['description'], 0, 2) as $student_image)
                             <x-round-image :src="$student_image" />
                         @endforeach
@@ -22,7 +22,7 @@
                                 {{ count(array_slice($event['description'], 2)) }}+
                             </div>
                         @endif
-                    @elseif (Auth::user()->role->name == \App\Enums\Roles::STUDENT->value)
+                    @elseif (Helpers::is_student_role())
                         <x-round-image :src="$event['description']" />
                     @endif
                 </div>

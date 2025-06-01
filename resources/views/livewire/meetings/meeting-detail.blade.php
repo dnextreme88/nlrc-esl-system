@@ -45,7 +45,7 @@
 
                             <p class="leading-tight text-sm text-gray-600 dark:text-gray-400">
                                 @if ($meeting_update['order'] == 2)
-                                    @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::TEACHER->value]))
+                                    @if ($is_teacher_role)
                                         @foreach ($meeting_update['sub_text'] as $student)
                                             <div class="flex space-y-2 gap-3">
                                                 <x-round-image
@@ -96,7 +96,6 @@
             @elseif ($is_meeting_done)
                 @php
                     $color_classes;
-                    $is_teacher_role = in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::TEACHER->value]);
 
                     switch ($current_meeting->status) {
                         case \App\Enums\MeetingStatuses::CANCELLED->value:
@@ -128,7 +127,7 @@
             <p class="text-gray-800 dark:text-gray-200">Meeting ID: <span class="font-bold">{{ $current_meeting['meeting_uuid'] }}</span></p>
         </div>
 
-        @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::TEACHER->value]) && !$is_meeting_done)
+        @if ($is_teacher_role && !$is_meeting_done)
             <p>Carbon utc: {{ \Carbon\Carbon::now()->format('F j, Y h:i A') }}</p>
             <p>User time ({{ Auth::user()->timezone }}): {{ Helpers::parse_time_to_user_timezone(\Carbon\Carbon::now())->format('F j, Y h:i A') }}</p>
             <p>Meeting time ({{ Auth::user()->timezone }}): {{ Helpers::parse_time_to_user_timezone($current_meeting['start_time'])->format('F j, Y h:i A') }}</p>
@@ -194,7 +193,7 @@
         @endif
     </div>
 
-    @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::TEACHER->value]) && !$is_meeting_done)
+    @if ($is_teacher_role && !$is_meeting_done)
         <x-modal wire:model="show_cancel_meeting_modal" :max_width="'xl'">
             <div class="my-4 mx-6">
                 <div class="flex justify-between items-center border-b-2 border-b-gray-200">

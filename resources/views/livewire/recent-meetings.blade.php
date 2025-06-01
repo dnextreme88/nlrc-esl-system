@@ -5,7 +5,6 @@
         @forelse ($meetings as $meeting)
             @php
                 $color_classes;
-                $is_teacher_role = in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::TEACHER->value]);
 
                 switch ($meeting->status) {
                     case \App\Enums\MeetingStatuses::CANCELLED->value:

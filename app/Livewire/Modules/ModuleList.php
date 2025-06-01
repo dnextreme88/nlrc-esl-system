@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Modules;
 
-use App\Enums\Roles;
+use App\Helpers\Helpers;
 use App\Models\Module;
 use App\Models\ModulesStudent;
 use App\Models\ModulesTeacher;
@@ -16,13 +16,15 @@ class ModuleList extends Component
     public function render()
     {
         $user = Auth::user();
+        $is_student_role = Helpers::is_student_role();
+        $is_teacher_role = Helpers::is_teacher_role();
 
         $modules_with_user_access = '';
 
-        if (in_array($user->role->name, [Roles::HEAD_TEACHER->value, Roles::TEACHER->value])) {
+        if ($is_teacher_role) {
             $modules_with_user_access = ModulesTeacher::isTeacherId(Auth::user()->id)
                 ->pluck('module_id');
-        } else if ($user->role->name == Roles::STUDENT->value) {
+        } else if ($is_student_role) {
             $modules_with_user_access = ModulesStudent::isStudentId(Auth::user()->id)
                 ->pluck('module_id');
         }

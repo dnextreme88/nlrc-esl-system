@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Enums\Roles;
+use App\Helpers\Helpers;
 use App\Models\Announcement;
 use App\Models\User;
 
@@ -15,32 +15,42 @@ class AnnouncementPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->role->name == Roles::ADMIN->value;
+        $is_admin_role = Helpers::is_admin_role();
+
+        return $is_admin_role;
     }
 
     public function view(?User $user, Announcement $announcement): bool
     {
+        $is_admin_role = Helpers::is_admin_role();
+
         $user_has_announcement = $user->notifications()
             ->where('type', 'announcement-sent')
             ->where('data->announcement_id', $announcement->id)
             ->first();
 
-        return $user_has_announcement || $user->role->name == Roles::ADMIN->value ? true : false;
+        return $is_admin_role || $user_has_announcement ? true : false;
     }
 
     public function create(User $user): bool
     {
-        return $user->role->name == Roles::ADMIN->value;
+        $is_admin_role = Helpers::is_admin_role();
+
+        return $is_admin_role;
     }
 
     public function update(User $user, Announcement $announcement): bool
     {
-        return $user->role->name == Roles::ADMIN->value;
+        $is_admin_role = Helpers::is_admin_role();
+
+        return $is_admin_role;
     }
 
     public function delete(User $user, Announcement $announcement): bool
     {
-        return $user->role->name == Roles::ADMIN->value;
+        $is_admin_role = Helpers::is_admin_role();
+
+        return $is_admin_role;
     }
 
     public function restore(User $user, Announcement $announcement): bool

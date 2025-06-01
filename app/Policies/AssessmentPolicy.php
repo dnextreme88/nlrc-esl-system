@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Enums\Roles;
+use App\Helpers\Helpers;
 use App\Models\Assessment;
 use App\Models\ModulesStudent;
 use App\Models\ModulesTeacher;
@@ -19,7 +19,9 @@ class AssessmentPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->role->name == Roles::ADMIN->value;
+        $is_admin_role = Helpers::is_admin_role();
+
+        return $is_admin_role;
     }
 
     public function view(?User $user, Assessment $assessment, Unit $unit): bool
@@ -32,11 +34,14 @@ class AssessmentPolicy
             return false;
         }
 
+        $is_student_role = Helpers::is_student_role();
+        $is_teacher_role = Helpers::is_teacher_role();
+
         // Basing it from the modules table since assessments are dependent on unit->modules anyway
-        if (in_array($user->role->name, [Roles::HEAD_TEACHER->value, Roles::TEACHER->value])) {
+        if ($is_teacher_role) {
             $user_has_access_to_assessment = ModulesTeacher::isModuleId($unit->module->id)->isTeacherId($user->id)
                 ->first();
-        } else if ($user->role->name == Roles::STUDENT->value) {
+        } else if ($is_student_role) {
             $user_has_access_to_assessment = ModulesStudent::isModuleId($unit->module->id)->isStudentId($user->id)
                 ->first();
         }
@@ -46,26 +51,36 @@ class AssessmentPolicy
 
     public function create(User $user): bool
     {
-        return $user->role->name != Roles::STUDENT->value;
+        $is_student_role = Helpers::is_student_role();
+
+        return !$is_student_role;
     }
 
     public function update(User $user, Assessment $assessment): bool
     {
-        return $user->role->name != Roles::STUDENT->value;
+        $is_student_role = Helpers::is_student_role();
+
+        return !$is_student_role;
     }
 
     public function delete(User $user, Assessment $assessment): bool
     {
-        return $user->role->name == Roles::ADMIN->value;
+        $is_admin_role = Helpers::is_admin_role();
+
+        return $is_admin_role;
     }
 
     public function restore(User $user, Assessment $assessment): bool
     {
-        return $user->role->name == Roles::ADMIN->value;
+        $is_admin_role = Helpers::is_admin_role();
+
+        return $is_admin_role;
     }
 
     public function forceDelete(User $user, Assessment $assessment): bool
     {
-        return $user->role->name == Roles::ADMIN->value;
+        $is_admin_role = Helpers::is_admin_role();
+
+        return $is_admin_role;
     }
 }

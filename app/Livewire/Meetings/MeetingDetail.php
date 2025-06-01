@@ -3,7 +3,6 @@
 namespace App\Livewire\Meetings;
 
 use App\Enums\MeetingStatuses;
-use App\Enums\Roles;
 use App\Helpers\Helpers;
 use App\Models\Meetings\Meeting;
 use App\Models\Meetings\MeetingUser;
@@ -21,6 +20,8 @@ class MeetingDetail extends Component
     public $current_meeting;
     public bool $allow_meeting_link_edit = true;
     public bool $is_meeting_done = false;
+    public bool $is_student_role;
+    public bool $is_teacher_role;
     public $meeting_link;
     public $meeting_status;
     public $meeting_updates = [];
@@ -90,6 +91,8 @@ class MeetingDetail extends Component
     {
         $this->current_meeting = Meeting::where('meeting_uuid', $meeting_uuid)->first();
         $this->is_meeting_done = $this->current_meeting->status != MeetingStatuses::PENDING->value;
+        $this->is_student_role = Helpers::is_student_role();
+        $this->is_teacher_role = Helpers::is_teacher_role();
         $this->meeting_link = $this->current_meeting->meeting_link;
         $this->valid_statuses = collect(MeetingStatuses::cases())
             ->reject(fn ($case) => $case === MeetingStatuses::PENDING)
@@ -119,13 +122,13 @@ class MeetingDetail extends Component
                 // Sort students who booked first in ascending order
                 usort($students_in_meeting, fn ($a, $b) => $a['created_at'] <=> $b['created_at']);
 
-                if (in_array($user->role->name, [Roles::HEAD_TEACHER->value, Roles::TEACHER->value])) {
+                if ($this->is_teacher_role) {
                     $this->meeting_updates[] = [
                         'order' => 2,
                         'headline' => 'Your meeting has been booked!',
                         'sub_text' => $students_in_meeting,
                     ];
-                } else if ($user->role->name == Roles::STUDENT->value) {
+                } else if ($this->is_student_role) {
                     $meeting_of_student = array_values(array_filter($students_in_meeting, fn ($user) => $user->student_id == Auth::user()->id));
 
                     $this->meeting_updates[] = [

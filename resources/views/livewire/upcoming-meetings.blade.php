@@ -5,7 +5,6 @@
         @forelse ($meetings as $meeting)
             @php
                 $color_classes;
-                $is_teacher_role = in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::TEACHER->value]);
 
                 switch ($meeting->status) {
                     case \App\Enums\MeetingStatuses::CANCELLED->value:
@@ -47,7 +46,7 @@
         @endforelse
     </div>
 
-    @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::STUDENT->value, \App\Enums\Roles::TEACHER->value]))
+    @if ($is_student_role || $is_teacher_role)
         <x-modal wire:model="show_reschedule_meeting_modal" :max_width="'xl'">
             <div class="my-4 mx-6">
                 <div class="flex justify-between items-center border-b-2 border-b-gray-200">

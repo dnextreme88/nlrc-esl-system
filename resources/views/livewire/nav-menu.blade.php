@@ -15,7 +15,7 @@
                     </x-nav-link>
                 </div>
 
-                @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::STUDENT->value, \App\Enums\Roles::TEACHER->value]))
+                @if ($is_student_role || $is_teacher_role)
                     <div class="hidden space-x-8 md:flex md:-my-px md:ms-10">
                         <x-nav-link wire:navigate href="{{ route('my-meetings') }}" :active="request()->routeIs('my-meetings')">
                             {{ __('My Meetings') }}
@@ -29,7 +29,7 @@
                     </div>
                 @endif
 
-                @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::TEACHER->value]))
+                @if ($is_teacher_role)
                     <div class="hidden space-x-8 md:flex md:-my-px md:ms-10">
                         <x-nav-link wire:navigate href="{{ route('meetings.availability') }}" :active="request()->routeIs('meetings.availability')">
                             {{ __('Meeting Availability') }}
@@ -37,7 +37,7 @@
                     </div>
                 @endif
 
-                @if (Auth::user()->role->name == \App\Enums\Roles::ADMIN->value)
+                @if ($is_admin_role)
                     <div class="hidden space-x-8 md:flex md:-my-px md:ms-10">
                         <x-nav-link wire:navigate href="{{ url('/admin') }}">
                             {{ __('Admin Panel') }}
@@ -159,7 +159,7 @@
             </x-responsive-nav-link>
         </div>
 
-        @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::STUDENT->value, \App\Enums\Roles::TEACHER->value]))
+        @if ($is_student_role || $is_teacher_role)
             <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link wire:navigate href="{{ route('my-meetings') }}" :active="request()->routeIs('my-meetings')">
                     {{ __('My Meetings') }}
@@ -173,7 +173,7 @@
             </div>
         @endif
 
-        @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::TEACHER->value]))
+        @if ($is_teacher_role)
             <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link wire:navigate href="{{ route('meetings.availability') }}" :active="request()->routeIs('meetings.availability')">
                     {{ __('Meeting Availability') }}
@@ -181,7 +181,7 @@
             </div>
         @endif
 
-        @if (Auth::user()->role->name == \App\Enums\Roles::ADMIN->value)
+        @if ($is_admin_role)
             <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link wire:navigate href="{{ url('/admin') }}">
                     {{ __('Admin Panel') }}

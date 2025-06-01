@@ -3,7 +3,6 @@
 namespace App\Livewire;
 
 use App\Enums\MeetingStatuses;
-use App\Enums\Roles;
 use App\Helpers\Helpers;
 use App\Models\Meetings\Meeting;
 use App\Models\Meetings\MeetingUser;
@@ -15,6 +14,8 @@ use Masmerise\Toaster\Toaster;
 
 class UpcomingMeetings extends Component
 {
+    public bool $is_student_role;
+    public bool $is_teacher_role;
     public $meetings = [];
     public $meeting_id;
     public bool $show_reschedule_meeting_modal = false;
@@ -60,8 +61,10 @@ class UpcomingMeetings extends Component
         $this->start_times = Helpers::populate_time_slots();
 
         $user = Auth::user();
+        $this->is_student_role = Helpers::is_student_role();
+        $this->is_teacher_role = Helpers::is_teacher_role();
 
-        if (in_array($user->role->name, [Roles::HEAD_TEACHER->value, Roles::TEACHER->value])) {
+        if ($this->is_teacher_role) {
             $this->meetings = Meeting::select(['id', 'meeting_uuid', 'meeting_date', 'start_time', 'end_time', 'status'])->isTeacherId($user->id)
                 ->whereIn('status', [MeetingStatuses::CANCELLED->value, MeetingStatuses::PENDING->value])
                 ->whereHas('meeting_users')
@@ -69,7 +72,7 @@ class UpcomingMeetings extends Component
                 ->orderMeetings('ASC')
                 ->limit(5)
                 ->get();
-        } else if ($user->role->name == Roles::STUDENT->value) {
+        } else if ($this->is_student_role) {
             $this->meetings = MeetingUser::select(['ms.id', 'ms.meeting_uuid', 'ms.meeting_date', 'ms.start_time', 'ms.end_time', 'ms.status'])->join('meetings AS ms', 'meeting_users.meeting_id', 'ms.id')
                 ->isStudentId($user->id)
                 ->whereIn('status', [MeetingStatuses::CANCELLED->value, MeetingStatuses::PENDING->value])

@@ -2,7 +2,6 @@
 
 namespace App\Livewire;
 
-use App\Enums\Roles;
 use App\Helpers\Helpers;
 use App\Models\Meetings\Meeting;
 use App\Models\Meetings\MeetingUser;
@@ -16,8 +15,10 @@ class MyMeetingsCalendar extends LivewireCalendar
     {
         $meetings = [];
         $user = Auth::user();
+        $is_student_role = Helpers::is_student_role();
+        $is_teacher_role = Helpers::is_teacher_role();
 
-        if (in_array($user->role->name, [Roles::HEAD_TEACHER->value, Roles::TEACHER->value])) {
+        if ($is_teacher_role) {
             $meetings_for_teacher = Meeting::isTeacherId($user->id)->whereHas('meeting_users')
                 ->get();
 
@@ -40,7 +41,7 @@ class MyMeetingsCalendar extends LivewireCalendar
                     'meeting' => $slot,
                 ];
             }
-        } else if ($user->role->name == Roles::STUDENT->value) {
+        } else if ($is_student_role) {
             $meetings_for_student = MeetingUser::isStudentId($user->id)->whereHas('meeting')
                 ->get();
 

@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\ModuleResource\RelationManagers;
 
-use App\Enums\Roles;
 use App\Models\ModulesTeacher;
 use App\Models\User;
 use Filament\Forms;
@@ -42,9 +41,7 @@ class ModulesTeachersRelationManager extends RelationManager
 
                         $query->where('is_active', true)
                             ->whereNotIn('id', $used_teacher_ids)
-                            ->whereHas('role', fn ($query) => $query->where('name', Roles::HEAD_TEACHER->value)
-                                ->orWhere('name', Roles::TEACHER->value)
-                            )
+                            ->whereHas('role', fn ($query) => $query->isTeacher())
                             ->orderBy('last_name')
                             ->orderBy('first_name')
                             ->orderBy('middle_name');
@@ -88,7 +85,8 @@ class ModulesTeachersRelationManager extends RelationManager
                 CreateAction::make()
                     ->createAnother(false)
                     ->label('Enroll new teacher')
-                    ->modalHeading('Enroll new teacher'),
+                    ->modalHeading('Enroll new teacher')
+                    ->modalSubmitActionLabel('Enroll teacher'),
             ])
             ->actions([
                 DeleteAction::make('unenroll_teacher')

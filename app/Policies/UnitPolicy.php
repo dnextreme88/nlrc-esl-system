@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Enums\Roles;
+use App\Helpers\Helpers;
 use App\Models\Module;
 use App\Models\ModulesStudent;
 use App\Models\ModulesTeacher;
@@ -18,16 +18,21 @@ class UnitPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->role->name == Roles::ADMIN->value;
+        $is_admin_role = Helpers::is_admin_role();
+
+        return $is_admin_role;
     }
 
     public function view(?User $user, Module $module): bool
     {
+        $is_student_role = Helpers::is_student_role();
+        $is_teacher_role = Helpers::is_teacher_role();
+
         // Basing it from the modules table since units are dependent on modules anyway
-        if (in_array($user->role->name, [Roles::HEAD_TEACHER->value, Roles::TEACHER->value])) {
+        if ($is_teacher_role) {
             $user_has_access_to_unit = ModulesTeacher::isModuleId($module->id)->isTeacherId($user->id)
                 ->first();
-        } else if ($user->role->name == Roles::STUDENT->value) {
+        } else if ($is_student_role) {
             $user_has_access_to_unit = ModulesStudent::isModuleId($module->id)->isStudentId($user->id)
                 ->first();
         }
@@ -37,26 +42,36 @@ class UnitPolicy
 
     public function create(User $user): bool
     {
-        return $user->role->name == Roles::ADMIN->value;
+        $is_admin_role = Helpers::is_admin_role();
+
+        return $is_admin_role;
     }
 
     public function update(User $user, Unit $unit): bool
     {
-        return $user->role->name == Roles::ADMIN->value;
+        $is_admin_role = Helpers::is_admin_role();
+
+        return $is_admin_role;
     }
 
     public function delete(User $user, Unit $unit): bool
     {
-        return $user->role->name == Roles::ADMIN->value;
+        $is_admin_role = Helpers::is_admin_role();
+
+        return $is_admin_role;
     }
 
     public function restore(User $user, Unit $unit): bool
     {
-        return $user->role->name == Roles::ADMIN->value;
+        $is_admin_role = Helpers::is_admin_role();
+
+        return $is_admin_role;
     }
 
     public function forceDelete(User $user, Unit $unit): bool
     {
-        return $user->role->name == Roles::ADMIN->value;
+        $is_admin_role = Helpers::is_admin_role();
+
+        return $is_admin_role;
     }
 }

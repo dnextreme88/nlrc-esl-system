@@ -19,7 +19,7 @@
                         <p class="text-gray-800 dark:text-gray-200">View your calendar here. You may cancel upcoming meetings or re-schedule them</p>
                     </div>
 
-                    @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::STUDENT->value, \App\Enums\Roles::TEACHER->value]))
+                    @if ($is_student_role || $is_teacher_role)
                         <div class="ms-4 mb-6 col-span-4 *:py-4">
                             <livewire:upcoming-meetings />
                         </div>
@@ -38,7 +38,7 @@
                     </div>
                 </div>
 
-                @if (in_array(Auth::user()->role->name, [\App\Enums\Roles::HEAD_TEACHER->value, \App\Enums\Roles::STUDENT->value, \App\Enums\Roles::TEACHER->value]))
+                @if ($is_student_role || $is_teacher_role)
                     <livewire:my-meetings-calendar
                         :drag-and-drop-enabled="false"
                         :key="$current_year.$current_month->format('n')"
