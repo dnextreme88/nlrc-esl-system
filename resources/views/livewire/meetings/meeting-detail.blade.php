@@ -13,8 +13,8 @@
         <div class="w-full py-4 mt-4">
             <h3 class="text-2xl text-center font-semibold mb-6 text-gray-800 dark:text-gray-200">Tracker</h1>
 
-            <div class="flex flex-col md:grid grid-cols-[100px_1fr] text-gray-50">
-                @foreach ($meeting_updates as $key => $meeting_update)
+            <div class="flex flex-col md:grid {{ count($meeting_updates) > 0 ? 'grid-cols-[100px_1fr]' : 'grid-cols-1' }}">
+                @forelse ($meeting_updates as $key => $meeting_update)
                     @php
                         $is_last_element = $key === array_key_last($meeting_updates);
                     @endphp
@@ -44,29 +44,25 @@
                             <h3 class="font-semibold text-lg mb-1 text-gray-800 dark:text-gray-200">{{ $meeting_update['headline'] }}</h3>
 
                             <p class="leading-tight text-sm text-gray-600 dark:text-gray-400">
-                                @if ($meeting_update['order'] == 2)
-                                    @if ($is_teacher_role)
-                                        @foreach ($meeting_update['sub_text'] as $student)
-                                            <div class="flex space-y-2 gap-3">
-                                                <x-round-image
-                                                    :alt_text="$student['student']['last_name']. ', ' .$student['student']['first_name']"
-                                                    :src="$student['student']['profile_photo_url']"
-                                                    :title_text="$student['student']['last_name']. ', ' .$student['student']['first_name']. ' has booked this slot'"
-                                                />
+                                @if (array_key_exists('user', $meeting_update))
+                                    <div class="flex space-y-2 gap-3">
+                                        <x-round-image
+                                            :alt_text="$meeting_update['user']['last_name']. ', ' .$meeting_update['user']['first_name']"
+                                            :src="$meeting_update['user']['profile_photo_url']"
+                                            :title_text="$meeting_update['user']['last_name']. ', ' .$meeting_update['user']['first_name']. ' has booked this slot'"
+                                        />
 
-                                                <span class="self-center text-sm text-gray-800 dark:text-gray-200">booked on {{ Helpers::parse_time_to_user_timezone($student['created_at'])->format('F j, Y g:i A') }}</span>
-                                            </div>
-                                        @endforeach
-                                    @else
-                                        {{ $meeting_update['sub_text'] }}
-                                    @endif
+                                        <span class="self-center text-sm text-gray-800 dark:text-gray-200">{{ $meeting_update['sub_text'] }}</span>
+                                    </div>
                                 @else
                                     {{ $meeting_update['sub_text'] }}
                                 @endif
                             </p>
                         </div>
                     </div>
-                @endforeach
+                @empty
+                    <p class="text-gray-800 dark:text-gray-200">There's nothing to track!</p>
+                @endforelse
             </div>
         </div>
 
@@ -128,10 +124,6 @@
         </div>
 
         @if ($is_teacher_role && !$is_meeting_done)
-            <p>Carbon utc: {{ \Carbon\Carbon::now()->format('F j, Y h:i A') }}</p>
-            <p>User time ({{ Auth::user()->timezone }}): {{ Helpers::parse_time_to_user_timezone(\Carbon\Carbon::now())->format('F j, Y h:i A') }}</p>
-            <p>Meeting time ({{ Auth::user()->timezone }}): {{ Helpers::parse_time_to_user_timezone($current_meeting['start_time'])->format('F j, Y h:i A') }}</p>
-            <p>Meeting time (end) ({{ Auth::user()->timezone }}): {{ Helpers::parse_time_to_user_timezone($current_meeting['end_time'])->format('F j, Y h:i A') }}</p>
             <div class="p-4 mt-10 flex flex-col space-y-6 border-2 border-gray-300 dark:border-gray-600 lg:col-span-2">
                 <div class="p-2">
                     <button wire:click="cancel_meeting_modal" class="transition duration-150 rounded-md py-2 px-4 text-gray-800 dark:text-gray-200 bg-red-300 dark:bg-red-600 hover:bg-red-400 dark:hover:bg-red-700 hover:cursor-pointer {{ $current_meeting->status == \App\Enums\MeetingStatuses::CANCELLED->value ? 'hidden md:block md:invisible' : '' }}">Cancel Meeting</button>

@@ -5,7 +5,6 @@ namespace App\Livewire\Meetings;
 use App\Enums\MeetingStatuses;
 use App\Helpers\Helpers;
 use App\Models\Meetings\Meeting;
-use App\Models\Meetings\MeetingUser;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -76,12 +75,24 @@ class MeetingDetail extends Component
 
         $fields_to_update = ['meeting_link' => $this->meeting_link];
 
-        // TODO: OPTIONAL: WHEN RESOLVING A MEETING THAT CONCLUDED, SEND AN EMAIL TO THE RECIPIENTS TO NOTIFY THEM ABOUT IT
         if ($this->meeting_status != null) {
             $fields_to_update['status'] = $this->meeting_status;
         }
 
         $this->current_meeting->update($fields_to_update);
+
+        if ($this->current_meeting->status == MeetingStatuses::PENDING->value) {
+            $this->current_meeting->meeting_updates()->create([
+                'user_id' => Auth::user()->id,
+                'description' => 'Teacher updated meeting link',
+            ]);
+        } else {
+            // TODO: OPTIONAL: WHEN RESOLVING A MEETING THAT CONCLUDED, SEND EMAIL TO THE RECIPIENTS TO NOTIFY THEM ABOUT IT
+            $this->current_meeting->meeting_updates()->create([
+                'user_id' => Auth::user()->id,
+                'description' => 'Teacher updated meeting status',
+            ]);
+        }
 
         Toaster::success('Meeting details are now updated!');
         $this->dispatch('updated-meeting');
@@ -104,60 +115,49 @@ class MeetingDetail extends Component
         if ($user->cannot('view', $this->current_meeting)) {
             abort(403);
         } else {
-            if ($this->current_meeting) {
-                $this->meeting_updates[] = [
-                    'order' => 1,
-                    'headline' => 'Teacher opened the slot for ' .Helpers::parse_time_to_user_timezone($this->current_meeting->start_time)->format('F j, Y g:i A'). ' ~ ' .Helpers::parse_time_to_user_timezone($this->current_meeting->end_time)->format('g:i A'),
-                    'sub_text' => Helpers::parse_time_to_user_timezone($this->current_meeting->created_at)->format('F j, Y g:i A'),
+            $this->current_meeting->meeting_updates->map(function ($update, $index) use ($user) {
+                $values = [
+                    'headline' => $update->description,
+                    'sub_text' => Helpers::parse_time_to_user_timezone($update->created_at)->format('F j, Y h:i A'),
+                    'time' => Helpers::parse_time_to_user_timezone($update->created_at)->format('F j, Y h:i A'),
                 ];
-            }
 
-            // Check if there are students who are already booked on this slot
-            if ($this->current_meeting->meeting_users) {
-                $students_in_meeting = $this->current_meeting->meeting_users
-                    ->map(fn ($student) => MeetingUser::where('meeting_id', $this->current_meeting->id)->isStudentId($student->id)
-                        ->first()
-                    )->all();
+                $user = User::find($update->user_id);
 
-                // Sort students who booked first in ascending order
-                usort($students_in_meeting, fn ($a, $b) => $a['created_at'] <=> $b['created_at']);
+                if ($update->description == 'Teacher created meeting') {
+                    $values['headline'] = 'Teacher created meeting for ' .Helpers::parse_time_to_user_timezone($update->old_meeting_time)->format('F j, Y h:i A'). ' ~ ' .Helpers::parse_time_to_user_timezone(Carbon::parse($update->old_meeting_time)->addMinutes(30))->format('h:i A');
+                    $values['sub_text'] = Helpers::parse_time_to_user_timezone($this->current_meeting->created_at)->format('F j, Y h:i A');
 
-                if ($this->is_teacher_role) {
-                    $this->meeting_updates[] = [
-                        'order' => 2,
-                        'headline' => 'Your meeting has been booked!',
-                        'sub_text' => $students_in_meeting,
-                    ];
-                } else if ($this->is_student_role) {
-                    $meeting_of_student = array_values(array_filter($students_in_meeting, fn ($user) => $user->student_id == Auth::user()->id));
+                    array_push($this->meeting_updates, $values);
+                } else if ($update->description == 'Student booked meeting') {
+                    if ($this->is_student_role && ($this->current_meeting->teacher_id == $user->id || Auth::user()->id == $user->id)) {
+                        $values['headline'] = 'You booked this meeting';
+                        $values['sub_text'] = Helpers::parse_time_to_user_timezone($update->created_at)->format('F j, Y h:i A');
+                        $values['user'] = $user;
 
-                    $this->meeting_updates[] = [
-                        'order' => 2,
-                        'headline' => 'You booked this slot!',
-                        'sub_text' => Helpers::parse_time_to_user_timezone($meeting_of_student[0]->created_at)->format('F j, Y g:i A'),
-                    ];
+                        array_push($this->meeting_updates, $values);
+                    } else if ($this->is_teacher_role) {
+                        $values['sub_text'] = 'booked on ' .Helpers::parse_time_to_user_timezone($update->created_at)->format('F j, Y h:i A');
+                        $values['user'] = User::find($update->user_id);
+
+                        array_push($this->meeting_updates, $values);
+                    }
+                } else if ($update->description == 'Teacher updated meeting link') {
+                    $values['sub_text'] = Helpers::parse_time_to_user_timezone($update->created_at)->format('F j, Y h:i A');
+                    $values['user'] = $user;
+
+                    array_push($this->meeting_updates, $values);
+                } else if ($update->description == 'Teacher updated meeting status') {
+                    $values['sub_text'] = Helpers::parse_time_to_user_timezone($update->created_at)->format('F j, Y h:i A');
+
+                    array_push($this->meeting_updates, $values);
                 }
-            }
 
-            // Check if the meeting details were updated such as time was changed or date was changed
-            // Goes here if there are students booked as it doesn't make sense to go here
-            // If there are no booked students even if you update the meeting details
-            if (array_key_exists('1', $this->meeting_updates) && $this->current_meeting->meeting_link) {
-                $this->meeting_updates[] = [
-                    'order' => 3,
-                    'headline' => 'Teacher updated meeting details',
-                    'sub_text' => Helpers::parse_time_to_user_timezone($this->current_meeting->updated_at)->format('F j, Y g:i A'),
-                ];
-            }
+                return $values;
+            })->all();
 
-            // Check if the meeting has reached some sort of conclusion
-            if ($this->is_meeting_done) {
-                $this->meeting_updates[] = [
-                    'order' => 4,
-                    'headline' => 'Meeting resolved',
-                    'sub_text' => $this->current_meeting->status,
-                ];
-            }
+            // Sort by created_at field
+            usort($this->meeting_updates, fn ($a, $b) => $a['time'] <=> $b['time']);
         }
     }
 

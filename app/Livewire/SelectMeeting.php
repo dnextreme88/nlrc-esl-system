@@ -77,6 +77,19 @@ class SelectMeeting extends Component
         if ($random_meeting->isNotEmpty()) {
             $random_meeting = $random_meeting->random();
 
+            if ($random_meeting->meeting_updates()->count() == 0) {
+                $random_meeting->meeting_updates()->create([
+                    'user_id' => $random_meeting->teacher_id,
+                    'description' => 'Teacher created meeting',
+                    'old_meeting_time' => $random_meeting->start_time,
+                ]);
+            }
+
+            $random_meeting->meeting_updates()->create([
+                'user_id' => Auth::user()->id,
+                'description' => 'Student booked meeting',
+            ]);
+
             $random_meeting->meeting_users()->attach($random_meeting->id, [
                 'student_id' => Auth::user()->id,
                 'created_at' => Carbon::now(),

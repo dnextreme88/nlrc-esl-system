@@ -3,6 +3,7 @@
 namespace App\Models\Meetings;
 
 use App\Helpers\Helpers;
+use App\Models\Meetings\MeetingUpdate;
 use App\Models\User;
 use App\Traits\DateTrait;
 use App\Traits\IdTrait;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Ramsey\Uuid\Uuid;
 
 class Meeting extends Model
@@ -35,6 +37,11 @@ class Meeting extends Model
     {
         return $this->belongsToMany(User::class, 'meeting_users', 'meeting_id', 'student_id')
             ->withTimestamps();
+    }
+
+    public function meeting_updates(): HasMany
+    {
+        return $this->hasMany(MeetingUpdate::class);
     }
 
     public function teacher(): BelongsTo
